@@ -274,3 +274,5 @@ section { margin-top: 48px; }
 .update-panel__note { display: flex; gap: 6px; align-items: baseline; margin: 0; color: var(--text-2); font-size: 12px; line-height: 1.5; }
 .update-panel__note--error { color: var(--color-status-critical); }
 .update-panel .popover__foot { justify-content: flex-end; }
+#update-toggle { position: relative; }
+#update-toggle[data-update]::after { content: ""; position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; border: 1.5px solid var(--color-surface); border-radius: 50%; background: var(--color-accent); }

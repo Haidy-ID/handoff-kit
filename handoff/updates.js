@@ -27,12 +27,29 @@
   };
   const row = (label, value) => `<div class="update-panel__row"><span>${label}</span><b>${esc(value)}</b></div>`;
 
+  // GitHub allows 60 unauthenticated requests an hour per IP: the automatic check reuses a result younger than an hour,
+  // kept in this browser. Opening the panel always asks GitHub again.
+  const CACHE = "handoff-latest-release";
+  const HOUR = 3600e3;
+  const installedVersion = () => fetch(new URL("VERSION", KIT), { cache: "no-store" }).then((r) => r.text()).then((t) => t.trim());
+  const latestRelease = async ({ fresh }) => {
+    if (!fresh) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(CACHE));
+        if (saved && Date.now() - saved.at < HOUR) return saved.release;
+      } catch {}
+    }
+    const release = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    if (release) try { localStorage.setItem(CACHE, JSON.stringify({ at: Date.now(), release: { tag_name: release.tag_name, html_url: release.html_url } })); } catch {}
+    return release;
+  };
+  // A dot on the button when a newer release exists.
+  const mark = (installed, release) => toggle.toggleAttribute("data-update", Boolean(release && newer(release.tag_name, installed)));
+
   const check = async () => {
     render(`<p class="popover__label">Handoff Kit</p>${row("Installed", "…")}${row("Latest", "Checking…")}`);
-    const [installed, release] = await Promise.all([
-      fetch(new URL("VERSION", KIT), { cache: "no-store" }).then((r) => r.text()).then((t) => t.trim()),
-      fetch(`https://api.github.com/repos/${REPO}/releases/latest`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
-    ]);
+    const [installed, release] = await Promise.all([installedVersion(), latestRelease({ fresh: true })]);
+    mark(installed, release);
     if (!release) return render(`<p class="popover__label">Handoff Kit</p>${row("Installed", installed)}<p class="update-panel__note">GitHub cannot be reached. Try again later.</p>`);
     const latest = release.tag_name.replace(/^v/, "");
     const head = `<p class="popover__label">Handoff Kit</p>${row("Installed", installed)}${row("Latest", latest)}`;
@@ -78,4 +95,6 @@
   document.addEventListener("click", (e) => { if (!panel.hidden && !panel.contains(e.target) && !toggle.contains(e.target)) close(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) { close(); toggle.focus(); } });
   window.renderIcons?.(toggle.parentElement);
+  // Automatic check on each page, on the local server only (where the update can be installed).
+  if (LOCAL) Promise.all([installedVersion(), latestRelease({ fresh: false })]).then(([installed, release]) => mark(installed, release));
 })();

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1 · 2026-10-20
+
+- Update button at the end of the topbar, after a divider.
+- On the local server, each page checks for a new release and shows a dot on the button. The result is kept an hour in the browser, so GitHub's limit of 60 requests an hour is never reached.
+
 ## 1.1.0 · 2026-10-20
 
 - Update button in the topbar: shows the installed and latest versions. Served by `serve.py`, it installs the update in place; published, it links the zip.
