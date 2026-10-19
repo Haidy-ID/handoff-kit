@@ -13,7 +13,8 @@
   };
 
   const anchor = document.querySelector('.topbar a[href*="playground"]');
-  anchor.insertAdjacentHTML("beforebegin", `<button class="btn" data-variant="icon" id="update-toggle" aria-label="Updates" aria-expanded="false" data-tip="Check for a new version of the kit">${icon("arrow-circle-up")}</button>`);
+  // Last item of the topbar, after a divider.
+  anchor.insertAdjacentHTML("afterend", `<span class="topbar__divider" aria-hidden="true"></span><button class="btn" data-variant="icon" id="update-toggle" aria-label="Updates" aria-expanded="false" data-tip="Check for a new version of the kit">${icon("arrow-circle-up")}</button>`);
   const toggle = document.getElementById("update-toggle");
   const panel = Object.assign(document.createElement("div"), { className: "popover update-panel", id: "update-panel", hidden: true });
   panel.setAttribute("role", "dialog");
