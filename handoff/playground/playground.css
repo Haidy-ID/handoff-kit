@@ -1,0 +1,32 @@
+/* Playground chrome, on Minimaly. The specimens inside the iframe use their own design system. */
+@import "../minimaly/tokens.css";
+@import "../minimaly/components.css";
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--color-surface-raised); color: var(--color-text-primary); font: var(--font-size-lg)/var(--line-height-normal) var(--font-family); }
+.bar { box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 16px; border-bottom: var(--stroke-width-subtle) solid var(--color-border); font-size: var(--font-size-md); }
+.bar__start { display: inline-flex; align-items: center; gap: var(--spacing-xl); }
+.bar__trail { display: inline-flex; align-items: center; gap: var(--spacing-sm); }
+.brand { display: inline-flex; align-items: center; gap: var(--spacing-sm); color: inherit; text-decoration: none; }
+.brand img { display: block; }
+.brand b { font-size: var(--font-size-xl); }
+.muted { color: var(--color-text-tertiary); }
+
+
+.layout { display: grid; grid-template-columns: 200px 1fr; min-height: calc(100vh - 56px); }
+#nav { display: flex; flex-direction: column; gap: var(--spacing-xs); padding: var(--spacing-xl) var(--spacing-lg); border-right: var(--stroke-width-subtle) solid var(--color-border); }
+#nav a { padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-md); color: var(--color-text-secondary); text-decoration: none; }
+#nav a:hover { background: var(--color-surface-hover); }
+#nav a[aria-current="true"] { background: var(--color-surface-sunken); color: var(--color-text-primary); font-weight: var(--font-weight-medium); }
+
+main { padding: var(--spacing-xl) var(--spacing-2xl) var(--spacing-3xl); min-width: 0; }
+h1 { margin: 0; font-size: var(--font-size-4xl); font-weight: var(--font-weight-semibold); }
+.meta { margin: var(--spacing-xs) 0 var(--spacing-lg); color: var(--color-text-secondary); font-size: var(--font-size-md); }
+iframe { display: block; box-sizing: content-box; width: calc(100% - 2px); border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-xl); }
+pre { margin: var(--spacing-xl) 0 0; padding: var(--spacing-lg); border-radius: var(--radius-xl); background: var(--color-surface-sunken); font: var(--font-size-sm)/var(--line-height-normal) var(--font-family-mono); white-space: pre-wrap; }
+
+@media (max-width: 720px) {
+  .layout { grid-template-columns: 1fr; }
+  #nav { flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: var(--stroke-width-subtle) solid var(--color-border); }
+  main { padding: var(--spacing-lg); }
+}

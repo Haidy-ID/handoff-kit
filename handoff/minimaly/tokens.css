@@ -1,0 +1,187 @@
+/* Minimaly design tokens.
+   Primitives hold resolved ramp values; semantic roles are the only thing components read. */
+
+:root {
+  /* Primitives — neutral (zinc seed) */
+  --neutral-50: #F8F8F9;
+  --neutral-100: #F0F0F1;
+  --neutral-200: #E0E0E2;
+  --neutral-300: #C5C5C9;
+  --neutral-400: #A0A0A6;
+  --neutral-500: #71717A;
+  --neutral-600: #55555D;
+  --neutral-700: #43434A;
+  --neutral-800: #37373C;
+  --neutral-900: #28282C;
+  --neutral-950: #1D1D1F;
+  --base-white: #FFFFFF;
+
+  /* Primitives — primary (blue seed #2563EB): interaction only */
+  --primary-50: #F2F5FA;
+  --primary-100: #E2E9F7;
+  --primary-200: #BBCEF1;
+  --primary-400: #5D8DED;
+  --primary-600: #1448BB;
+  --primary-800: #0E2F79;
+  --primary-900: #0A235B;
+  --primary-950: #071A42;
+
+  /* Primitives — agent (violet seed #7C3AED): AI agent identity only */
+  --agent-50: #F5F4FA;
+  --agent-400: #9676EF;
+  --agent-600: #5F23BD;
+  --agent-950: #200F43;
+
+  /* Primitive — brand. Brand marks and prototype hints only */
+  --brand-500: #EC3278;
+
+  /* Primitives — status palettes */
+  --red-50: #FBF3F2;
+  --red-400: #FA7870;
+  --red-700: #980014;
+  --red-950: #3F0003;
+  --amber-50: #F9F4EF;
+  --amber-400: #F7B675;
+  --amber-700: #8B5200;
+  --amber-950: #2D1700;
+  --green-50: #F1F7F2;
+  --green-400: #78D387;
+  --green-700: #006F29;
+  --green-950: #002508;
+
+  /* Type */
+  --font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-family-mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-md: 13px;
+  --font-size-lg: 14px;
+  --font-size-xl: 16px;
+  --font-size-2xl: 18px;
+  --font-size-3xl: 20px;
+  --font-size-4xl: 24px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+
+  /* Spacing */
+  --spacing-none: 0;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 48px;
+  --spacing-4xl: 64px;
+  --spacing-5xl: 96px;
+
+  /* Radius */
+  --radius-none: 0;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* Controls: anything clickable is at least this high */
+  --control-height: 32px;
+
+  /* Stroke */
+  --stroke-width-subtle: 1px;
+  --stroke-width-mid: 1.5px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.10);
+  --shadow-lg: 0 16px 40px -8px rgba(0, 0, 0, 0.28);
+
+  /* Motion */
+  --duration-fast: 120ms;   /* hover, press, color changes */
+  --duration-base: 200ms;   /* tooltips, popovers, small reveals */
+  --duration-slow: 320ms;   /* page and panel entrances, crossfades */
+  --duration-stagger: 40ms; /* delay between siblings entering one after the other */
+  --duration-flash: 900ms;  /* a live value lights up after it changes */
+  --delay-show: 120ms;      /* silence before a loading placeholder may paint; not motion, kept under reduced motion */
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);          /* entrances: fast start, soft landing */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);           /* exits */
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1); /* pops with a slight overshoot */
+}
+
+/* Reduced motion: every transition and animation built on these tokens becomes instant. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --duration-fast: 0ms; --duration-base: 0ms; --duration-slow: 0ms; --duration-stagger: 0ms; }
+}
+
+/* Semantic roles — light (default) */
+:root,
+:root[data-theme="light"] {
+  --color-surface: var(--neutral-50);
+  --color-surface-raised: var(--base-white);
+  --color-surface-sunken: var(--neutral-100);
+  --color-surface-hover: var(--neutral-100);
+  --color-border: var(--neutral-200);
+  --color-border-strong: var(--neutral-300);
+  --color-scrim: var(--neutral-950);
+
+  --color-text-primary: var(--neutral-950);
+  --color-text-secondary: var(--neutral-600);
+  --color-text-tertiary: var(--neutral-500);
+
+  --color-accent: var(--primary-600);
+  --color-accent-subtle: var(--primary-50);
+  --color-accent-border: var(--primary-200);
+  --color-on-accent: var(--base-white);
+  --color-flash: var(--primary-100);
+
+  --color-agent: var(--agent-600);
+  --color-brand: var(--brand-500);
+  --color-agent-subtle: var(--agent-50);
+  --color-agent-border: color-mix(in srgb, var(--agent-600) 30%, transparent);
+
+  --color-status-critical: var(--red-700);
+  --color-status-critical-subtle: var(--red-50);
+  --color-status-warning: var(--amber-700);
+  --color-status-warning-subtle: var(--amber-50);
+  --color-status-success: var(--green-700);
+  --color-status-success-subtle: var(--green-50);
+  --color-status-neutral: var(--neutral-700);
+  --color-status-neutral-subtle: var(--neutral-100);
+}
+
+/* Semantic roles — dark */
+:root[data-theme="dark"] {
+  --color-surface: var(--neutral-950);
+  --color-surface-raised: var(--neutral-900);
+  --color-surface-sunken: var(--neutral-950);
+  --color-surface-hover: var(--neutral-800);
+  --color-border: var(--neutral-800);
+  --color-border-strong: var(--neutral-700);
+  --color-scrim: var(--neutral-950);
+
+  --color-text-primary: var(--neutral-50);
+  --color-text-secondary: var(--neutral-400);
+  --color-text-tertiary: var(--neutral-500);
+
+  --color-accent: var(--primary-400);
+  --color-accent-subtle: var(--primary-950);
+  --color-accent-border: var(--primary-800);
+  --color-on-accent: var(--base-white);
+  --color-flash: var(--primary-900);
+
+  --color-agent: var(--agent-400);
+  --color-agent-subtle: var(--agent-950);
+  --color-agent-border: color-mix(in srgb, var(--agent-400) 40%, transparent);
+
+  --color-status-critical: var(--red-400);
+  --color-status-critical-subtle: var(--red-950);
+  --color-status-warning: var(--amber-400);
+  --color-status-warning-subtle: var(--amber-950);
+  --color-status-success: var(--green-400);
+  --color-status-success-subtle: var(--green-950);
+  --color-status-neutral: var(--neutral-300);
+  --color-status-neutral-subtle: var(--neutral-800);
+}

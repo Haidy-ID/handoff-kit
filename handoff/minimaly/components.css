@@ -1,0 +1,422 @@
+/* Minimaly components.
+   Variants through data-variant, states through native attributes (disabled, aria-pressed).
+   data-force="hover" pins the hover state for specimen pages. Tokens only, no raw values. */
+
+/* Borders and padding stay inside the declared size (32 px controls), whatever the page reset. */
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header),
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header) * { box-sizing: border-box; }
+
+/* Motion: keyframes shared by the components and the pages built on them.
+   enter = fade up (page sections, cards), pop-in = fade and grow (tooltips, popovers), fade-in, fade-out.
+   Usage: animation: enter var(--duration-slow) var(--ease-out) both; stagger siblings with var(--duration-stagger). */
+@keyframes enter { from { opacity: 0; transform: translateY(8px); } }
+@keyframes enter-down { from { opacity: 0; transform: translateY(-8px); } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(4px) scale(0.96); } }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes spin { to { transform: rotate(1turn); } }
+
+/* Button: default, primary, ghost, icon (square, icon only). aria-pressed="true" = toggled on. */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--spacing-xs);
+  height: var(--control-height); padding: 0 var(--spacing-md);
+  border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-sm);
+  background: var(--color-surface-raised); color: var(--color-text-primary);
+  font: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-tight) var(--font-family);
+  text-decoration: none; white-space: nowrap; cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+}
+/* Press: the button gives a little under the pointer. */
+.btn:active { transform: scale(0.97); }
+.btn .icon { color: var(--color-text-secondary); transition: color var(--duration-fast) var(--ease-out), transform var(--duration-base) var(--ease-spring); }
+.btn:hover, .btn[data-force="hover"] { background: var(--color-surface-hover); border-color: var(--color-accent-border); }
+.btn:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; }
+.btn[aria-pressed="true"] { background: var(--color-accent-subtle); border-color: var(--color-accent-border); color: var(--color-accent); }
+.btn[aria-pressed="true"] .icon { color: var(--color-accent); }
+.btn[data-variant="primary"] { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-accent); }
+.btn[data-variant="primary"] .icon { color: var(--color-on-accent); }
+.btn[data-variant="primary"]:hover, .btn[data-variant="primary"][data-force="hover"] { background: var(--color-accent); opacity: 0.9; }
+.btn[data-variant="ghost"] { border-color: transparent; background: none; }
+.btn[data-variant="ghost"]:hover, .btn[data-variant="ghost"][data-force="hover"] { border-color: transparent; background: var(--color-surface-hover); }
+.btn[data-variant="icon"] { width: var(--control-height); padding: 0; border-color: transparent; background: none; }
+.btn[data-variant="icon"]:hover, .btn[data-variant="icon"][data-force="hover"] { border-color: transparent; background: var(--color-surface-hover); }
+/* Pressed beats the transparent ghost and icon looks: a toggle on stays visible (Inspect). */
+.btn:is([data-variant="ghost"], [data-variant="icon"])[aria-pressed="true"] { background: var(--color-accent-subtle); border-color: var(--color-accent-border); }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+/* Async button: ds.js builds one .btn__label per state (idle, busy, done, error) from data-busy, data-done, data-error or data-copy.
+   They share one grid cell: the button is as wide as its longest label from the start and never resizes. The label crossfades. */
+.btn[data-state] { display: inline-grid; }
+.btn__label { display: inline-flex; grid-area: 1 / 1; align-items: center; justify-content: center; gap: var(--spacing-xs); opacity: 0; visibility: hidden; transform: translateY(2px);
+  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out), visibility var(--duration-fast); }
+:is(.btn[data-state="idle"] > [data-for="idle"], .btn[data-state="busy"] > [data-for="busy"], .btn[data-state="done"] > [data-for="done"], .btn[data-state="error"] > [data-for="error"]) { opacity: 1; visibility: visible; transform: none; }
+.btn[aria-busy="true"] { cursor: progress; }
+.btn__label[data-for="busy"] .icon { animation: spin calc(var(--duration-slow) * 2.5) linear infinite; }
+.btn__label[data-for="done"] .icon { color: var(--color-status-success); }
+.btn__label[data-for="error"] .icon { color: var(--color-status-critical); }
+.btn[data-variant="primary"] .btn__label .icon { color: var(--color-on-accent); }
+
+/* Badge: status label, not clickable. Mono, tinted by tone. */
+.badge {
+  display: inline-flex; align-items: center; height: 20px; padding: 0 var(--spacing-sm);
+  border-radius: var(--radius-sm); background: var(--color-status-neutral-subtle); color: var(--color-status-neutral);
+  font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); white-space: nowrap;
+  transition: background var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out);
+}
+.badge[data-variant="critical"] { background: var(--color-status-critical-subtle); color: var(--color-status-critical); }
+.badge[data-variant="warning"] { background: var(--color-status-warning-subtle); color: var(--color-status-warning); }
+.badge[data-variant="success"] { background: var(--color-status-success-subtle); color: var(--color-status-success); }
+.badge[data-variant="accent"] { background: var(--color-accent-subtle); color: var(--color-accent); box-shadow: inset 0 0 0 var(--stroke-width-subtle) var(--color-accent-border); }
+
+/* Chip: tag for a value or an entity, not clickable (a clickable filter is a .btn with aria-pressed). */
+.chip {
+  display: inline-flex; align-items: center; gap: var(--spacing-xs); height: 22px; padding: 0 var(--spacing-sm);
+  border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken); color: var(--color-text-primary);
+  font: var(--font-weight-medium) var(--font-size-xs)/1 var(--font-family); white-space: nowrap;
+}
+.chip .icon { --icon-size: 12px; color: var(--color-text-secondary); }
+.chip[data-variant="round"] { border-radius: var(--radius-full); background: var(--color-surface-raised); }
+.chip[data-variant="accent"] { background: var(--color-accent-subtle); border-color: var(--color-accent-border); color: var(--color-accent); }
+.chip[data-variant="accent"] .icon { color: var(--color-accent); }
+
+/* Avatar: initials or photo in a circle. .avatars stacks them with an overlap. */
+.avatar {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 24px; height: 24px; overflow: hidden;
+  border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-full);
+  background: var(--color-surface-sunken); color: var(--color-text-secondary);
+  font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family);
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.avatar[data-variant="lg"] { width: var(--control-height); height: var(--control-height); font-size: var(--font-size-sm); }
+.avatars { display: inline-flex; }
+.avatars .avatar + .avatar { margin-left: calc(var(--spacing-xs) * -1); box-shadow: 0 0 0 var(--stroke-width-mid) var(--color-surface-raised); }
+/* A hovered avatar in a stack rises above its neighbours. */
+.avatars .avatar { position: relative; transition: transform var(--duration-base) var(--ease-spring); }
+.avatars .avatar:hover { z-index: 1; transform: translateY(-2px); }
+
+/* Kbd: keyboard shortcut. */
+.kbd {
+  display: inline-flex; align-items: center; height: 18px; padding: 0 var(--spacing-xs);
+  border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-xs);
+  color: var(--color-text-secondary); font: var(--font-size-xs)/1 var(--font-family-mono);
+}
+
+/* Card: raised surface with an optional head (mono uppercase title, tag, actions) and a body. */
+.card { width: 100%; overflow: hidden; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface-raised); transition: border-color var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out); }
+.card__head { display: flex; align-items: center; gap: var(--spacing-md); min-height: 44px; padding: var(--spacing-xs) var(--spacing-lg); }
+.card__head + * { border-top: var(--stroke-width-subtle) solid var(--color-border); }
+.card__title { margin: 0; font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); text-transform: uppercase; }
+.card__tag { flex: 1; color: var(--color-text-tertiary); font-size: var(--font-size-xs); }
+.card__body { padding: var(--spacing-lg); }
+.card[data-variant="accent"] { border-color: var(--color-accent); }
+
+/* Divider: horizontal rule with a centered label. Accent by default, quiet for low emphasis. */
+.divider { display: flex; align-items: center; gap: var(--spacing-md); }
+.divider::before, .divider::after { content: ""; flex: 1; height: var(--stroke-width-subtle); background: var(--color-accent); }
+.divider span { padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-full); background: var(--color-accent); color: var(--color-on-accent); font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); }
+.divider[data-variant="quiet"]::before, .divider[data-variant="quiet"]::after { background: var(--color-border); }
+.divider[data-variant="quiet"] span { border: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised); color: var(--color-text-tertiary); font-weight: var(--font-weight-regular); }
+
+/* Tooltip: dark bubble. Position it from the page (position: fixed or absolute). */
+.tooltip {
+  display: flex; flex-direction: column; gap: var(--spacing-xs); max-width: 280px; padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md); background: var(--color-text-primary); box-shadow: var(--shadow-md);
+  color: var(--color-surface-raised); font-size: var(--font-size-xs); line-height: var(--line-height-normal);
+  animation: pop-in var(--duration-base) var(--ease-out);
+}
+.tooltip strong { display: inline-flex; align-items: center; gap: var(--spacing-xs); font-weight: var(--font-weight-semibold); }
+.tooltip__lead { opacity: 0.7; }
+/* display above would override the hidden attribute: hiding must win. */
+.tooltip[hidden], .popover[hidden] { display: none; }
+/* Moving along a group of tooltips: the text swaps in place, no pop-in per neighbour. */
+.tooltip[data-instant] { animation: none; }
+
+/* Popover: floating panel for filters or menus. Position it from the page. */
+.popover {
+  display: flex; flex-direction: column; gap: var(--spacing-sm); width: 300px; padding: var(--spacing-md);
+  border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-lg);
+  background: var(--color-surface-raised); box-shadow: var(--shadow-lg);
+  animation: pop-in var(--duration-base) var(--ease-spring); transform-origin: top left;
+}
+.popover__label { margin: 0; color: var(--color-text-tertiary); font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); text-transform: uppercase; }
+.popover__foot { display: flex; justify-content: flex-end; gap: var(--spacing-sm); }
+/* Select menu: the list of a .select, opened by ds.js under its box. The chosen option carries a check. */
+.select__menu { position: fixed; z-index: 1000; width: max-content; max-width: 360px; max-height: 320px; overflow: auto; gap: 0; padding: var(--spacing-xs); }
+.select__option {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-md); min-height: var(--control-height); padding: 0 var(--spacing-sm);
+  border: 0; border-radius: var(--radius-sm); background: none; color: var(--color-text-primary); font: var(--font-weight-regular) var(--font-size-sm)/var(--line-height-tight) var(--font-family); text-align: left; cursor: pointer;
+}
+.select__option:hover, .select__option:focus-visible { background: var(--color-surface-hover); outline: 0; }
+.select__option .icon { color: var(--color-accent); visibility: hidden; }
+.select__option[aria-selected="true"] { font-weight: var(--font-weight-medium); }
+.select__option[aria-selected="true"] .icon { visibility: visible; }
+
+/* Icon: Phosphor icon inlined by ds.js. 16 px by default, --icon-size to change it, color follows the text. */
+.icon { display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--icon-size, 16px); height: var(--icon-size, 16px); color: inherit; }
+.icon svg { width: 100%; height: 100%; fill: currentColor; }
+/* Icons inlined by ds.js fade in instead of popping into place. */
+.icon svg { animation: fade-in var(--duration-base) var(--ease-out); }
+.icon[data-icon-error] { outline: var(--stroke-width-subtle) dashed var(--color-status-critical); }
+
+/* Input: text field in a 32 px box, optional leading icon. <label class="input"> so the whole box focuses the field. */
+.input {
+  display: inline-flex; align-items: center; gap: var(--spacing-sm); height: var(--control-height); padding: 0 var(--spacing-md);
+  border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-sm);
+  background: var(--color-surface-raised); color: var(--color-text-tertiary); cursor: text;
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+}
+.input:hover { border-color: var(--color-border-strong); }
+/* Focus ring as a box-shadow rather than an outline, so it fades in with the border. */
+.input:focus-within { border-color: var(--color-accent); box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-accent); }
+.input input { flex: 1; min-width: 0; height: 100%; padding: 0; border: 0; outline: 0; background: none; color: var(--color-text-primary); font: var(--font-size-sm)/var(--line-height-tight) var(--font-family); }
+.input input::placeholder { color: var(--color-text-tertiary); }
+
+/* Select: native select in a 32 px box, optional inline label before the value, chevron drawn in CSS. */
+.select {
+  position: relative; display: inline-flex; align-items: center; gap: var(--spacing-xs); height: var(--control-height); padding: 0 var(--spacing-md);
+  border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-sm);
+  background: var(--color-surface-raised); cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+}
+.select:hover { border-color: var(--color-accent-border); }
+.select:focus-within { border-color: var(--color-accent); box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-accent); }
+/* Trimmed to cap height so the label sits on the optical center of the box. */
+.select__label { color: var(--color-text-tertiary); font-size: var(--font-size-sm); line-height: 1; white-space: nowrap; text-box: trim-both cap alphabetic; }
+.select select {
+  appearance: none; height: 100%; padding: 0 var(--spacing-xl) 0 0; border: 0; outline: 0; background: none; cursor: pointer;
+  color: var(--color-text-primary); font: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-tight) var(--font-family);
+}
+/* Chevron: a caret-down icon in its 16 px square, centered on the box, clicks pass through to the select. */
+/* Phosphor draws caret-down 1/32 of its box below center (0.5 px at 16 px): lifted by the same amount. */
+.select__icon { position: absolute; top: 50%; right: var(--spacing-md); transform: translateY(calc(-50% - var(--icon-size, 16px) / 32)); color: var(--color-text-secondary); pointer-events: none;
+  transition: transform var(--duration-base) var(--ease-spring), color var(--duration-fast) var(--ease-out); }
+/* The caret dips on hover: the box opens downward. */
+.select:hover .select__icon { transform: translateY(calc(-50% - var(--icon-size, 16px) / 32 + 2px)); color: var(--color-text-primary); }
+
+/* Breadcrumb: where the page sits, after the brand. Each parent is a link, the current page comes last (aria-current) and is not.
+   Separators are .breadcrumb__sep spans, one before each item, so the trail reads on from the brand. */
+.breadcrumb { display: inline-flex; align-items: center; gap: var(--spacing-2xs); min-width: 0; font-size: var(--font-size-md); color: var(--color-text-tertiary); }
+.breadcrumb a {
+  display: inline-flex; align-items: center; height: var(--control-height); padding: 0 var(--spacing-xs); border-radius: var(--radius-sm);
+  color: var(--color-text-secondary); text-decoration: none; white-space: nowrap;
+  transition: color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+}
+.breadcrumb a:hover, .breadcrumb a[data-force="hover"] { background: var(--color-surface-hover); color: var(--color-text-primary); }
+.breadcrumb a:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; }
+.breadcrumb__sep { color: var(--color-text-tertiary); }
+.breadcrumb [aria-current="page"] { overflow: hidden; padding: 0 var(--spacing-xs); color: var(--color-text-primary); font-weight: var(--font-weight-medium); white-space: nowrap; text-overflow: ellipsis; }
+
+/* Segmented: one toggle made of joined .btn, one of them pressed (aria-pressed="true"). */
+/* The whole group is one control high, like a button next to it. */
+.segmented { position: relative; display: inline-flex; height: var(--control-height); padding: 2px; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-sunken); }
+.segmented .btn { position: relative; height: 100%; border-color: transparent; background: none; color: var(--color-text-secondary); }
+.segmented .btn[data-variant="icon"] { width: calc(var(--control-height) - 4px); }
+.segmented .btn:hover, .segmented .btn[data-force="hover"] { border-color: transparent; background: var(--color-surface-hover); }
+.segmented .btn[aria-pressed="true"] { border-color: transparent; background: none; color: var(--color-text-primary); }
+/* The raised look is one indicator placed by ds.js under the pressed option: it slides to the next one instead of jumping. */
+.segmented__indicator { position: absolute; top: 2px; bottom: 2px; left: 0; box-sizing: border-box; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface-raised); box-shadow: var(--shadow-sm); }
+.segmented__indicator[data-ready] { transition: transform var(--duration-base) var(--ease-out), width var(--duration-base) var(--ease-out); }
+/* The newly pressed segment settles in with a small pop. */
+.segmented .btn[aria-pressed="true"] .icon { animation: pop-in var(--duration-base) var(--ease-spring); }
+.segmented .btn[aria-pressed="true"] .icon { color: var(--color-text-primary); }
+
+/* Accordion: a list of questions, each unfolds its answer. Native <details>, so it opens with the keyboard and without script. */
+.accordion__item { border-bottom: var(--stroke-width-subtle) solid var(--color-border); }
+.accordion__item:last-child { border-bottom: 0; }
+.accordion__item summary {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-md); padding: var(--spacing-md) 0; list-style: none; cursor: pointer;
+  color: var(--color-text-primary); font-weight: var(--font-weight-semibold); user-select: none; transition: color var(--duration-fast) var(--ease-out);
+}
+.accordion__item summary::-webkit-details-marker { display: none; }
+.accordion__item summary:hover { color: var(--color-accent); }
+.accordion__item summary:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; }
+.accordion__item summary .icon { color: var(--color-text-secondary); transition: transform var(--duration-base) var(--ease-out); }
+.accordion__item[open] summary .icon { transform: rotate(180deg); }
+.accordion__body { padding: 0 0 var(--spacing-md); color: var(--color-text-secondary); }
+/* The answer slides open and closed: its height animates from 0 to auto, its text fades in. */
+.accordion { interpolate-size: allow-keywords; }
+.accordion__item::details-content { height: 0; overflow: hidden; transition: height var(--duration-slow) var(--ease-out), content-visibility var(--duration-slow) allow-discrete; }
+.accordion__item[open]::details-content { height: auto; }
+.accordion__body { opacity: 0; transform: translateY(-4px); transition: opacity var(--duration-slow) var(--ease-out), transform var(--duration-slow) var(--ease-out); }
+.accordion__item[open] .accordion__body { opacity: 1; transform: none; }
+
+/* Value: a figure that changes live. Tabular digits, so a new value of the same length never jitters (Inter digits are proportional).
+   ds.js sets data-trend for --duration-flash when the text changes: a tint, and an arrow outside the box so nothing moves. */
+.value { position: relative; border-radius: var(--radius-xs); font-variant-numeric: tabular-nums; }
+.value[data-trend] { animation: value-flash var(--duration-flash) var(--ease-out); }
+@keyframes value-flash { from { background: var(--color-flash); box-shadow: 0 0 0 var(--spacing-xs) var(--color-flash); color: var(--color-accent); } }
+.value:is([data-trend="up"], [data-trend="down"])::after { position: absolute; left: 100%; padding-left: var(--spacing-xs); color: var(--color-accent); animation: fade-out var(--duration-flash) var(--ease-in) both; }
+.value[data-trend="up"]::after { content: "↑"; }
+.value[data-trend="down"]::after { content: "↓"; }
+
+/* Skeleton: holds the height of content still loading, one bar per line of text. Built by loadInto() in ds.js.
+   Invisible for its first --delay-show, so a fast answer never shows it. The last bar is shorter, like the end of a paragraph. */
+.skeleton { display: flex; flex-direction: column; animation: fade-in var(--duration-base) var(--ease-out) var(--delay-show) both; }
+.skeleton > span { height: var(--spacing-sm); margin-block: calc((1em * var(--line-height-normal) - var(--spacing-sm)) / 2); border-radius: var(--radius-xs); background: var(--color-border); }
+.skeleton > span:last-child:not(:first-child) { width: 60%; }
+.skeleton[data-variant="block"] { border-radius: var(--radius-lg); background: var(--color-border); }
+
+/* Tabs: a row of sections, one selected. One 2 px indicator, placed by ds.js, slides under the selected tab.
+   Selected and idle tabs share the same weight, so selecting never changes a tab's width. */
+.tabs { position: relative; display: flex; gap: var(--spacing-lg); border-bottom: var(--stroke-width-subtle) solid var(--color-border); }
+.tabs__tab {
+  display: inline-flex; align-items: center; gap: var(--spacing-xs); height: var(--control-height); padding: 0; border: 0; background: none;
+  color: var(--color-text-secondary); font: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-tight) var(--font-family); white-space: nowrap; cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.tabs__tab:hover, .tabs__tab[data-force="hover"] { color: var(--color-text-primary); }
+.tabs__tab[aria-selected="true"] { color: var(--color-text-primary); }
+.tabs__tab:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; border-radius: var(--radius-xs); }
+.tabs__tab:disabled { opacity: 0.4; cursor: not-allowed; }
+.tabs__indicator { position: absolute; bottom: -1px; left: 0; height: 2px; border-radius: var(--radius-full); background: var(--color-text-primary); }
+.tabs__indicator[data-ready] { transition: transform var(--duration-base) var(--ease-out), width var(--duration-base) var(--ease-out); }
+.tabs__panel { padding-top: var(--spacing-lg); }
+.tabs__panel:not([hidden]) { animation: fade-in var(--duration-base) var(--ease-out); }
+
+/* Menu: actions under a button (data-menu) or on right-click (data-context-menu). A .popover with menu rows. */
+.menu { position: fixed; z-index: 1000; width: 224px; max-width: calc(100vw - 16px); max-height: 320px; overflow: auto; gap: 0; padding: var(--spacing-xs); }
+.menu__item {
+  display: flex; align-items: center; gap: var(--spacing-sm); width: 100%; min-height: var(--control-height); padding: 0 var(--spacing-sm);
+  border: 0; border-radius: var(--radius-sm); background: none; color: var(--color-text-primary);
+  font: var(--font-weight-regular) var(--font-size-sm)/var(--line-height-tight) var(--font-family); text-align: left; cursor: pointer;
+}
+.menu__item .icon { color: var(--color-text-secondary); }
+.menu__item .kbd { margin-left: auto; }
+.menu__item:hover, .menu__item:focus-visible, .menu__item[data-force="hover"] { background: var(--color-surface-hover); outline: 0; }
+.menu__item[data-variant="critical"], .menu__item[data-variant="critical"] .icon { color: var(--color-status-critical); }
+.menu__item:disabled, .menu__item[aria-disabled="true"] { opacity: 0.4; cursor: not-allowed; }
+.menu__separator { height: var(--stroke-width-subtle); margin: var(--spacing-xs) calc(var(--spacing-xs) * -1); border: 0; background: var(--color-border); }
+.popover.menu[hidden] { display: none; }
+
+/* Modal and drawer: native <dialog>, opened by data-open="<id>" or showModal(). Esc closes the top one; data-close closes;
+   a press that starts and ends on the backdrop closes unless data-static. The page under it does not scroll. */
+.modal, .drawer {
+  display: flex; flex-direction: column; padding: 0; border: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised);
+  color: var(--color-text-primary); box-shadow: var(--shadow-lg);
+  opacity: 0; transition: opacity var(--duration-base) var(--ease-in), transform var(--duration-base) var(--ease-in), display var(--duration-base) allow-discrete, overlay var(--duration-base) allow-discrete;
+}
+.modal:not([open]), .drawer:not([open]) { display: none; }
+.modal[open], .drawer[open] { opacity: 1; transform: none; transition-timing-function: var(--ease-out); }
+.modal::backdrop, .drawer::backdrop { background: color-mix(in srgb, var(--color-scrim) 40%, transparent); opacity: 0; transition: opacity var(--duration-base) var(--ease-out), display var(--duration-base) allow-discrete, overlay var(--duration-base) allow-discrete; }
+.modal[open]::backdrop, .drawer[open]::backdrop { opacity: 1; }
+@starting-style {
+  .modal[open], .drawer[open], .modal[open]::backdrop, .drawer[open]::backdrop { opacity: 0; }
+}
+.modal { width: min(440px, calc(100vw - 32px)); max-height: min(78vh, 620px); border-radius: var(--radius-xl); transform: translateY(8px) scale(0.98); }
+@starting-style { .modal[open] { transform: translateY(8px) scale(0.98); } }
+.drawer { position: fixed; inset: 0 0 0 auto; width: min(320px, calc(100% - 40px)); max-width: none; height: 100%; max-height: none; margin: 0; border-width: 0 0 0 var(--stroke-width-subtle); transform: translateX(100%); }
+.drawer[data-side="left"] { inset: 0 auto 0 0; border-width: 0 var(--stroke-width-subtle) 0 0; transform: translateX(-100%); }
+@starting-style { .drawer[open] { transform: translateX(100%); } .drawer[data-side="left"][open] { transform: translateX(-100%); } }
+.dialog__head { display: flex; align-items: center; gap: var(--spacing-sm); min-height: 52px; padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-lg); }
+.dialog__title { flex: 1; min-width: 0; margin: 0; overflow: hidden; font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); white-space: nowrap; text-overflow: ellipsis; }
+.dialog__body { flex: 1; overflow: auto; overscroll-behavior: contain; padding: 0 var(--spacing-lg) var(--spacing-lg); color: var(--color-text-secondary); font-size: var(--font-size-md); line-height: var(--line-height-normal); }
+.dialog__foot { display: flex; justify-content: flex-end; gap: var(--spacing-sm); padding: var(--spacing-md) var(--spacing-lg); border-top: var(--stroke-width-subtle) solid var(--color-border); }
+html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
+
+/* Toast: short news about something that just happened, bottom right. Built by toast() in ds.js. */
+.toasts { position: fixed; right: var(--spacing-lg); bottom: var(--spacing-lg); z-index: 1100; display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-sm); pointer-events: none; }
+.toast {
+  display: flex; align-items: center; gap: var(--spacing-sm); max-width: 360px; min-height: 40px; padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-lg); background: var(--color-text-primary); box-shadow: var(--shadow-md); color: var(--color-surface-raised);
+  font-size: var(--font-size-sm); line-height: var(--line-height-normal); pointer-events: auto;
+  animation: enter var(--duration-slow) var(--ease-out);
+}
+.toast[data-leaving] { animation: fade-out var(--duration-base) var(--ease-in) forwards; }
+.toast__text { flex: 1; padding: var(--spacing-xs) 0; }
+.toast > .icon { color: inherit; }
+.toast[data-variant="success"] > .icon { color: var(--color-status-success); }
+.toast[data-variant="critical"] > .icon { color: var(--color-status-critical); }
+.toast .btn { height: 28px; border-color: transparent; background: none; color: inherit; }
+.toast .btn:hover { background: color-mix(in srgb, var(--color-surface-raised) 14%, transparent); border-color: transparent; }
+.toast .btn .icon { color: inherit; }
+
+/* Streaming text: an agent's answer revealed word by word by streamText(). A caret follows the last word while it streams. */
+.stream { margin: 0; color: var(--color-text-primary); font-size: var(--font-size-md); line-height: var(--line-height-normal); }
+.stream[aria-busy="true"]::after { content: ""; display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: text-bottom; background: var(--color-agent); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Typing: the agent is working on an answer. Three dots in agent violet, and what it is doing in words. */
+.typing { display: inline-flex; align-items: center; gap: var(--spacing-sm); color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+.typing__dots { display: inline-flex; gap: 3px; padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--radius-full); background: var(--color-agent-subtle); }
+.typing__dots i { width: 5px; height: 5px; border-radius: var(--radius-full); background: var(--color-agent); animation: typing calc(var(--duration-slow) * 4) var(--ease-out) infinite; }
+.typing__dots i:nth-child(2) { animation-delay: calc(var(--duration-slow) * 0.5); }
+.typing__dots i:nth-child(3) { animation-delay: var(--duration-slow); }
+@keyframes typing { 0%, 60%, 100% { opacity: 0.3; transform: none; } 30% { opacity: 1; transform: translateY(-2px); } }
+
+/* Steps: the plan of a run, one row per step. data-state on each li: done, active, failed, or nothing (pending).
+   The meta (a duration, a count) shows once its step is done; its room is kept, so rows never shift. */
+.steps { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; font-size: var(--font-size-md); }
+.steps > li { display: flex; align-items: center; gap: var(--spacing-sm); min-height: var(--control-height); color: var(--color-text-tertiary); transition: color var(--duration-base) var(--ease-out); }
+.steps > li::before {
+  content: ""; flex: none; display: grid; place-items: center; width: 16px; height: 16px; box-sizing: border-box;
+  border: var(--stroke-width-mid) solid var(--color-border-strong); border-radius: var(--radius-full);
+  color: var(--color-on-accent); font: var(--font-weight-semibold) 10px/1 var(--font-family);
+}
+.steps > li[data-state="active"] { color: var(--color-text-primary); }
+.steps > li[data-state="active"]::before { border-color: var(--color-agent-border); border-top-color: var(--color-agent); animation: spin calc(var(--duration-slow) * 2.5) linear infinite; }
+.steps > li[data-state="done"] { color: var(--color-text-secondary); }
+.steps > li[data-state="done"]::before { content: "✓"; border-color: var(--color-status-success); background: var(--color-status-success); animation: pop-in var(--duration-base) var(--ease-spring); }
+.steps > li[data-state="failed"] { color: var(--color-status-critical); }
+.steps > li[data-state="failed"]::before { content: "✕"; border-color: var(--color-status-critical); background: var(--color-status-critical); }
+.steps__meta { margin-left: auto; color: var(--color-text-tertiary); font: var(--font-weight-regular) var(--font-size-xs)/1 var(--font-family-mono); visibility: hidden; }
+.steps > li[data-state="done"] .steps__meta { visibility: visible; animation: fade-in var(--duration-base) var(--ease-out); }
+
+/* Progress: a run with a measurable end. setProgress() moves the fill and the readout together, in whole percents,
+   so they never disagree. Without a value yet, the fill crawls towards a third and waits there. */
+.progress { display: grid; grid-template-columns: 1fr auto; gap: var(--spacing-xs) var(--spacing-md); font-size: var(--font-size-sm); }
+.progress__label { color: var(--color-text-secondary); }
+.progress__value { color: var(--color-text-primary); font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-normal) var(--font-family-mono); font-variant-numeric: tabular-nums; }
+.progress__track { grid-column: 1 / -1; height: 4px; overflow: hidden; border-radius: var(--radius-full); background: var(--color-surface-hover); }
+.progress__fill { width: calc(var(--progress, 0) * 1%); height: 100%; border-radius: inherit; background: var(--color-accent); transition: width var(--duration-slow) var(--ease-out); }
+.progress[data-state="unknown"] .progress__fill { width: 35%; transition: width calc(var(--duration-slow) * 20) cubic-bezier(0.1, 0.6, 0.3, 1); }
+.progress[data-state="done"] .progress__fill { background: var(--color-status-success); }
+
+/* Pagination: built by ds.js from data-pages and data-page. Always the same number of slots, each as wide as the
+   largest page number, so moving through pages never moves the arrows. */
+.pagination { --slot: calc(var(--digits, 1) * 1ch + var(--spacing-lg) + 2 * var(--stroke-width-subtle)); display: inline-flex; align-items: center; gap: 2px; }
+.pagination .btn:not([data-variant]) { width: var(--slot); padding: 0; }
+.pagination .btn { padding: 0; font-family: var(--font-family-mono); font-variant-numeric: tabular-nums; }
+.pagination .btn:not([aria-current]) { border-color: transparent; background: none; }
+.pagination .btn[aria-current="page"] { background: var(--color-accent-subtle); border-color: var(--color-accent-border); color: var(--color-accent); }
+/* Same font as the page buttons: 1ch is measured in the element's own font, so a gap is exactly a slot wide. */
+.pagination__gap { display: inline-grid; place-items: center; width: var(--slot); color: var(--color-text-tertiary); font: var(--font-weight-medium) var(--font-size-sm)/1 var(--font-family-mono); }
+
+/* Table: data rows. data-sortable makes header buttons sort: ascending, descending, then back to the original order.
+   Rows glide to their new place instead of jumping. */
+.table { width: 100%; border-collapse: collapse; font-size: var(--font-size-md); }
+.table th, .table td { height: 40px; padding: 0 var(--spacing-md); border-bottom: var(--stroke-width-subtle) solid var(--color-border); text-align: left; white-space: nowrap; }
+.table th { height: var(--control-height); color: var(--color-text-tertiary); font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); text-transform: uppercase; }
+.table td { color: var(--color-text-primary); font-variant-numeric: tabular-nums; }
+.table [data-align="end"] { text-align: right; }
+.table tbody tr { background: var(--color-surface-raised); }
+.table tbody tr:hover { background: var(--color-surface-hover); }
+.table th button { display: inline-flex; align-items: center; gap: var(--spacing-xs); height: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-transform: inherit; cursor: pointer; }
+.table th button:hover, .table th[aria-sort]:not([aria-sort="none"]) button { color: var(--color-text-primary); }
+.table th button::after { content: "↕"; opacity: 0.4; }
+.table th[aria-sort="ascending"] button::after { content: "↑"; opacity: 1; }
+.table th[aria-sort="descending"] button::after { content: "↓"; opacity: 1; }
+
+/* Table of contents with scroll spy: the link of the section being read carries aria-current, set by ds.js. */
+.toc { display: flex; flex-direction: column; gap: 2px; border-left: var(--stroke-width-subtle) solid var(--color-border); font-size: var(--font-size-sm); }
+.toc a { margin-left: -1px; padding: var(--spacing-xs) var(--spacing-md); border-left: 2px solid transparent; color: var(--color-text-secondary); text-decoration: none; transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-base) var(--ease-out); }
+.toc a:hover { color: var(--color-text-primary); }
+.toc a[aria-current] { border-left-color: var(--color-accent); color: var(--color-text-primary); font-weight: var(--font-weight-medium); }
+
+/* Sticky header: stays on top of a scrolling page. Once content passes under it, ds.js sets data-stuck: a hairline
+   appears and the subtitle fades out. Its height never changes, so the content under it never jumps. */
+.sticky-header { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: var(--spacing-md); height: 56px; padding: 0 var(--spacing-lg); border-bottom: var(--stroke-width-subtle) solid transparent; background: var(--color-surface-raised); transition: border-color var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out); }
+.sticky-header[data-stuck] { border-bottom-color: var(--color-border); box-shadow: var(--shadow-sm); }
+.sticky-header__titles { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.sticky-header__title { margin: 0; overflow: hidden; font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); white-space: nowrap; text-overflow: ellipsis; }
+.sticky-header__subtitle { overflow: hidden; color: var(--color-text-tertiary); font-size: var(--font-size-xs); white-space: nowrap; text-overflow: ellipsis; transition: opacity var(--duration-base) var(--ease-out); }
+.sticky-header[data-stuck] .sticky-header__subtitle { opacity: 0; }
+
+/* Hold to confirm: a .btn with data-hold for an action that cannot be undone. Holding fills it; letting go early drains
+   it faster than it filled. Only a full hold fires the "confirm" event. Built by ds.js. */
+.btn[data-hold] { position: relative; overflow: hidden; isolation: isolate; }
+.btn__fill { position: absolute; inset: 0; z-index: -1; background: var(--color-status-critical-subtle); transform: scaleX(0); transform-origin: left; }
+.btn[data-hold][data-state="done"] { border-color: var(--color-status-critical); color: var(--color-status-critical); }
+

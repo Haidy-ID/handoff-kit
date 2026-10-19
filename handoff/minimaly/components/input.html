@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Input</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../ds.css">
+  <link rel="stylesheet" href="../../playground/specimen.css">
+</head>
+<body>
+  <div class="specimen" style="--cols: 3">
+    <span></span><span class="col">Empty</span><span class="col">Filled</span><span class="col">Focus</span>
+    <span class="row">Default</span>
+    <label class="input" style="width: 240px"><input placeholder="Project name"></label>
+    <label class="input" style="width: 240px"><input value="Atlas"></label>
+    <label class="input" style="width: 240px"><input id="focus" value="Atl"></label>
+    <span class="row">Search</span>
+    <label class="input" style="width: 240px"><i class="icon" data-icon="magnifying-glass"></i><input type="search" placeholder="Search topics"></label>
+    <label class="input" style="width: 240px"><i class="icon" data-icon="magnifying-glass"></i><input type="search" value="loan"></label>
+    <span></span>
+  </div>
+  <script>document.getElementById("focus").focus();</script>
+  <script src="../ds.js"></script>
+</body>
+</html>

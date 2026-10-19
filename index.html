@@ -1,0 +1,27 @@
+<!doctype html>
+<!-- Topic list: every topic of topics.json, search, group by application, team or PI. Name and intro come from handoff.config.json. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Handoffs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="handoff/handoff.css">
+</head>
+<body class="landing">
+  <header class="topbar"><a class="brand" id="brand" href="./"></a><a class="btn" data-variant="ghost" href="handoff/playground/" data-tip="Browse the components of the design systems: variants, states and usage"><i class="icon" data-icon="puzzle-piece"></i>Components</a></header>
+  <main class="page">
+    <h1 id="title"></h1>
+    <p class="intent" id="intro"></p>
+    <div class="controls">
+      <label class="input search"><i class="icon" data-icon="magnifying-glass"></i><input type="search" id="q" placeholder="Search by title, application, team or PI" aria-label="Search topics"></label>
+      <label class="select"><span class="select__label">Group by</span><select id="group"></select><i class="icon select__icon" data-icon="caret-down"></i></label>
+      <label class="select"><span class="select__label">Show</span><select id="show"><option value="all">All</option><option value="active">In progress</option><option value="shipped">Shipped</option></select><i class="icon select__icon" data-icon="caret-down"></i></label>
+    </div>
+    <div id="list"></div>
+  </main>
+  <script src="handoff/list.js"></script>
+  <script src="handoff/minimaly/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "My Handoffs",
+  "intro": "Screens, states and flows ready for development.",
+  "logo": "",
+  "url": "",
+  "groupBy": ["app", "team", "pi"],
+  "teams": ["Core"],
+  "designSystems": {}
+}

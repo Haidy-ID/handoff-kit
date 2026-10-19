@@ -1,0 +1,409 @@
+[
+  {
+    "id": "button",
+    "class": "btn",
+    "name": "Button",
+    "variants": [
+      "default",
+      "primary",
+      "ghost",
+      "icon"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "pressed",
+      "disabled"
+    ]
+  },
+  {
+    "id": "badge",
+    "class": "badge",
+    "name": "Badge",
+    "variants": [
+      "neutral",
+      "critical",
+      "warning",
+      "success",
+      "accent"
+    ],
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "chip",
+    "class": "chip",
+    "name": "Chip",
+    "variants": [
+      "default",
+      "round",
+      "accent"
+    ],
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "avatar",
+    "class": "avatar",
+    "name": "Avatar",
+    "variants": [
+      "default",
+      "lg"
+    ],
+    "states": [
+      "initials",
+      "photo",
+      "stack"
+    ]
+  },
+  {
+    "id": "kbd",
+    "class": "kbd",
+    "name": "Kbd",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "card",
+    "class": "card",
+    "name": "Card",
+    "variants": [
+      "default",
+      "accent"
+    ],
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "divider",
+    "class": "divider",
+    "name": "Divider",
+    "variants": [
+      "default",
+      "quiet"
+    ],
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "tooltip",
+    "class": "tooltip",
+    "name": "Tooltip",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "popover",
+    "class": "popover",
+    "name": "Popover",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "icon",
+    "class": "icon",
+    "name": "Icon",
+    "variants": [
+      "regular",
+      "bold",
+      "fill",
+      "light",
+      "thin",
+      "duotone"
+    ],
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "input",
+    "class": "input",
+    "name": "Input",
+    "variants": [
+      "default",
+      "search"
+    ],
+    "states": [
+      "empty",
+      "filled",
+      "focus"
+    ]
+  },
+  {
+    "id": "select",
+    "class": "select",
+    "name": "Select",
+    "variants": [
+      "default",
+      "labelled"
+    ],
+    "states": [
+      "default",
+      "focus"
+    ]
+  },
+  {
+    "id": "segmented",
+    "class": "segmented",
+    "name": "Segmented",
+    "variants": [
+      "text",
+      "icon"
+    ],
+    "states": [
+      "default",
+      "hover"
+    ]
+  },
+  {
+    "id": "breadcrumb",
+    "class": "breadcrumb",
+    "name": "Breadcrumb",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default",
+      "hover"
+    ]
+  },
+  {
+    "id": "accordion",
+    "class": "accordion",
+    "name": "Accordion",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "closed",
+      "open",
+      "hover"
+    ]
+  },
+  {
+    "id": "async-button",
+    "class": "btn",
+    "name": "Async button",
+    "variants": [
+      "default",
+      "primary",
+      "copy"
+    ],
+    "states": [
+      "idle",
+      "busy",
+      "done",
+      "error"
+    ]
+  },
+  {
+    "id": "value",
+    "class": "value",
+    "name": "Value",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "rising",
+      "falling"
+    ]
+  },
+  {
+    "id": "skeleton",
+    "class": "skeleton",
+    "name": "Skeleton",
+    "variants": [
+      "text",
+      "block"
+    ],
+    "states": [
+      "loading"
+    ]
+  },
+  {
+    "id": "tabs",
+    "class": "tabs",
+    "name": "Tabs",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "selected",
+      "idle",
+      "hover",
+      "disabled"
+    ]
+  },
+  {
+    "id": "menu",
+    "class": "menu",
+    "name": "Menu",
+    "variants": [
+      "button",
+      "context"
+    ],
+    "states": [
+      "item",
+      "hover",
+      "disabled",
+      "critical"
+    ]
+  },
+  {
+    "id": "dialog",
+    "class": "modal",
+    "name": "Modal and drawer",
+    "variants": [
+      "modal",
+      "drawer"
+    ],
+    "states": [
+      "open",
+      "static"
+    ]
+  },
+  {
+    "id": "toast",
+    "class": "toast",
+    "name": "Toast",
+    "variants": [
+      "neutral",
+      "success",
+      "critical"
+    ],
+    "states": [
+      "default",
+      "with action"
+    ]
+  },
+  {
+    "id": "stream",
+    "class": "stream",
+    "name": "Streaming text",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "streaming",
+      "done"
+    ]
+  },
+  {
+    "id": "typing",
+    "class": "typing",
+    "name": "Typing",
+    "variants": [
+      "dots",
+      "label"
+    ],
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "steps",
+    "class": "steps",
+    "name": "Steps",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "pending",
+      "active",
+      "done",
+      "failed"
+    ]
+  },
+  {
+    "id": "progress",
+    "class": "progress",
+    "name": "Progress",
+    "variants": [
+      "known",
+      "unknown"
+    ],
+    "states": [
+      "running",
+      "done"
+    ]
+  },
+  {
+    "id": "pagination",
+    "class": "pagination",
+    "name": "Pagination",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "current",
+      "hover",
+      "disabled"
+    ]
+  },
+  {
+    "id": "table",
+    "class": "table",
+    "name": "Table",
+    "variants": [
+      "default",
+      "sortable"
+    ],
+    "states": [
+      "unsorted",
+      "ascending",
+      "descending"
+    ]
+  },
+  {
+    "id": "toc",
+    "class": "toc",
+    "name": "Table of contents",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "current"
+    ]
+  },
+  {
+    "id": "sticky-header",
+    "class": "sticky-header",
+    "name": "Sticky header",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "rest",
+      "stuck"
+    ]
+  },
+  {
+    "id": "hold-button",
+    "class": "btn",
+    "name": "Hold to confirm",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "idle",
+      "holding",
+      "confirmed"
+    ]
+  }
+]
