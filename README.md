@@ -49,7 +49,12 @@ A design system folder holds `components.json` (id, class, name, variants, state
 
 ## Update
 
-Download the new release zip and replace your `handoff/` folder with its `handoff/`. Your topics and config stay untouched. `handoff/VERSION` gives the version you run; `CHANGELOG.md` lists what changed and what to migrate.
+Click the update button (arrow in a circle) in the topbar: it shows the installed version and the latest release.
+
+- With `python serve.py`: **Update** downloads the release and replaces `handoff/`, then reloads the page.
+- Elsewhere (published site, other server): **Download zip**, then replace your `handoff/` folder with the one inside.
+
+Topics, `topics.json` and `handoff.config.json` stay untouched. The release notes say when a `topic.json` needs a change. The update route of `serve.py` only answers requests from the same machine and from the page itself.
 
 ## Viewer
 

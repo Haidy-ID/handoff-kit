@@ -22,6 +22,7 @@
   document.getElementById("brand").innerHTML = `${logo ? `<img src="${logo}" alt="" width="40" height="40">` : ""}<b>${esc(site.name)}</b>`;
   document.getElementById("title").textContent = site.name;
   document.getElementById("intro").textContent = site.intro || "";
+  document.head.append(Object.assign(document.createElement("script"), { src: new URL("updates.js", KIT) }));
 
   // A topic with two teams shows in both team groups.
   const KEYS = {

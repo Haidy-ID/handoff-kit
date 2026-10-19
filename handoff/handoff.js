@@ -163,6 +163,7 @@
     <div class="toast" id="toast"></div>`;
   renderIcons();
   applyTheme();
+  document.head.append(Object.assign(document.createElement("script"), { src: new URL("updates.js", KIT) }));
 
   const toast = (text) => {
     const t = document.getElementById("toast");

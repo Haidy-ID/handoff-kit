@@ -264,3 +264,12 @@ section { margin-top: 48px; }
 .inspect__row[data-copied] .inspect__val small { display: none; }
 .inspect__done { flex: none; margin-left: auto; color: var(--color-accent); font-weight: 600; }
 .inspect__empty { margin: 0; padding: 14px; color: var(--text-3); }
+
+/* Update panel: under the update button of the topbar (updates.js). */
+.update-panel { position: fixed; z-index: 1000; width: 280px; }
+.update-panel__row { display: flex; justify-content: space-between; font-size: 13px; }
+.update-panel__row span { color: var(--text-3); }
+.update-panel__row b { font-family: var(--font-family-mono); font-weight: 500; }
+.update-panel__note { display: flex; gap: 6px; align-items: baseline; margin: 0; color: var(--text-2); font-size: 12px; line-height: 1.5; }
+.update-panel__note--error { color: var(--color-status-critical); }
+.update-panel .popover__foot { justify-content: flex-end; }
