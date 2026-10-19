@@ -6,7 +6,14 @@
   // Minimaly icons and tooltips (ds.js) load in parallel with the topic: renderIcons() runs after each render.
   const dsReady = new Promise((resolve) => document.head.appendChild(Object.assign(document.createElement("script"), { src: new URL("minimaly/ds.js", KIT), onload: resolve })));
   const get = (url) => fetch(url, { cache: "no-store" }).then((r) => r.json());
-  const [topic, site] = await Promise.all([get("topic.json"), get(new URL("handoff.config.json", ROOT))]);
+  const load = (src) => new Promise((resolve) => document.head.appendChild(Object.assign(document.createElement("script"), { src, onload: resolve })));
+  // journal.md next to topic.json is optional: the iteration log of the topic, shown as the Journal section.
+  const [topic, site, journal] = await Promise.all([
+    get("topic.json"),
+    get(new URL("handoff.config.json", ROOT)),
+    fetch("journal.md", { cache: "no-store" }).then((r) => (r.ok ? r.text() : "")),
+    load(new URL("markdown.js", KIT)),
+  ]);
   topic.screens ??= [];
   // A state is { name, note }: the name drives ?state=, the note is shown where the state is looked at
   // (under the screen in Prototype, in the tooltip of its button).
@@ -89,9 +96,11 @@
   };
 
 
-  // Trail: the topic list (the brand), the application (a filtered list), then this topic.
+  // Trail: home (the brand), the group whose folder holds the topic, the application (a filtered list), then this topic.
+  const group = site.groups.find((g) => HERE.startsWith(new URL(`${g.path}/`, ROOT).href));
   const breadcrumb = () => {
-    const trail = topic.app ? [[topic.app, `${ROOT}?q=${encodeURIComponent(topic.app)}`]] : [];
+    const list = new URL(`${group.path}/`, ROOT);
+    const trail = [[group.title, list], ...(topic.app ? [[topic.app, `${list}?q=${encodeURIComponent(topic.app)}`]] : [])];
     const sep = '<span class="breadcrumb__sep">/</span>';
     return `<nav class="breadcrumb" aria-label="Breadcrumb">${trail.map(([label, href]) => `${sep}<a href="${href}">${esc(label)}</a>`).join("")}${sep}<span aria-current="page">${esc(topic.title)}</span></nav>`;
   };
@@ -99,7 +108,7 @@
   // Site name and optional logo from handoff.config.json; the logo is the tab icon too.
   const logo = site.logo && new URL(site.logo, ROOT);
   if (logo) document.head.append(Object.assign(document.createElement("link"), { rel: "icon", href: logo }));
-  const brand = () => `<a class="brand" href="${ROOT}" data-tip="Back to the topics">${logo ? `<img src="${logo}" alt="" width="40" height="40">` : ""}<b>${esc(site.name)}</b></a>`;
+  const brand = () => `<a class="brand" href="${ROOT}" data-tip="Back to home">${logo ? `<img src="${logo}" alt="" width="40" height="40">` : ""}<b>${esc(site.name)}</b></a>`;
 
   const story = (text) => esc(text).replace(/^(As an? [^,]+),/, "<b>$1</b>,");
   const flowCard = (f, i) => `
@@ -113,11 +122,13 @@
         </article>`;
 
   // A UX deliverable: a working document of the topic (a ranking sheet, a study), not a screen of the product.
+  // A Markdown deliverable (a story, a study) opens in the reader page, where screen links play in the prototype.
+  const deliverableUrl = (file) => (/\.md$/i.test(file) ? `${KIT}doc.html?topic=${encodeURIComponent(HERE.slice(ROOT.href.length))}&file=${encodeURIComponent(file)}` : file);
   const deliverableCard = (d) => `
         <article class="flow">
           <header class="flow__head">
             <h3 class="flow__name">${esc(d.name)}</h3>
-            <span class="flow__tools"><a class="btn" href="${esc(d.file)}" target="_blank" data-tip="Open this deliverable in a new tab">${icon("arrow-square-out")}Open</a></span>
+            <span class="flow__tools"><a class="btn" href="${esc(deliverableUrl(d.file))}" target="_blank" data-tip="Open this deliverable in a new tab">${icon("arrow-square-out")}Open</a></span>
           </header>
           ${d.statement ? `<p class="flow__statement">${esc(d.statement)}</p>` : ""}
         </article>`;
@@ -159,11 +170,12 @@
       }).join("")}</div></section>` : ""}
       ${topic.qa?.length ? `<section><h2>${icon("chats-circle")}Q&amp;A</h2><div class="accordion">${topic.qa.map((x) => `<details class="accordion__item"><summary>${esc(x.q)}${icon("caret-down")}</summary><div class="accordion__body">${esc(x.a)}</div></details>`).join("")}</div></section>` : ""}
       ${topic.questions?.length ? `<section><h2>${icon("question")}Open questions</h2>${topic.questions.map((q) => `<p class="question">${icon("question")}${esc(q)}</p>`).join("")}</section>` : ""}
+      ${journal.trim() ? `<section><h2>${icon("notebook")}Journal</h2><div class="md">${renderMarkdown(journal, { link: (href) => { const m = href.match(/^screen:([\w-]+)(?::([\w-]+))?$/); return m ? `?view=prototype&flow=all&at=${encodeURIComponent(`${m[1]}:${m[2] || ""}`)}` : href; } })}</div></section>` : ""}
     </main>
     <div class="toast" id="toast"></div>`;
   renderIcons();
   applyTheme();
-  document.head.append(Object.assign(document.createElement("script"), { src: new URL("updates.js", KIT) }));
+  for (const name of ["updates.js", "live.js"]) document.head.append(Object.assign(document.createElement("script"), { src: new URL(name, KIT) }));
 
   const toast = (text) => {
     const t = document.getElementById("toast");

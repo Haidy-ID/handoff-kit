@@ -276,3 +276,17 @@ section { margin-top: 48px; }
 .update-panel .popover__foot { justify-content: flex-end; }
 #update-toggle { position: relative; }
 #update-toggle[data-update]::after { content: ""; position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; border: 1.5px solid var(--color-surface); border-radius: 50%; background: var(--color-accent); }
+
+/* Markdown: the topic journal and the Markdown deliverables (markdown.js). */
+.md { max-width: 720px; color: var(--text-2); font-size: 15px; line-height: 1.6; }
+.md > :first-child { margin-top: 0; }
+.md h2, .md h3, .md h4, .md h5 { margin: 24px 0 8px; color: var(--text); font-size: 15px; font-weight: 600; }
+.md h2 { font-size: 22px; }
+.md p, .md ul, .md ol, .md blockquote { margin: 0 0 12px; }
+.md ul, .md ol { padding-left: 20px; }
+.md blockquote { padding-left: 12px; border-left: 2px solid var(--line); }
+.md code { font-family: var(--font-family-mono); font-size: 13px; }
+.md a { color: var(--color-accent); }
+.md-gap { display: flex; gap: 8px; align-items: baseline; }
+.md--doc { margin: 0 auto; }
+.md--doc h2:first-child { font-size: 32px; }

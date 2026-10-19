@@ -1,9 +1,24 @@
 {
   "name": "My Handoffs",
-  "intro": "Screens, states and flows ready for development.",
+  "intro": "Mockups, handoffs and prototypes.",
   "logo": "",
   "url": "",
-  "groupBy": ["app", "team", "pi"],
   "teams": ["Core"],
-  "designSystems": {}
+  "designSystems": {},
+  "groups": [
+    {
+      "title": "Handoffs",
+      "path": "handoffs",
+      "icon": "stack",
+      "text": "Screens, states and flows ready for development.",
+      "groupBy": ["app", "team", "pi"]
+    },
+    {
+      "title": "Explorations",
+      "path": "explorations",
+      "icon": "lightbulb",
+      "text": "Concepts and free prototypes, some with a handoff.",
+      "groupBy": ["team", "pi"]
+    }
+  ]
 }

@@ -1,28 +1,32 @@
-// Topic list of the site root index.html: <script src="handoff/list.js"></script>.
-// Reads handoff.config.json and topics.json at the site root. Topic paths are relative to the root.
+// Topic list of a group folder (<group>/index.html): <script src="../handoff/list.js"></script>.
+// Reads handoff.config.json at the site root and the topics.json next to the page. Topic paths are relative to the group folder.
 // The view lives in the URL (?q=&group=&show=) so it can be shared as a link.
 (async () => {
   const KIT = new URL(".", document.currentScript.src);
   const ROOT = new URL("..", KIT);
+  const BASE = new URL(".", location.href);
   const STATUS = { draft: "Draft", review: "In review", ready: "Ready for development", shipped: "Shipped" };
   const TONE = { draft: "warning", review: "accent", ready: "success" };
   const LABEL = { app: "Application", team: "Team", pi: "PI" };
   const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const get = (f) => fetch(new URL(f, ROOT), { cache: "no-store" }).then((r) => r.json());
+  const get = (url) => fetch(url, { cache: "no-store" }).then((r) => r.json());
 
-  const [site, paths] = await Promise.all([get("handoff.config.json"), get("topics.json")]);
-  const topics = await Promise.all(paths.map((p) => get(`${p}/topic.json`).then((t) => ({ ...t, path: p }))));
-  const GROUPS = site.groupBy;
+  const [site, paths] = await Promise.all([get(new URL("handoff.config.json", ROOT)), get(new URL("topics.json", BASE))]);
+  const topics = await Promise.all(paths.map((p) => get(new URL(`${p}/topic.json`, BASE)).then((t) => ({ ...t, path: p }))));
+  // This page's group: the one whose folder holds it.
+  const group = site.groups.find((g) => BASE.href === new URL(`${g.path}/`, ROOT).href);
+  const GROUPS = group.groupBy;
   const TEAMS = site.teams || [];
 
-  // Header from the config: brand (logo is the tab icon too), title and intro.
+  // Header: brand from the config (logo is the tab icon too), title and intro from the group.
   const logo = site.logo && new URL(site.logo, ROOT);
   if (logo) document.head.append(Object.assign(document.createElement("link"), { rel: "icon", href: logo }));
-  document.title = site.name;
+  document.title = `${group.title} · ${site.name}`;
   document.getElementById("brand").innerHTML = `${logo ? `<img src="${logo}" alt="" width="40" height="40">` : ""}<b>${esc(site.name)}</b>`;
-  document.getElementById("title").textContent = site.name;
-  document.getElementById("intro").textContent = site.intro || "";
-  document.head.append(Object.assign(document.createElement("script"), { src: new URL("updates.js", KIT) }));
+  document.getElementById("crumb").textContent = group.title;
+  document.getElementById("title").textContent = group.title;
+  document.getElementById("intro").textContent = group.text || "";
+  for (const name of ["updates.js", "live.js"]) document.head.append(Object.assign(document.createElement("script"), { src: new URL(name, KIT) }));
 
   // A topic with two teams shows in both team groups.
   const KEYS = {
@@ -43,7 +47,7 @@
   const matches = (q) => (t) => q.toLowerCase().split(/\s+/).filter(Boolean).every((w) => haystack(t).includes(w));
 
   // A topic with screens opens on its handoff page, a free prototype opens on its own entry point.
-  const href = (t) => (t.screens?.length || !t.prototype ? `${ROOT}${t.path}/` : `${ROOT}${t.path}/${t.prototype}`);
+  const href = (t) => (t.screens?.length || !t.prototype ? `${BASE}${t.path}/` : `${BASE}${t.path}/${t.prototype}`);
   const icon = (name) => `<i class="icon" data-icon="${name}"></i>`;
   const chip = (text, iconName, round) => (text ? `<span class="chip"${round ? ' data-variant="round"' : ""}>${icon(iconName)}${esc(text)}</span>` : "");
 
@@ -54,7 +58,7 @@
     if (!src) return `<span class="thumb"></span>`;
     const vp = t.viewport || { width: 1440, height: 900 };
     const scale = THUMB.width / vp.width;
-    return `<span class="thumb"><iframe src="${ROOT}${t.path}/${src}" width="${vp.width}" height="${Math.ceil(THUMB.height / scale)}" style="transform:scale(${scale})" loading="lazy" tabindex="-1" aria-hidden="true"></iframe></span>`;
+    return `<span class="thumb"><iframe src="${BASE}${t.path}/${src}" width="${vp.width}" height="${Math.ceil(THUMB.height / scale)}" style="transform:scale(${scale})" loading="lazy" tabindex="-1" aria-hidden="true"></iframe></span>`;
   };
 
   const row = (t) => `

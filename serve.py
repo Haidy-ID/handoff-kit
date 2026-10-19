@@ -1,8 +1,10 @@
 # Local preview server: python serve.py [port], then http://localhost:8000
 # Same as `python -m http.server`, plus Cache-Control: no-store so an edited CSS or JS file shows on a plain reload,
-# and POST /__handoff/update, which installs the latest kit release (the update button of the pages).
+# GET /__handoff/revision for the live reload of the pages, and POST /__handoff/update, which installs the latest
+# kit release (the update button of the pages).
 import importlib.util
 import json
+import os
 import socket
 import sys
 from functools import partial
@@ -20,6 +22,20 @@ class NoCacheHandler(SimpleHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store")
         super().end_headers()
 
+    def do_GET(self):
+        # Live reload: the pages poll the latest change time of the site files and reload when it moves.
+        if self.path == "/__handoff/revision":
+            return self.send_json({"revision": revision()}, 200)
+        super().do_GET()
+
+    def send_json(self, body, status):
+        data = json.dumps(body).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
     def do_POST(self):
         if self.path != "/__handoff/update":
             return self.send_error(404)
@@ -34,12 +50,25 @@ class NoCacheHandler(SimpleHTTPRequestHandler):
             body, status = {"version": updater.install()}, 200
         except Exception as e:
             body, status = {"error": str(e)}, 500
-        data = json.dumps(body).encode()
-        self.send_response(status)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Content-Length", str(len(data)))
-        self.end_headers()
-        self.wfile.write(data)
+        self.send_json(body, status)
+
+    def log_message(self, format, *args):
+        # The live reload polls every second: keep it out of the console.
+        if "/__handoff/revision" not in self.requestline:
+            super().log_message(format, *args)
+
+
+def revision():
+    # Newest modification time among the site files; hidden folders (.git) skipped.
+    latest = 0
+    for folder, dirs, files in os.walk(ROOT):
+        dirs[:] = [d for d in dirs if not d.startswith(".") and d != "node_modules"]
+        for name in files:
+            try:
+                latest = max(latest, os.stat(os.path.join(folder, name)).st_mtime_ns)
+            except OSError:
+                pass
+    return latest
 
 
 class DualStackServer(ThreadingHTTPServer):

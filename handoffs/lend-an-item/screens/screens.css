@@ -21,7 +21,7 @@ body > .btn { width: 100%; }
 
 .field { display: flex; flex-direction: column; gap: var(--spacing-xs); }
 .field__label { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
-.field__label small { color: var(--color-text-tertiary); font-weight: var(--font-weight-regular); }
+.field__label small { color: var(--color-text-secondary); font-weight: var(--font-weight-regular); }
 .field .input { width: 100%; }
 .field__error { display: none; margin: 0; color: var(--color-status-critical); font-size: var(--font-size-sm); }
 .field[aria-invalid="true"] .input { border-color: var(--color-status-critical); }

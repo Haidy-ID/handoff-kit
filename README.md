@@ -1,24 +1,29 @@
 # Handoff Kit
 
-Static handoff pages for UX/UI mockups: intent, screens with their states, flows, Q&A and open questions. Each topic opens as a page with a pannable canvas, a clickable prototype, a token inspector and Copy to Figma. No build, no dependency: HTML, CSS and JS served as is.
+Build UX/UI prototypes fast with an AI, iterate on them, and hand them to a team in one standard shape: intent, screens with their states, flows, Q&A, open questions, journal and stories. Each topic opens as a page with a pannable canvas, a clickable prototype, a token inspector and Copy to Figma. No build, no dependency: HTML, CSS and JS served as is.
 
 ## Start
 
 1. Download the latest release zip and unzip it.
 2. Edit `handoff.config.json` (see below).
 3. Run `python serve.py` and open http://localhost:8000. Pages load JSON with `fetch`: opening files from disk does not work.
+4. Ask your AI to read `AGENTS.md`, then to create a topic: the kit's skills tell it how.
 
 ## Layout
 
 ```
-index.html             topic list: search, group by application, team or PI
-handoff.config.json    your site: name, logo, address, teams, design systems
-topics.json            the topics shown in the list, paths from the root
-topics/<topic>/        index.html (handoff page) · topic.json · screens/
+index.html             home: one card per group
+handoff.config.json    your site: name, logo, address, teams, design systems, groups
+AGENTS.md, CLAUDE.md   entry point for AI agents, with room for your project notes
+handoffs/              a group: index.html (list) · topics.json · one folder per topic
+explorations/          another group, with a prototype-only topic
+  <topic>/             index.html (never edited) · topic.json · screens/ · journal.md · deliverables
 handoff/               the kit: replaced as a whole on update, never edited
-  minimaly/            design system of the handoff pages, usable for mockups
+  AGENTS.md            guide for agents: layout, rules, pitfalls
+  skills/              new-topic.md, build-mockup/ (skill, validator, render linter)
+  minimaly/            default design system
   playground/          component pages: handoff/playground/?ds=<name>#<component>
-serve.py               local server, no browser cache
+serve.py               local server: no cache, live reload, update route
 ```
 
 ## handoff.config.json
@@ -26,35 +31,41 @@ serve.py               local server, no browser cache
 | Key | Meaning |
 | --- | --- |
 | `name` | Site name, shown in the header and the tab. |
-| `intro` | One line under the name on the list. |
+| `intro` | One line under the name on the home page. |
 | `logo` | Optional logo path from the root, also the tab icon. |
 | `url` | Published address of the site. Copy post builds topic links from it. Empty: the current address. |
-| `groupBy` | List groupings, in order: `app`, `team`, `pi`. |
-| `teams` | Team order in the list. |
+| `teams` | Known teams, in list order. The validator flags others. |
 | `designSystems` | Your design systems: `{ "My DS": "design-systems/my-ds" }`, paths from the root. Minimaly is built in. |
+| `groups` | One entry per group folder: `title`, `path` (the folder), `icon` (a Phosphor name), `text`, `groupBy` (list groupings among `app`, `team`, `pi`). |
 
-## Add a topic
+A new group: add its entry, create the folder with a copy of `handoffs/index.html` and a `topics.json` holding `[]`.
 
-1. Copy `topics/lend-an-item/` to `topics/<your-topic>/`.
-2. Fill `topic.json`: title, intent, status (`draft`, `review`, `ready`, `shipped`), screens with their states, flows, Q&A, questions.
-3. Add its path to `topics.json`.
+## Topics
 
-A topic can sit at any depth: the two paths to `handoff/` in its `index.html` get one `../` per extra folder level.
+[handoff/skills/new-topic.md](handoff/skills/new-topic.md) describes a topic, a prototype-only topic, the journal and stories. In short:
 
-Screens read their state from `?state=<name>` (`screens.js` sets `data-state` on `<html>`). A flow step is `screen-id` or `screen-id:state`.
+- Copy `handoffs/lend-an-item/` (or `explorations/quick-capture/` for a prototype alone) into a group, fill `topic.json`, add the folder name to the group's `topics.json`.
+- Screens read their state from `?state=<name>`. A flow step is `screen-id` or `screen-id:state`.
+- `journal.md` logs each iteration, shown as the Journal section.
+- A `.md` deliverable (a story, a study) opens in a reader where `[label](screen:<id>)` plays that screen, and `> Gap: …` marks a moment no screen shows yet.
+- `node handoff/skills/build-mockup/validate.mjs <group>/<topic>` checks the screens against the design system. `handoff/skills/build-mockup/lint.html?topic=<group>/<topic>` checks their render.
 
-## Use your own design system
+## Your own design system
 
-A design system folder holds `components.json` (id, class, name, variants, states per component), `components/<id>.html` specimens and `catalog/<id>.md` cards. Declare it in `designSystems`, then set `"ds"` and `"components"` in a topic to link its components to the playground. Inspect reads tokens from the `:root` custom properties of the screens, whatever the design system.
+A design system folder holds `ds.css`, `ds.js`, `tokens.css`, `components.css`, `components.json` (id, class, name, variants, states per component), `components/<id>.html` specimens and `catalog/<id>.md` cards. Declare it in `designSystems`, then set `"ds"` and `"components"` in a topic. The playground shows its components and the topics that use each one. Inspect reads tokens from the `:root` custom properties of the screens, whatever the design system.
+
+## Live reload
+
+With `python serve.py`, every page reloads when a file of the site changes. The viewer keeps its place: mode, flow, screen and device live in the URL.
 
 ## Update
 
-Click the update button (arrow in a circle) in the topbar: it shows the installed version and the latest release.
+The update button (arrow in a circle) in the topbar shows the installed version and the latest release. On the local server, each page checks once an hour and puts a dot on the button when a release is newer.
 
 - With `python serve.py`: **Update** downloads the release and replaces `handoff/`, then reloads the page.
 - Elsewhere (published site, other server): **Download zip**, then replace your `handoff/` folder with the one inside.
 
-Topics, `topics.json` and `handoff.config.json` stay untouched. The release notes say when a `topic.json` needs a change. The update route of `serve.py` only answers requests from the same machine and from the page itself.
+Your groups, topics and `handoff.config.json` stay untouched. The release notes say when they need a change. The update route of `serve.py` only answers requests from the same machine and from the page itself.
 
 ## Viewer
 
@@ -66,7 +77,7 @@ Topics, `topics.json` and `handoff.config.json` stay untouched. The release note
 
 ## Publish
 
-GitHub Pages: push the folder, then Settings → Pages → Deploy from a branch → `main` and `/ (root)`. Keep the empty `.nojekyll` file. Links are relative, so the site also works in a subfolder.
+Optional. GitHub Pages: push the folder, then Settings → Pages → Deploy from a branch → `main` and `/ (root)`. Keep the empty `.nojekyll` file. A public repository publishes your mockups to everyone.
 
 ## License
 

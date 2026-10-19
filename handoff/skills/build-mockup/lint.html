@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- Render linter: /handoff/skills/build-mockup/lint.html?topic=<group>/<topic>
+     Renders every screen × state × theme at the topic viewport and checks the real geometry.
+     Result for agents: window.lintResult, and the JSON in #result. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Render lint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    @import "../../minimaly/tokens.css";
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: var(--spacing-xl) var(--spacing-2xl); background: var(--color-surface-raised); color: var(--color-text-primary); font: var(--font-size-lg)/var(--line-height-normal) var(--font-family); }
+    h1 { margin: 0; font-size: var(--font-size-3xl); font-weight: var(--font-weight-semibold); }
+    #summary { margin: var(--spacing-xs) 0 var(--spacing-xl); color: var(--color-text-secondary); }
+    #summary b.bad { color: var(--color-status-critical); }
+    #summary b.ok { color: var(--color-status-success); }
+    #grid { display: flex; flex-wrap: wrap; gap: var(--spacing-xl); }
+    .card { display: flex; flex-direction: column; gap: var(--spacing-sm); width: var(--w); }
+    .card h2 { margin: 0; font-size: var(--font-size-md); font-weight: var(--font-weight-semibold); }
+    .card h2 span { color: var(--color-text-tertiary); font-weight: var(--font-weight-regular); }
+    .frame { position: relative; overflow: hidden; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-lg); }
+    .frame iframe { position: absolute; top: 0; left: 0; border: 0; transform-origin: 0 0; }
+    .box { position: absolute; border: 2px solid var(--color-status-critical); pointer-events: none; }
+    .box.warning { border-color: var(--color-status-warning); }
+    .box.accepted { border: 1px dashed var(--color-text-tertiary); }
+    ul { margin: 0; padding: 0; list-style: none; font-size: var(--font-size-sm); }
+    li { padding: var(--spacing-xs) 0; border-top: var(--stroke-width-subtle) solid var(--color-border); }
+    li code { font-family: var(--font-family-mono); font-weight: var(--font-weight-semibold); }
+    li.error code { color: var(--color-status-critical); }
+    li.warning code { color: var(--color-status-warning); }
+    li.accepted { color: var(--color-text-tertiary); }
+    li small { display: block; color: var(--color-text-secondary); }
+    #result { display: none; }
+  </style>
+</head>
+<body>
+  <h1 id="title">Render lint</h1>
+  <p id="summary">Running…</p>
+  <div id="grid"></div>
+  <pre id="result"></pre>
+  <script src="lint.js"></script>
+  <script>
+    (async () => {
+      const topicPath = (new URLSearchParams(location.search).get("topic") || "").replace(/\/$/, "");
+      const KIT = new URL("../../", location.href);
+      const ROOT = new URL("..", KIT);
+      const base = new URL(`${topicPath}/`, ROOT);
+      const [topic, site] = await Promise.all([new URL("topic.json", base), new URL("handoff.config.json", ROOT)].map((url) => fetch(url, { cache: "no-store" }).then((r) => r.json())));
+      // <ds>/lint.json → acceptContrast: colors the design system keeps below the contrast threshold on purpose.
+      const dsUrl = topic.ds === "Minimaly" ? new URL("minimaly/", KIT) : new URL(`${(site.designSystems?.[topic.ds] || "").replace(/\/?$/, "/")}`, ROOT);
+      const rules = topic.ds ? await fetch(new URL("lint.json", dsUrl), { cache: "no-store" }).then((r) => (r.ok ? r.json() : {})) : {};
+      const vp = topic.viewport || { width: 390, height: 780 };
+      const WIDTH = 260;
+      const scale = WIDTH / vp.width;
+      const stateId = (label) => label.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+      document.getElementById("title").textContent = `Render lint · ${topic.title}`;
+      document.title = `${topic.title} · Render lint`;
+
+      const runs = topic.screens.flatMap((s) => (s.states?.length ? s.states.map((st) => st.name) : [null]).flatMap((state) => ["light", "dark"].map((theme) => ({ s, state, theme }))));
+      const grid = document.getElementById("grid");
+      const all = [];
+
+      // One run at a time: same rendering conditions for every frame, and a stable order in the output.
+      for (const { s, state, theme } of runs) {
+        const card = document.createElement("section");
+        card.className = "card";
+        card.style.setProperty("--w", `${WIDTH}px`);
+        card.innerHTML = `<h2>${esc(s.label)} <span>· ${esc(state || "Default")} · ${theme}</span></h2>
+          <div class="frame" style="width:${WIDTH}px;height:${Math.round(vp.height * scale)}px"><iframe width="${vp.width}" height="${vp.height}" style="transform:scale(${scale})"></iframe></div><ul></ul>`;
+        grid.append(card);
+        const frame = card.querySelector("iframe");
+        await new Promise((resolve) => {
+          frame.onload = resolve;
+          frame.src = `${base}${s.file}${state ? `?state=${stateId(state)}` : ""}`;
+        });
+        const doc = frame.contentDocument;
+        doc.documentElement.dataset.theme = theme;
+        await doc.fonts.ready;
+        await frame.contentWindow.iconsReady;
+        // A timer, not requestAnimationFrame: a hidden tab never fires animation frames and the run would stall.
+        await new Promise((r) => setTimeout(r, 50));
+
+        const findings = window.lintDocument(doc, rules);
+        const box = card.querySelector(".frame");
+        card.querySelector("ul").innerHTML = findings.map((f) => `<li class="${f.level}"><code>${f.code}</code> ${esc(f.target)} — ${esc(f.message)}<small>${esc(f.fix)}</small></li>`).join("") || "<li>No finding.</li>";
+        for (const f of findings) {
+          const b = document.createElement("div");
+          b.className = `box ${f.level}`;
+          Object.assign(b.style, { left: `${f.rect.x * scale}px`, top: `${f.rect.y * scale}px`, width: `${Math.max(f.rect.w * scale, 4)}px`, height: `${Math.max(f.rect.h * scale, 4)}px` });
+          box.append(b);
+          all.push({ code: f.code, level: f.level, screen: s.id, state: state ? stateId(state) : "default", theme, target: f.target, message: f.message, fix: f.fix });
+        }
+      }
+
+      const count = (level) => all.filter((f) => f.level === level).length;
+      const [errors, warnings, accepted] = ["error", "warning", "accepted"].map(count);
+      const summary = document.getElementById("summary");
+      summary.innerHTML = `${runs.length} renders · <b class="${errors ? "bad" : "ok"}">${errors} error(s)</b> · ${warnings} warning(s) · ${accepted} accepted`;
+      window.lintResult = { topic: topicPath, renders: runs.length, errors, warnings, accepted, findings: all };
+      document.getElementById("result").textContent = JSON.stringify(window.lintResult);
+    })().catch((e) => {
+      document.getElementById("summary").textContent = `Lint failed: ${e.message}`;
+      window.lintResult = { error: e.message };
+    });
+  </script>
+</body>
+</html>

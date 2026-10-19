@@ -30,3 +30,5 @@ pre { margin: var(--spacing-xl) 0 0; padding: var(--spacing-lg); border-radius: 
   #nav { flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: var(--stroke-width-subtle) solid var(--color-border); }
   main { padding: var(--spacing-lg); }
 }
+#meta { margin-bottom: 0; }
+.meta a { color: var(--color-accent); }

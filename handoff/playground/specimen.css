@@ -1,8 +1,7 @@
-/* Specimen pages: neutral grid around the components. Vanilla token names first, Minimaly as fallback. */
-body { margin: 0; padding: var(--spacing-l, 24px); background: var(--surface-neutral-first, var(--color-surface-raised)); color: var(--texticon-neutral-default, var(--color-text-primary)); font-family: var(--font-family); font-size: var(--font-size-md, 14px); line-height: var(--line-height-normal, 1.5); }
+/* Specimen pages: neutral grid around the components, in Minimaly tokens. Another design system's specimens link their own stylesheet. */
+body { margin: 0; padding: var(--spacing-xl); background: var(--color-surface-raised); color: var(--color-text-primary); font-family: var(--font-family); font-size: var(--font-size-md); line-height: var(--line-height-normal); }
 /* Column names on top, then each row's name above its row, across all columns. */
-.specimen { display: grid; grid-template-columns: repeat(var(--cols, 5), max-content); align-items: start; gap: var(--spacing-xs, 8px) var(--spacing-l, 24px); }
+.specimen { display: grid; grid-template-columns: repeat(var(--cols, 5), max-content); align-items: start; gap: var(--spacing-sm) var(--spacing-xl); }
 .specimen > span:empty:first-child { display: none; }
-.specimen > .col, .specimen > .row { font-size: var(--font-size-sm, 12px); color: var(--texticon-neutral-third, var(--color-text-tertiary)); }
-.specimen > .row { grid-column: 1 / -1; margin-top: var(--spacing-m, 16px); font-weight: var(--font-weight-bold, 700); }
-.specimen .field:not(.menu__search) { width: 240px; }
+.specimen > .col, .specimen > .row { font-size: var(--font-size-sm); color: var(--color-text-tertiary); }
+.specimen > .row { grid-column: 1 / -1; margin-top: var(--spacing-lg); font-weight: var(--font-weight-semibold); }

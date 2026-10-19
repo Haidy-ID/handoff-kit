@@ -6,7 +6,7 @@
   "teams": [
     "Core"
   ],
-  "updated": "2026-10-19",
+  "updated": "2026-10-20",
   "intent": "Record an item loan in a few seconds without turning the product into an inventory-management system.",
   "figma": "",
   "story": "STORY-12",
@@ -93,5 +93,12 @@
   ],
   "questions": [
     "Should duplicate Item names be allowed?"
+  ],
+  "deliverables": [
+    {
+      "name": "Story: Sam lends a drill",
+      "file": "story.md",
+      "statement": "A walkthrough of the flow from a lender's day, with the gaps it reveals."
+    }
   ]
 }

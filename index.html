@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Topic list: every topic of topics.json, search, group by application, team or PI. Name and intro come from handoff.config.json. -->
+<!-- Home: one card per group of handoff.config.json → groups, with its topic count and last update. -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -14,14 +14,9 @@
   <main class="page">
     <h1 id="title"></h1>
     <p class="intent" id="intro"></p>
-    <div class="controls">
-      <label class="input search"><i class="icon" data-icon="magnifying-glass"></i><input type="search" id="q" placeholder="Search by title, application, team or PI" aria-label="Search topics"></label>
-      <label class="select"><span class="select__label">Group by</span><select id="group"></select><i class="icon select__icon" data-icon="caret-down"></i></label>
-      <label class="select"><span class="select__label">Show</span><select id="show"><option value="all">All</option><option value="active">In progress</option><option value="shipped">Shipped</option></select><i class="icon select__icon" data-icon="caret-down"></i></label>
-    </div>
-    <div id="list"></div>
+    <div class="groups" id="groups"></div>
   </main>
-  <script src="handoff/list.js"></script>
+  <script src="handoff/home.js"></script>
   <script src="handoff/minimaly/ds.js"></script>
 </body>
 </html>

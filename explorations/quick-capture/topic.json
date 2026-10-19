@@ -1,0 +1,10 @@
+{
+  "title": "Quick capture",
+  "status": "draft",
+  "teams": ["Core"],
+  "pi": "PI 1",
+  "updated": "2026-10-20",
+  "intent": "Save an idea in one tap, sort it later.",
+  "prototype": "prototype/index.html",
+  "note": "Free prototype: no screens, no flows. Add them later to get a full handoff."
+}
