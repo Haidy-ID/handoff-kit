@@ -20,7 +20,7 @@ explorations/          another group, with a prototype-only topic
   <topic>/             index.html (never edited) · topic.json · screens/ · journal.md · deliverables
 handoff/               the kit: replaced as a whole on update, never edited
   AGENTS.md            guide for agents: layout, rules, pitfalls
-  skills/              new-topic.md, build-mockup/ (skill, validator, render linter)
+  skills/              new-topic.md, build-mockup/ (skill, validator, render linter), new-component/
   minimaly/            default design system
   playground/          component pages: handoff/playground/?ds=<name>#<component>
 serve.py               local server: no cache, live reload, update route
@@ -47,7 +47,7 @@ A new group: add its entry, create the folder with a copy of `handoffs/index.htm
 - Copy `handoffs/lend-an-item/` (or `explorations/quick-capture/` for a prototype alone) into a group, fill `topic.json`, add the folder name to the group's `topics.json`.
 - Screens read their state from `?state=<name>`. A flow step is `screen-id` or `screen-id:state`.
 - `journal.md` logs each iteration, shown as the Journal section.
-- A `.md` deliverable (a story, a study) opens in a reader where `[label](screen:<id>)` plays that screen, and `> Gap: …` marks a moment no screen shows yet.
+- A `.md` deliverable (a story, a study) opens in a reader where `[label](screen:<id>)` plays that screen, `> Gap: …` marks a moment no screen shows yet, and `![caption](figures/x.html)` embeds an animated illustration.
 - `node handoff/skills/build-mockup/validate.mjs <group>/<topic>` checks the screens against the design system. `handoff/skills/build-mockup/lint.html?topic=<group>/<topic>` checks their render.
 
 ## Your own design system

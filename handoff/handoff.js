@@ -399,8 +399,9 @@
     };
     new ResizeObserver(fit).observe(document.getElementById("proto"));
     // Double buffer: the next screen loads in a second frame, invisible, on top of the current one. Once it has
-    // painted, it fades in and the old frame goes: no blank frame between two screens.
-    proto.load = (url) => {
+    // painted, it comes in and the old frame goes: no blank frame between two screens. dir 1 (forward: a link, →) slides
+    // the new screen in from the right and the old one out to the left, dir -1 the other way, dir 0 crossfades.
+    proto.load = (url, dir = 0) => {
       const next = Object.assign(document.createElement("iframe"), { title: "Prototype", src: url });
       next.style.opacity = "0";
       fitFrame(next);
@@ -419,12 +420,17 @@
           const a = e.target.closest?.("a[href]");
           if (!a || a.target === "_blank" || e.ctrlKey || e.metaKey || e.shiftKey || new URL(a.href).origin !== location.origin) return;
           e.preventDefault();
-          proto.load(a.href);
+          proto.load(a.href, 1);
         });
         requestAnimationFrame(() => {
           next.style.opacity = "";
-          next.animate([{ opacity: 0 }, { opacity: 1 }], { duration: ms("--duration-base"), easing: motion("--ease-out") })
-            .finished.then(() => device.querySelectorAll("iframe").forEach((f) => { if (f !== next) f.remove(); }));
+          // translate composes with the fit scale held in transform.
+          const shift = (k) => `${dir * k}px 0`;
+          const timing = { duration: ms(dir ? "--duration-spring" : "--duration-base"), easing: motion(dir ? "--ease-spring" : "--ease-out") };
+          const old = [...device.querySelectorAll("iframe")].filter((f) => f !== next);
+          if (dir) old.forEach((f) => f.animate([{ translate: "0 0", opacity: 1, filter: "none" }, { translate: shift(-40), opacity: 0, filter: "blur(4px)" }], { duration: ms("--duration-base"), easing: motion("--ease-in"), fill: "forwards" }));
+          next.animate([{ opacity: 0, translate: shift(40), filter: dir ? "blur(4px)" : "none" }, { opacity: 1, translate: "0 0", filter: "none" }], timing)
+            .finished.then(() => old.forEach((f) => f.remove()));
           device.querySelector("#proto-frame")?.removeAttribute("id");
           next.id = "proto-frame";
           onScreen(next);
@@ -564,13 +570,13 @@
     }
   };
   const stepName = (key) => { const { s, state } = fromKey(key); return state && s.states.length > 1 ? `${s.label} · ${state}` : s.label; };
-  const show = (key) => { const { s, state } = fromKey(key); proto.load(screenUrl(s, state)); };
+  const show = (key, dir = 0) => { const { s, state } = fromKey(key); proto.load(screenUrl(s, state), dir); };
   const go = (dir) => {
     if (proto.busy) return;
     const key = proto.steps[proto.step + dir];
     if (key) {
       proto.step += dir;
-      return show(key);
+      return show(key, dir);
     }
     // Past either end of a single flow: the next flow from its first step, or the previous one from its last step.
     const f = Number(viewer.sel) + dir;

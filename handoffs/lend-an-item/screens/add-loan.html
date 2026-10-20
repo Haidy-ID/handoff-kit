@@ -9,17 +9,17 @@
 <body>
   <h1>Add Loan</h1>
   <div class="field" id="item-field">
-    <span class="field__label">Item *</span>
-    <label class="input"><input id="item" placeholder="What are you lending?" aria-label="Item"></label>
-    <p class="field__error">Item is required.</p>
+    <label class="field__label">Item <span class="field__required" aria-hidden="true">*</span></label>
+    <label class="input"><input id="item" placeholder="What are you lending?" required></label>
+    <p class="field__error"><i class="icon" data-icon="warning-circle"></i>Item is required.</p>
   </div>
   <div class="field">
-    <span class="field__label">Person *</span>
-    <label class="input"><input id="person" placeholder="Who has it?" aria-label="Person"></label>
+    <label class="field__label">Person <span class="field__required" aria-hidden="true">*</span></label>
+    <label class="input"><input id="person" placeholder="Who has it?" required></label>
   </div>
   <div class="field">
-    <span class="field__label">Expected return <small>Optional</small></span>
-    <label class="input"><input id="return" placeholder="No date" aria-label="Expected return"></label>
+    <label class="field__label">Expected return <span class="field__optional">Optional</span></label>
+    <label class="input"><input id="return" placeholder="No date"></label>
   </div>
   <div class="grow"></div>
   <a class="btn" data-variant="primary" id="confirm" href="confirm.html">
@@ -37,7 +37,7 @@
       document.querySelectorAll("input").forEach((i) => (i.disabled = true));
       document.getElementById("confirm").setAttribute("aria-disabled", "true");
     }
-    if (s === "error") document.getElementById("item-field").setAttribute("aria-invalid", "true");
+    if (s === "error") document.getElementById("item-field").setAttribute("data-invalid", "");
   </script>
   <script src="../../../handoff/minimaly/ds.js"></script>
 </body>

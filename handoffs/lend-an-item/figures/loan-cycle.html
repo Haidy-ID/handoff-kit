@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- Figure of the story: an item leaves, waits, comes back. Self-contained, embedded with ![caption](figures/loan-cycle.html).
+     Animated illustrations can also come from an illustration skill such as Hairline (hairline-create). -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Loan cycle</title>
+  <style>
+    :root { --ink: #18181b; --muted: #a1a1aa; --accent: #2563eb; --bg: #ffffff; color-scheme: light dark; }
+    @media (prefers-color-scheme: dark) { :root { --ink: #f4f4f5; --muted: #52525b; --accent: #60a5fa; --bg: #18181b; } }
+    html, body { height: 100%; margin: 0; background: var(--bg); }
+    svg { display: block; width: 100%; height: 100%; font: 500 13px/1 Inter, system-ui, sans-serif; }
+    .track { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 4 6; }
+    .node { fill: var(--bg); stroke: var(--ink); stroke-width: 1.5; }
+    .label { fill: var(--ink); text-anchor: middle; }
+    .late { fill: var(--accent); opacity: 0; animation: late 6s ease-in-out infinite; }
+    .item { fill: var(--accent); offset-path: path("M110 150 C 200 40, 400 40, 490 150 C 400 260, 200 260, 110 150"); animation: travel 6s cubic-bezier(0.6, 0, 0.4, 1) infinite; }
+    @keyframes travel { 0%, 8% { offset-distance: 0%; } 42%, 58% { offset-distance: 50%; } 92%, 100% { offset-distance: 100%; } }
+    @keyframes late { 0%, 44% { opacity: 0; } 50% { opacity: 1; } 58%, 100% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { .item, .late { animation: none; } }
+  </style>
+</head>
+<body>
+  <svg viewBox="0 0 600 300" role="img" aria-label="An item goes from Sam to the borrower and comes back">
+    <path class="track" d="M110 150 C 200 40, 400 40, 490 150 C 400 260, 200 260, 110 150"/>
+    <circle class="node" cx="110" cy="150" r="34"/><text class="label" x="110" y="208">Sam</text>
+    <circle class="node" cx="490" cy="150" r="34"/><text class="label" x="490" y="208">Neighbour</text>
+    <text class="label" x="300" y="58">Lent</text><text class="label" x="300" y="252">Back</text>
+    <text class="late label" x="490" y="100">Late? Reminder</text>
+    <circle class="item" r="9"/>
+  </svg>
+</body>
+</html>

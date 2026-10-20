@@ -405,5 +405,129 @@
       "holding",
       "confirmed"
     ]
+  },
+  {
+    "id": "field",
+    "class": "field",
+    "name": "Field",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default",
+      "invalid",
+      "disabled"
+    ]
+  },
+  {
+    "id": "checkbox",
+    "class": "checkbox",
+    "name": "Checkbox",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "checked",
+      "indeterminate",
+      "disabled"
+    ]
+  },
+  {
+    "id": "radio",
+    "class": "radio",
+    "name": "Radio",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "checked",
+      "disabled"
+    ]
+  },
+  {
+    "id": "switch",
+    "class": "switch",
+    "name": "Switch",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "off",
+      "on",
+      "pressed",
+      "disabled"
+    ]
+  },
+  {
+    "id": "textarea",
+    "class": "textarea",
+    "name": "Textarea",
+    "variants": [
+      "default",
+      "counter"
+    ],
+    "states": [
+      "empty",
+      "filled",
+      "full",
+      "focus"
+    ]
+  },
+  {
+    "id": "banner",
+    "class": "banner",
+    "name": "Banner",
+    "variants": [
+      "info",
+      "success",
+      "warning",
+      "critical"
+    ],
+    "states": [
+      "default",
+      "dismissing"
+    ]
+  },
+  {
+    "id": "empty",
+    "class": "empty",
+    "name": "Empty state",
+    "variants": [
+      "default",
+      "compact"
+    ],
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "list",
+    "class": "list",
+    "name": "List",
+    "variants": [
+      "plain",
+      "inset"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "current"
+    ]
+  },
+  {
+    "id": "shell",
+    "class": "shell",
+    "name": "App shell",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "expanded",
+      "collapsed"
+    ]
   }
 ]

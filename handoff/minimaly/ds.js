@@ -61,6 +61,8 @@
     const above = r.top - 8 - t.height > 0;
     tip.style.left = `${left}px`;
     tip.style.top = `${above ? r.top - 8 - t.height : r.bottom + 8}px`;
+    // The side drives the direction it opens from (CSS --from).
+    tip.dataset.side = above ? "top" : "bottom";
   };
   const arm = (el, delay) => {
     clearTimeout(leaveTimer);
@@ -93,7 +95,9 @@
     if (!menu) return;
     const { el, select } = menu;
     menu = null;
-    el.remove();
+    // hidden plays the closing transition (CSS), then the list goes.
+    el.hidden = true;
+    setTimeout(() => el.remove(), parseFloat(getComputedStyle(el).transitionDuration) * 1000 || 0);
     if (refocus) select.focus();
   };
   const pick = (select, value) => {
@@ -116,6 +120,7 @@
     el.style.left = `${Math.min(r.left, innerWidth - el.offsetWidth - 8)}px`;
     const below = r.bottom + 4 + el.offsetHeight < innerHeight;
     el.style.top = `${below ? r.bottom + 4 : r.top - 4 - el.offsetHeight}px`;
+    el.dataset.side = below ? "bottom" : "top";
     menu = { el, select };
     (el.querySelector('[aria-selected="true"]') || el.firstElementChild).focus();
   };
@@ -262,6 +267,18 @@
   // value, once the figure has been quiet for 700 ms.
   const values = new WeakMap();
   const quiet = new WeakMap();
+  // The characters that changed, compared from the right (figures grow on the left), each in a .value__char that rolls in.
+  // values already holds the new text, so the rewrite below does not count as a new change.
+  const rollDigits = (el, prev, next) => {
+    const offset = next.length - prev.length;
+    let i = 0;
+    el.replaceChildren(...[...next].map((ch, k) => {
+      if (prev[k - offset] === ch) return document.createTextNode(ch);
+      const span = Object.assign(document.createElement("span"), { className: "value__char", textContent: ch });
+      span.style.setProperty("--i", i++);
+      return span;
+    }));
+  };
   const toNumber = (text) => parseFloat(text.replace(/\u2212/g, "-").replace(/[^\d.-]/g, ""));
   const watchValue = (el) => {
     const next = el.textContent;
@@ -273,6 +290,7 @@
     el.removeAttribute("data-trend");
     void el.offsetWidth; // restarts the flash when a new change lands mid-flash
     el.dataset.trend = b > a ? "up" : b < a ? "down" : "change";
+    rollDigits(el, prev, next);
     if (el.dataset.label) {
       clearTimeout(quiet.get(el));
       quiet.set(el, setTimeout(() => announce(`${el.dataset.label}: ${el.textContent}`), 700));
@@ -366,6 +384,7 @@
     el.style.left = `${Math.max(8, Math.min(r.left, innerWidth - el.offsetWidth - 8))}px`;
     const below = r.bottom + 4 + el.offsetHeight < innerHeight;
     el.style.top = `${below ? r.bottom + 4 : Math.max(8, r.top - 4 - el.offsetHeight)}px`;
+    el.dataset.side = below ? "bottom" : "top";
     openMenu = { el, trigger };
     if (trigger.hasAttribute("data-menu")) trigger.setAttribute("aria-expanded", "true");
     menuItems(el)[0]?.focus();
@@ -722,6 +741,67 @@
   });
   for (const type of ["pointerup", "pointercancel", "keyup"]) document.addEventListener(type, () => held && release());
 
+  // Checkbox: the check is drawn in an SVG inside .checkbox__box (two paths: the check, and the dash of indeterminate).
+  const CHECK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path class="checkbox__check" d="M3.5 8.5l3 3 6-7"/><path class="checkbox__dash" d="M4 8h8"/></svg>';
+  const buildCheckbox = (box) => { if (!box.firstElementChild) box.innerHTML = CHECK; };
+
+  // Field: the label names the control, the hint and the error describe it, data-invalid sets aria-invalid.
+  let fieldIds = 0;
+  const idOf = (el) => el.id || (el.id = `field-${++fieldIds}`);
+  const syncField = (field) => {
+    const control = field.querySelector(":scope > :is(.input, .select, .textarea) :is(input, select, textarea)");
+    if (!control) return;
+    if (field.hasAttribute("data-invalid")) control.setAttribute("aria-invalid", "true");
+    else control.removeAttribute("aria-invalid");
+  };
+  const buildField = (field) => {
+    const control = field.querySelector(":scope > :is(.input, .select, .textarea) :is(input, select, textarea)");
+    const label = field.querySelector(":scope > label.field__label");
+    if (control && label) label.htmlFor = idOf(control);
+    const notes = [...field.querySelectorAll(":scope > :is(.field__hint, .field__error)")].map(idOf);
+    if (control && notes.length) control.setAttribute("aria-describedby", notes.join(" "));
+    const error = field.querySelector(":scope > .field__error");
+    if (error) error.setAttribute("aria-live", "polite");
+    syncField(field);
+  };
+
+  // Textarea: data-max="280" caps the length and shows "used / max"; the counter turns critical once full.
+  const countText = (box) => {
+    const area = box.querySelector("textarea");
+    const count = box.querySelector(".textarea__count");
+    count.textContent = `${area.value.length} / ${box.dataset.max}`;
+    box.toggleAttribute("data-full", area.value.length >= Number(box.dataset.max));
+  };
+  const buildTextarea = (box) => {
+    box.querySelector("textarea").maxLength = Number(box.dataset.max);
+    box.append(Object.assign(document.createElement("span"), { className: "textarea__count", ariaHidden: "true" }));
+    countText(box);
+  };
+  document.addEventListener("input", (e) => {
+    const box = e.target.closest?.(".textarea[data-max]");
+    if (box) countText(box);
+  });
+
+  // Banner: [data-dismiss] inside a .banner folds it away, then removes it and fires "dismiss" on the parent.
+  document.addEventListener("click", (e) => {
+    const banner = e.target.closest?.(".banner [data-dismiss]")?.closest(".banner");
+    if (!banner || banner.hasAttribute("data-leaving")) return;
+    const parent = banner.parentElement;
+    banner.setAttribute("data-leaving", "");
+    const done = () => { banner.remove(); parent?.dispatchEvent(new CustomEvent("dismiss", { bubbles: true, detail: banner })); };
+    banner.addEventListener("animationend", (a) => a.animationName === "banner-out" && done());
+    if (!parseFloat(getComputedStyle(banner).animationDuration)) done();
+  });
+
+  // App shell: [data-shell-toggle] folds the navigation rail to icons and back. Its aria-expanded follows.
+  document.addEventListener("click", (e) => {
+    const toggle = e.target.closest?.("[data-shell-toggle]");
+    const shell = toggle && (toggle.closest(".shell") || document.querySelector(".shell"));
+    if (!shell) return;
+    const collapsed = shell.toggleAttribute("data-collapsed");
+    toggle.setAttribute("aria-expanded", String(!collapsed));
+  });
+
   // Markup present at load and markup rendered later get the same behaviours.
   const each = (node, selector, fn) => {
     if (node.nodeType !== 1) return;
@@ -739,6 +819,9 @@
     each(node, ".toc[data-spy]", (nav) => { spies.add(nav); spy(nav); });
     each(node, ".sticky-header", (header) => { stickies.add(header); stick(header); });
     each(node, ".btn[data-hold]:not([data-state])", buildHold);
+    each(node, ".checkbox__box", buildCheckbox);
+    each(node, ".field", buildField);
+    each(node, ".textarea[data-max]:not(:has(.textarea__count))", buildTextarea);
   };
   enhance(document.body);
   new MutationObserver((records) => {
@@ -746,11 +829,12 @@
       if (r.type === "attributes") {
         if (r.target.parentElement?.matches(".segmented, .tabs")) placeIndicator(r.target.parentElement);
         if (r.target.matches(".pagination")) renderPagination(r.target);
+        if (r.target.matches(".field")) syncField(r.target);
         continue;
       }
       const value = (r.target.nodeType === 1 ? r.target : r.target.parentElement)?.closest(".value");
       if (value) watchValue(value);
       if (r.type === "childList") r.addedNodes.forEach(enhance);
     }
-  }).observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["aria-pressed", "aria-selected", "data-page"] });
+  }).observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["aria-pressed", "aria-selected", "data-page", "data-invalid"] });
 })();

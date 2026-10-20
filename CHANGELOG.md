@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.1.0 · 2026-10-20
+
+- Minimaly components: field (label, hint, error with shake), checkbox (drawn check, indeterminate), radio, switch, textarea (grows, counter), banner (dismiss folds it away), empty state, list (lead, body, trail, staggered entry), app shell (navigation rail that folds).
+- Motion: physical springs (`--ease-spring`, `--ease-bounce`, `--duration-spring`); tooltips, popovers, menus and select lists open and close natively from the side of their trigger; content swaps through a blur (async button labels, tab panels); changed digits of a value roll in; toasts slide out; avatars lift their neighbours; pages crossfade on navigation.
+- Prototype: moving forward slides the next screen in from the right, back from the left.
+- Markdown: figures on their own line, images or HTML illustrations in a sandboxed frame. The example story has one.
+- Skill `handoff/skills/new-component/` to create or upgrade a component; `handoff/AGENTS.md` points to Hairline for animated illustrations.
+- The example topic uses the new field and list instead of its own CSS.
+- Render linter: a field inside a `<label>` is measured by its label.
+
 ## 2.0.0 · 2026-10-20
 
 - Groups: a home page with one card per group, and one topic list per group folder (`handoff.config.json` → `groups`).

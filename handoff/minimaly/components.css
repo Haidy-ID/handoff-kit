@@ -3,8 +3,8 @@
    data-force="hover" pins the hover state for specimen pages. Tokens only, no raw values. */
 
 /* Borders and padding stay inside the declared size (32 px controls), whatever the page reset. */
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header),
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header) * { box-sizing: border-box; }
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell),
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell) * { box-sizing: border-box; }
 
 /* Motion: keyframes shared by the components and the pages built on them.
    enter = fade up (page sections, cards), pop-in = fade and grow (tooltips, popovers), fade-in, fade-out.
@@ -15,6 +15,13 @@
 @keyframes fade-in { from { opacity: 0; } }
 @keyframes fade-out { to { opacity: 0; } }
 @keyframes spin { to { transform: rotate(1turn); } }
+/* swap-in = new content replacing old in place (a panel, a label): rises out of a light blur. */
+@keyframes swap-in { from { opacity: 0; transform: translateY(4px); filter: blur(var(--blur-swap)); } }
+/* shake = a field refused its value: a short damped shake, played once when the error appears. */
+@keyframes shake { 15% { transform: translateX(-5px); } 35% { transform: translateX(4px); } 55% { transform: translateX(-3px); } 75% { transform: translateX(2px); } }
+
+/* Pages of the same site crossfade into each other on navigation (cross-document view transition). */
+@view-transition { navigation: auto; }
 
 /* Button: default, primary, ghost, icon (square, icon only). aria-pressed="true" = toggled on. */
 .btn {
@@ -29,7 +36,7 @@
 }
 /* Press: the button gives a little under the pointer. */
 .btn:active { transform: scale(0.97); }
-.btn .icon { color: var(--color-text-secondary); transition: color var(--duration-fast) var(--ease-out), transform var(--duration-base) var(--ease-spring); }
+.btn .icon { color: var(--color-text-secondary); transition: color var(--duration-fast) var(--ease-out), transform var(--duration-spring) var(--ease-spring); }
 .btn:hover, .btn[data-force="hover"] { background: var(--color-surface-hover); border-color: var(--color-accent-border); }
 .btn:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; }
 .btn[aria-pressed="true"] { background: var(--color-accent-subtle); border-color: var(--color-accent-border); color: var(--color-accent); }
@@ -48,9 +55,16 @@
 /* Async button: ds.js builds one .btn__label per state (idle, busy, done, error) from data-busy, data-done, data-error or data-copy.
    They share one grid cell: the button is as wide as its longest label from the start and never resizes. The label crossfades. */
 .btn[data-state] { display: inline-grid; }
-.btn__label { display: inline-flex; grid-area: 1 / 1; align-items: center; justify-content: center; gap: var(--spacing-xs); opacity: 0; visibility: hidden; transform: translateY(2px);
-  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out), visibility var(--duration-fast); }
-:is(.btn[data-state="idle"] > [data-for="idle"], .btn[data-state="busy"] > [data-for="busy"], .btn[data-state="done"] > [data-for="done"], .btn[data-state="error"] > [data-for="error"]) { opacity: 1; visibility: visible; transform: none; }
+.btn__label { display: inline-flex; grid-area: 1 / 1; align-items: center; justify-content: center; gap: var(--spacing-xs); opacity: 0; visibility: hidden; transform: translateY(6px) scale(0.96); filter: blur(var(--blur-swap));
+  transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-spring) var(--ease-spring), filter var(--duration-base) var(--ease-out), visibility var(--duration-base); }
+/* The leaving label rises out while the new one rises in from below, both through a blur. */
+.btn[data-state] > .btn__label:not([data-for="idle"]) { transform: translateY(6px) scale(0.96); }
+.btn[data-state="idle"] > .btn__label:not([data-for="idle"]), .btn:not([data-state="idle"]) > [data-for="idle"] { transform: translateY(-6px) scale(0.96); }
+:is(.btn[data-state="idle"] > [data-for="idle"], .btn[data-state="busy"] > [data-for="busy"], .btn[data-state="done"] > [data-for="done"], .btn[data-state="error"] > [data-for="error"]) { opacity: 1; visibility: visible; transform: none; filter: none; }
+/* Done: the check lands with a bounce and a small turn. */
+.btn[data-state="done"] > [data-for="done"] .icon { animation: check-land var(--duration-spring) var(--ease-bounce); }
+@keyframes check-land { from { opacity: 0; transform: scale(0.4) rotate(-30deg); } }
+.btn[data-state="error"] > [data-for="error"] { animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
 .btn[aria-busy="true"] { cursor: progress; }
 .btn__label[data-for="busy"] .icon { animation: spin calc(var(--duration-slow) * 2.5) linear infinite; }
 .btn__label[data-for="done"] .icon { color: var(--color-status-success); }
@@ -94,8 +108,10 @@
 .avatars { display: inline-flex; }
 .avatars .avatar + .avatar { margin-left: calc(var(--spacing-xs) * -1); box-shadow: 0 0 0 var(--stroke-width-mid) var(--color-surface-raised); }
 /* A hovered avatar in a stack rises above its neighbours. */
-.avatars .avatar { position: relative; transition: transform var(--duration-base) var(--ease-spring); }
-.avatars .avatar:hover { z-index: 1; transform: translateY(-2px); }
+.avatars .avatar { position: relative; transition: transform var(--duration-spring) var(--ease-spring); }
+.avatars .avatar:hover { z-index: 1; transform: translateY(-3px); }
+/* Its neighbours follow a little, the effect fading with distance. */
+.avatars .avatar:hover + .avatar, .avatars .avatar:has(+ .avatar:hover) { transform: translateY(-1px); }
 
 /* Kbd: keyboard shortcut. */
 .kbd {
@@ -125,22 +141,35 @@
   display: flex; flex-direction: column; gap: var(--spacing-xs); max-width: 280px; padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--radius-md); background: var(--color-text-primary); box-shadow: var(--shadow-md);
   color: var(--color-surface-raised); font-size: var(--font-size-xs); line-height: var(--line-height-normal);
-  animation: pop-in var(--duration-base) var(--ease-out);
+  transform-origin: bottom center;
 }
+.tooltip[data-side="bottom"] { transform-origin: top center; }
 .tooltip strong { display: inline-flex; align-items: center; gap: var(--spacing-xs); font-weight: var(--font-weight-semibold); }
 .tooltip__lead { opacity: 0.7; }
-/* display above would override the hidden attribute: hiding must win. */
-.tooltip[hidden], .popover[hidden] { display: none; }
-/* Moving along a group of tooltips: the text swaps in place, no pop-in per neighbour. */
-.tooltip[data-instant] { animation: none; }
 
 /* Popover: floating panel for filters or menus. Position it from the page. */
 .popover {
   display: flex; flex-direction: column; gap: var(--spacing-sm); width: 300px; padding: var(--spacing-md);
   border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-lg);
   background: var(--color-surface-raised); box-shadow: var(--shadow-lg);
-  animation: pop-in var(--duration-base) var(--ease-spring); transform-origin: top left;
+  transform-origin: top left;
 }
+/* Tooltips and popovers open and close natively: the hidden attribute animates both ways (display is discrete),
+   from the side they are attached to (data-side, set by ds.js). Opening springs, closing is shorter and plain. */
+.tooltip, .popover {
+  transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-spring) var(--ease-spring), filter var(--duration-base) var(--ease-out),
+    display var(--duration-base) allow-discrete;
+}
+.popover[data-side="top"] { transform-origin: bottom left; }
+/* --from: where it comes out of, toward its trigger. A popover sits below its trigger, a tooltip above, unless data-side flips them. */
+.popover, .tooltip[data-side="bottom"] { --from: -4px; }
+.tooltip, .popover[data-side="top"] { --from: 4px; }
+.tooltip[hidden], .popover[hidden] { display: none; opacity: 0; transform: translateY(var(--from)) scale(0.94); filter: blur(2px); transition-duration: var(--duration-fast); transition-timing-function: var(--ease-in); }
+@starting-style {
+  .tooltip:not([hidden]), .popover:not([hidden]) { opacity: 0; transform: translateY(var(--from)) scale(0.94); filter: blur(2px); }
+}
+/* Moving along a group of tooltips: the bubble glides to its neighbour and the text swaps, no pop-in per neighbour. */
+.tooltip[data-instant] { transition: left var(--duration-base) var(--ease-out), top var(--duration-base) var(--ease-out); }
 .popover__label { margin: 0; color: var(--color-text-tertiary); font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); text-transform: uppercase; }
 .popover__foot { display: flex; justify-content: flex-end; gap: var(--spacing-sm); }
 /* Select menu: the list of a .select, opened by ds.js under its box. The chosen option carries a check. */
@@ -192,7 +221,7 @@
 /* Chevron: a caret-down icon in its 16 px square, centered on the box, clicks pass through to the select. */
 /* Phosphor draws caret-down 1/32 of its box below center (0.5 px at 16 px): lifted by the same amount. */
 .select__icon { position: absolute; top: 50%; right: var(--spacing-md); transform: translateY(calc(-50% - var(--icon-size, 16px) / 32)); color: var(--color-text-secondary); pointer-events: none;
-  transition: transform var(--duration-base) var(--ease-spring), color var(--duration-fast) var(--ease-out); }
+  transition: transform var(--duration-spring) var(--ease-spring), color var(--duration-fast) var(--ease-out); }
 /* The caret dips on hover: the box opens downward. */
 .select:hover .select__icon { transform: translateY(calc(-50% - var(--icon-size, 16px) / 32 + 2px)); color: var(--color-text-primary); }
 
@@ -218,9 +247,9 @@
 .segmented .btn[aria-pressed="true"] { border-color: transparent; background: none; color: var(--color-text-primary); }
 /* The raised look is one indicator placed by ds.js under the pressed option: it slides to the next one instead of jumping. */
 .segmented__indicator { position: absolute; top: 2px; bottom: 2px; left: 0; box-sizing: border-box; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface-raised); box-shadow: var(--shadow-sm); }
-.segmented__indicator[data-ready] { transition: transform var(--duration-base) var(--ease-out), width var(--duration-base) var(--ease-out); }
+.segmented__indicator[data-ready] { transition: transform var(--duration-spring) var(--ease-spring), width var(--duration-spring) var(--ease-spring); }
 /* The newly pressed segment settles in with a small pop. */
-.segmented .btn[aria-pressed="true"] .icon { animation: pop-in var(--duration-base) var(--ease-spring); }
+.segmented .btn[aria-pressed="true"] .icon { animation: pop-in var(--duration-spring) var(--ease-bounce); }
 .segmented .btn[aria-pressed="true"] .icon { color: var(--color-text-primary); }
 
 /* Accordion: a list of questions, each unfolds its answer. Native <details>, so it opens with the keyboard and without script. */
@@ -251,6 +280,10 @@
 .value:is([data-trend="up"], [data-trend="down"])::after { position: absolute; left: 100%; padding-left: var(--spacing-xs); color: var(--color-accent); animation: fade-out var(--duration-flash) var(--ease-in) both; }
 .value[data-trend="up"]::after { content: "↑"; }
 .value[data-trend="down"]::after { content: "↓"; }
+/* Digits that changed roll in, from below when the value rises, from above when it falls, through a blur. ds.js wraps them. */
+.value__char { display: inline-block; animation: digit-in var(--duration-spring) var(--ease-spring) both; animation-delay: calc(var(--i, 0) * var(--duration-stagger)); }
+@keyframes digit-in { from { opacity: 0; transform: translateY(var(--dy, 0.5em)); filter: blur(var(--blur-swap)); } }
+.value[data-trend="down"] .value__char { --dy: -0.5em; }
 
 /* Skeleton: holds the height of content still loading, one bar per line of text. Built by loadInto() in ds.js.
    Invisible for its first --delay-show, so a fast answer never shows it. The last bar is shorter, like the end of a paragraph. */
@@ -272,9 +305,9 @@
 .tabs__tab:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; border-radius: var(--radius-xs); }
 .tabs__tab:disabled { opacity: 0.4; cursor: not-allowed; }
 .tabs__indicator { position: absolute; bottom: -1px; left: 0; height: 2px; border-radius: var(--radius-full); background: var(--color-text-primary); }
-.tabs__indicator[data-ready] { transition: transform var(--duration-base) var(--ease-out), width var(--duration-base) var(--ease-out); }
+.tabs__indicator[data-ready] { transition: transform var(--duration-spring) var(--ease-spring), width var(--duration-spring) var(--ease-spring); }
 .tabs__panel { padding-top: var(--spacing-lg); }
-.tabs__panel:not([hidden]) { animation: fade-in var(--duration-base) var(--ease-out); }
+.tabs__panel:not([hidden]) { animation: swap-in var(--duration-slow) var(--ease-out); }
 
 /* Menu: actions under a button (data-menu) or on right-click (data-context-menu). A .popover with menu rows. */
 .menu { position: fixed; z-index: 1000; width: 224px; max-width: calc(100vw - 16px); max-height: 320px; overflow: auto; gap: 0; padding: var(--spacing-xs); }
@@ -299,14 +332,14 @@
   opacity: 0; transition: opacity var(--duration-base) var(--ease-in), transform var(--duration-base) var(--ease-in), display var(--duration-base) allow-discrete, overlay var(--duration-base) allow-discrete;
 }
 .modal:not([open]), .drawer:not([open]) { display: none; }
-.modal[open], .drawer[open] { opacity: 1; transform: none; transition-timing-function: var(--ease-out); }
+.modal[open], .drawer[open] { opacity: 1; transform: none; transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-spring) var(--ease-spring), display var(--duration-base) allow-discrete, overlay var(--duration-base) allow-discrete; }
 .modal::backdrop, .drawer::backdrop { background: color-mix(in srgb, var(--color-scrim) 40%, transparent); opacity: 0; transition: opacity var(--duration-base) var(--ease-out), display var(--duration-base) allow-discrete, overlay var(--duration-base) allow-discrete; }
 .modal[open]::backdrop, .drawer[open]::backdrop { opacity: 1; }
 @starting-style {
   .modal[open], .drawer[open], .modal[open]::backdrop, .drawer[open]::backdrop { opacity: 0; }
 }
-.modal { width: min(440px, calc(100vw - 32px)); max-height: min(78vh, 620px); border-radius: var(--radius-xl); transform: translateY(8px) scale(0.98); }
-@starting-style { .modal[open] { transform: translateY(8px) scale(0.98); } }
+.modal { width: min(440px, calc(100vw - 32px)); max-height: min(78vh, 620px); border-radius: var(--radius-xl); transform: translateY(12px) scale(0.95); }
+@starting-style { .modal[open] { transform: translateY(12px) scale(0.95); } }
 .drawer { position: fixed; inset: 0 0 0 auto; width: min(320px, calc(100% - 40px)); max-width: none; height: 100%; max-height: none; margin: 0; border-width: 0 0 0 var(--stroke-width-subtle); transform: translateX(100%); }
 .drawer[data-side="left"] { inset: 0 auto 0 0; border-width: 0 var(--stroke-width-subtle) 0 0; transform: translateX(-100%); }
 @starting-style { .drawer[open] { transform: translateX(100%); } .drawer[data-side="left"][open] { transform: translateX(-100%); } }
@@ -322,9 +355,12 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
   display: flex; align-items: center; gap: var(--spacing-sm); max-width: 360px; min-height: 40px; padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-lg); background: var(--color-text-primary); box-shadow: var(--shadow-md); color: var(--color-surface-raised);
   font-size: var(--font-size-sm); line-height: var(--line-height-normal); pointer-events: auto;
-  animation: enter var(--duration-slow) var(--ease-out);
+  animation: toast-in var(--duration-spring) var(--ease-spring);
 }
-.toast[data-leaving] { animation: fade-out var(--duration-base) var(--ease-in) forwards; }
+/* In: rises and settles from a blur. Out: slides toward the edge it came from and blurs away. */
+@keyframes toast-in { from { opacity: 0; transform: translateY(16px) scale(0.94); filter: blur(var(--blur-swap)); } }
+.toast[data-leaving] { animation: toast-out var(--duration-base) var(--ease-in) forwards; }
+@keyframes toast-out { to { opacity: 0; transform: translateX(24px) scale(0.96); filter: blur(var(--blur-swap)); } }
 .toast__text { flex: 1; padding: var(--spacing-xs) 0; }
 .toast > .icon { color: inherit; }
 .toast[data-variant="success"] > .icon { color: var(--color-status-success); }
@@ -358,7 +394,7 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .steps > li[data-state="active"] { color: var(--color-text-primary); }
 .steps > li[data-state="active"]::before { border-color: var(--color-agent-border); border-top-color: var(--color-agent); animation: spin calc(var(--duration-slow) * 2.5) linear infinite; }
 .steps > li[data-state="done"] { color: var(--color-text-secondary); }
-.steps > li[data-state="done"]::before { content: "✓"; border-color: var(--color-status-success); background: var(--color-status-success); animation: pop-in var(--duration-base) var(--ease-spring); }
+.steps > li[data-state="done"]::before { content: "✓"; border-color: var(--color-status-success); background: var(--color-status-success); animation: pop-in var(--duration-spring) var(--ease-bounce); }
 .steps > li[data-state="failed"] { color: var(--color-status-critical); }
 .steps > li[data-state="failed"]::before { content: "✕"; border-color: var(--color-status-critical); background: var(--color-status-critical); }
 .steps__meta { margin-left: auto; color: var(--color-text-tertiary); font: var(--font-weight-regular) var(--font-size-xs)/1 var(--font-family-mono); visibility: hidden; }
@@ -420,3 +456,154 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .btn__fill { position: absolute; inset: 0; z-index: -1; background: var(--color-status-critical-subtle); transform: scaleX(0); transform-origin: left; }
 .btn[data-hold][data-state="done"] { border-color: var(--color-status-critical); color: var(--color-status-critical); }
 
+
+/* Field: a label, its control, an optional hint and an error. Works around .input, .select, .textarea or a group of choices.
+   data-invalid shows the error, tints the control and shakes it once. ds.js links the label, hint and error to the control. */
+.field { display: flex; flex-direction: column; gap: var(--spacing-xs); min-width: 0; }
+.field__label { display: flex; align-items: baseline; gap: var(--spacing-xs); color: var(--color-text-primary); font: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-tight) var(--font-family); }
+.field__required { color: var(--color-status-critical); }
+.field__optional { color: var(--color-text-secondary); font-weight: var(--font-weight-regular); }
+.field__hint { margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--line-height-normal); }
+.field__error { display: flex; align-items: center; gap: var(--spacing-xs); margin: 0; color: var(--color-status-critical); font-size: var(--font-size-xs); line-height: var(--line-height-normal); }
+.field__error .icon { --icon-size: 14px; }
+.field > :is(.input, .select, .textarea) { width: 100%; }
+/* The error takes no room until it shows: it unfolds under the control, and the hint gives it its place. */
+.field__error { interpolate-size: allow-keywords; height: 0; overflow: hidden; opacity: 0; transform: translateY(-2px);
+  transition: height var(--duration-base) var(--ease-out), opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out); }
+.field[data-invalid] .field__error { height: auto; opacity: 1; transform: none; }
+.field[data-invalid] .field__hint { display: none; }
+.field[data-invalid] > :is(.input, .select, .textarea) { border-color: var(--color-status-critical); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
+.field[data-invalid] > :is(.input, .select, .textarea):focus-within { box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-status-critical); }
+.field:has(:disabled) { opacity: 0.4; }
+.field__choices { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.field__choices[data-variant="row"] { flex-direction: row; flex-wrap: wrap; gap: var(--spacing-lg); }
+
+/* Checkbox, radio, switch: a native input inside its label, so the whole row toggles it and the keyboard works.
+   The box, dot and track are real elements (Copy to Figma keeps them). ds.js draws the check inside .checkbox__box. */
+.checkbox, .radio, .switch { position: relative; display: inline-flex; align-items: center; gap: var(--spacing-sm); min-height: var(--control-height); color: var(--color-text-primary); font-size: var(--font-size-sm); cursor: pointer; user-select: none; }
+.checkbox > input, .radio > input, .switch > input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
+.checkbox__box, .radio__dot { display: inline-grid; place-items: center; flex: none; width: 16px; height: 16px; border: var(--stroke-width-mid) solid var(--color-border-strong); background: var(--color-surface-raised);
+  transition: background var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-spring) var(--ease-bounce), transform var(--duration-fast) var(--ease-out); }
+.checkbox__box { border-radius: var(--radius-xs); color: var(--color-on-accent); }
+.checkbox__box svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+/* The check draws itself along its path when checked, and erases faster when unchecked. */
+.checkbox__box path { stroke-dasharray: 16; stroke-dashoffset: 16; transition: stroke-dashoffset var(--duration-fast) var(--ease-in); }
+.checkbox__dash { display: none; }
+.checkbox > input:checked + .checkbox__box { border-color: var(--color-accent); background: var(--color-accent); }
+.checkbox > input:checked + .checkbox__box .checkbox__check { stroke-dashoffset: 0; transition: stroke-dashoffset var(--duration-slow) var(--ease-out) calc(var(--duration-fast) / 2); }
+.checkbox > input:indeterminate + .checkbox__box { border-color: var(--color-accent); background: var(--color-accent); }
+.checkbox > input:indeterminate + .checkbox__box .checkbox__check { display: none; }
+.checkbox > input:indeterminate + .checkbox__box .checkbox__dash { display: inline; stroke-dashoffset: 0; }
+.radio__dot { border-radius: var(--radius-full); }
+/* The dot grows from the ring with a bounce: an inset shadow, which Copy to Figma keeps. */
+.radio > input:checked + .radio__dot { border-color: var(--color-accent); box-shadow: inset 0 0 0 4px var(--color-accent); }
+.switch__track { position: relative; display: inline-flex; align-items: center; flex: none; width: 30px; height: 18px; padding: 2px; border-radius: var(--radius-full); background: var(--color-border-strong); transition: background var(--duration-base) var(--ease-out); }
+.switch__thumb { width: 14px; height: 14px; border-radius: var(--radius-full); background: var(--color-surface-raised); box-shadow: var(--shadow-sm); transition: transform var(--duration-spring) var(--ease-spring), width var(--duration-fast) var(--ease-out); }
+.switch > input:checked + .switch__track { background: var(--color-accent); }
+.switch > input:checked + .switch__track .switch__thumb { transform: translateX(12px); }
+/* Pressing stretches the thumb toward where it will go, like a finger pushing it. */
+.switch:active .switch__thumb { width: 17px; }
+.switch:active > input:checked + .switch__track .switch__thumb { transform: translateX(9px); }
+.checkbox:active .checkbox__box, .radio:active .radio__dot { transform: scale(0.9); }
+.checkbox:hover .checkbox__box, .radio:hover .radio__dot, .checkbox[data-force="hover"] .checkbox__box, .radio[data-force="hover"] .radio__dot { border-color: var(--color-accent); }
+:is(.checkbox, .radio, .switch) > input:focus-visible + * { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; }
+:is(.checkbox, .radio, .switch):has(> input:disabled) { opacity: 0.4; cursor: not-allowed; }
+.checkbox__text, .radio__text, .switch__text { display: flex; flex-direction: column; }
+.checkbox__text small, .radio__text small, .switch__text small { color: var(--color-text-secondary); font-size: var(--font-size-xs); }
+
+/* Textarea: multi-line text that grows with its content up to max-height (field-sizing). data-max shows a counter. */
+.textarea { position: relative; display: flex; flex-direction: column; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface-raised); cursor: text;
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out); }
+.textarea:hover { border-color: var(--color-border-strong); }
+.textarea:focus-within { border-color: var(--color-accent); box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-accent); }
+.textarea textarea { field-sizing: content; min-height: calc(var(--control-height) * 2.5); max-height: 280px; padding: var(--spacing-sm) var(--spacing-md); border: 0; outline: 0; background: none; color: var(--color-text-primary); font: var(--font-size-sm)/var(--line-height-normal) var(--font-family); resize: none; }
+.textarea textarea::placeholder { color: var(--color-text-tertiary); }
+.textarea__count { align-self: flex-end; padding: 0 var(--spacing-sm) var(--spacing-xs); color: var(--color-text-tertiary); font: var(--font-size-xs)/1 var(--font-family-mono); font-variant-numeric: tabular-nums; transition: color var(--duration-fast) var(--ease-out); }
+.textarea[data-full] .textarea__count { color: var(--color-status-critical); }
+
+/* Banner: a message in the page flow. Tone by data-variant: info (default), success, warning, critical.
+   data-dismiss on its close button folds it away (ds.js); it slides in when it appears. */
+.banner { display: flex; align-items: flex-start; gap: var(--spacing-md); padding: var(--spacing-md); border: var(--stroke-width-subtle) solid var(--color-accent-border); border-radius: var(--radius-lg); background: var(--color-accent-subtle); color: var(--color-text-primary); font-size: var(--font-size-sm); line-height: var(--line-height-normal);
+  animation: enter-down var(--duration-spring) var(--ease-spring); }
+.banner > .icon { --icon-size: 18px; margin-top: 1px; color: var(--color-accent); }
+.banner__body { display: flex; flex: 1; flex-direction: column; gap: 2px; min-width: 0; }
+.banner__title { font-weight: var(--font-weight-semibold); }
+.banner__text { color: var(--color-text-secondary); }
+.banner__actions { display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm); }
+.banner > .btn[data-variant="icon"] { margin: calc(var(--spacing-xs) * -1) calc(var(--spacing-xs) * -1) 0 0; }
+.banner[data-variant="success"] { border-color: color-mix(in srgb, var(--color-status-success) 30%, transparent); background: var(--color-status-success-subtle); }
+.banner[data-variant="success"] > .icon { color: var(--color-status-success); }
+.banner[data-variant="warning"] { border-color: color-mix(in srgb, var(--color-status-warning) 30%, transparent); background: var(--color-status-warning-subtle); }
+.banner[data-variant="warning"] > .icon { color: var(--color-status-warning); }
+.banner[data-variant="critical"] { border-color: color-mix(in srgb, var(--color-status-critical) 30%, transparent); background: var(--color-status-critical-subtle); }
+.banner[data-variant="critical"] > .icon { color: var(--color-status-critical); }
+/* Dismissed: fades, then the room it took closes, so the content under it rises instead of jumping. */
+.banner[data-leaving] { interpolate-size: allow-keywords; overflow: hidden; animation: banner-out var(--duration-slow) var(--ease-in) forwards; }
+@keyframes banner-out { 40% { opacity: 0; transform: scale(0.98); filter: blur(2px); } to { opacity: 0; height: 0; padding-block: 0; margin-block: 0; border-width: 0; } }
+
+/* Empty state: what a list or a page shows before it has content, and the way to give it some. */
+.empty { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-sm); max-width: 360px; margin: 0 auto; padding: var(--spacing-2xl) var(--spacing-lg); text-align: center; }
+.empty__art { display: grid; place-items: center; width: 56px; height: 56px; margin-bottom: var(--spacing-sm); border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-xl); background: var(--color-surface-raised); box-shadow: var(--shadow-md); color: var(--color-text-secondary);
+  animation: empty-float calc(var(--duration-slow) * 12) ease-in-out infinite; }
+.empty__art .icon { --icon-size: 26px; }
+/* A slow float: the space waits, it is not broken. Stops under reduced motion with the other durations. */
+@keyframes empty-float { 50% { transform: translateY(-4px) rotate(-2deg); } }
+@media (prefers-reduced-motion: reduce) { .empty__art { animation: none; } }
+.empty__title { margin: 0; color: var(--color-text-primary); font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); }
+.empty__text { margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--line-height-normal); }
+.empty__actions { display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm); }
+.empty[data-variant="compact"] { padding: var(--spacing-lg); }
+.empty[data-variant="compact"] .empty__art { width: 40px; height: 40px; border-radius: var(--radius-lg); box-shadow: none; animation: none; }
+.empty[data-variant="compact"] .empty__art .icon { --icon-size: 20px; }
+
+/* List: rows of things. An item has a lead (avatar or icon), a body (title and meta) and a trail (badge, value, chevron).
+   An <a> or <button> item is clickable: it highlights and its chevron nudges. data-variant="inset" puts the list in a card.
+   Rows enter one after the other the first time the list paints. */
+.list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.list[data-variant="inset"] { overflow: hidden; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface-raised); }
+.list__item { display: flex; align-items: center; gap: var(--spacing-md); min-height: 52px; padding: var(--spacing-sm) var(--spacing-md); border: 0; border-bottom: var(--stroke-width-subtle) solid var(--color-border); background: none; color: var(--color-text-primary); font: inherit; text-align: left; text-decoration: none;
+  animation: enter var(--duration-slow) var(--ease-out) both; transition: background var(--duration-fast) var(--ease-out); }
+.list > :last-child { border-bottom: 0; }
+.list:not([data-variant="inset"]) .list__item { padding-inline: 0; }
+.list__item:nth-child(2) { animation-delay: var(--duration-stagger); }
+.list__item:nth-child(3) { animation-delay: calc(var(--duration-stagger) * 2); }
+.list__item:nth-child(4) { animation-delay: calc(var(--duration-stagger) * 3); }
+.list__item:nth-child(5) { animation-delay: calc(var(--duration-stagger) * 4); }
+.list__item:nth-child(n + 6) { animation-delay: calc(var(--duration-stagger) * 5); }
+:is(a, button).list__item { cursor: pointer; }
+.list[data-variant="inset"] :is(:is(a, button).list__item:hover, .list__item[data-force="hover"]) { background: var(--color-surface-hover); }
+.list:not([data-variant="inset"]) :is(:is(a, button).list__item:hover, .list__item[data-force="hover"]) .list__title { color: var(--color-accent); }
+:is(a, button).list__item:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: -2px; }
+.list__item[aria-current] { background: var(--color-accent-subtle); }
+.list__lead { display: grid; place-items: center; flex: none; width: var(--control-height); height: var(--control-height); border-radius: var(--radius-md); background: var(--color-surface-sunken); color: var(--color-text-secondary); }
+.list__lead.avatar { border-radius: var(--radius-full); }
+.list__body { display: flex; flex: 1; flex-direction: column; gap: 2px; min-width: 0; }
+.list__title { overflow: hidden; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); white-space: nowrap; text-overflow: ellipsis; transition: color var(--duration-fast) var(--ease-out); }
+.list__meta { overflow: hidden; color: var(--color-text-secondary); font-size: var(--font-size-xs); white-space: nowrap; text-overflow: ellipsis; }
+.list__trail { display: flex; align-items: center; gap: var(--spacing-sm); flex: none; color: var(--color-text-tertiary); font-size: var(--font-size-xs); }
+.list__chevron { color: var(--color-text-tertiary); transition: transform var(--duration-spring) var(--ease-spring), color var(--duration-fast) var(--ease-out); }
+:is(:is(a, button).list__item:hover, .list__item[data-force="hover"]) .list__chevron { transform: translateX(3px); color: var(--color-text-primary); }
+
+/* App shell: navigation rail, top bar and content. data-collapsed on .shell folds the rail to icons (ds.js toggles it
+   from [data-shell-toggle]); labels fade and the rail springs to its new width. The current page carries aria-current. */
+.shell { display: grid; grid-template-columns: 232px 1fr; grid-template-rows: auto 1fr; grid-template-areas: "nav top" "nav main"; height: 100vh; height: 100dvh; background: var(--color-surface); color: var(--color-text-primary);
+  transition: grid-template-columns var(--duration-spring) var(--ease-spring); }
+.shell[data-collapsed] { grid-template-columns: 56px 1fr; }
+.shell__nav { grid-area: nav; display: flex; flex-direction: column; gap: var(--spacing-xs); min-width: 0; overflow: hidden; padding: var(--spacing-md) var(--spacing-sm); border-right: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised); }
+.shell__brand { display: flex; align-items: center; gap: var(--spacing-sm); height: var(--control-height); margin-bottom: var(--spacing-md); padding: 0 var(--spacing-sm); font-weight: var(--font-weight-semibold); white-space: nowrap; }
+.shell__brand .avatar { border-radius: var(--radius-sm); }
+.shell__top { grid-area: top; display: flex; align-items: center; gap: var(--spacing-md); height: 56px; padding: 0 var(--spacing-lg); border-bottom: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised); }
+.shell__title { flex: 1; min-width: 0; margin: 0; overflow: hidden; font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); white-space: nowrap; text-overflow: ellipsis; }
+.shell__main { grid-area: main; overflow: auto; padding: var(--spacing-xl); }
+.nav__section { margin: var(--spacing-md) 0 var(--spacing-xs); padding: 0 var(--spacing-sm); color: var(--color-text-tertiary); font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); text-transform: uppercase; white-space: nowrap; }
+.nav__item { position: relative; display: flex; align-items: center; gap: var(--spacing-sm); height: var(--control-height); padding: 0 var(--spacing-sm); border-radius: var(--radius-sm); color: var(--color-text-secondary); font: var(--font-weight-medium) var(--font-size-sm)/1 var(--font-family); text-decoration: none; white-space: nowrap;
+  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
+.nav__item .icon { flex: none; transition: transform var(--duration-spring) var(--ease-bounce); }
+.nav__item:hover, .nav__item[data-force="hover"] { background: var(--color-surface-hover); color: var(--color-text-primary); }
+.nav__item:hover .icon { transform: scale(1.1); }
+.nav__item:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: -2px; }
+.nav__item[aria-current="page"] { background: var(--color-accent-subtle); color: var(--color-accent); }
+.nav__count { margin-left: auto; color: var(--color-text-tertiary); font: var(--font-size-xs)/1 var(--font-family-mono); }
+.nav__label, .nav__count, .nav__section, .shell__brand-name { transition: opacity var(--duration-base) var(--ease-out); }
+.shell[data-collapsed] :is(.nav__label, .nav__count, .nav__section, .shell__brand-name) { opacity: 0; pointer-events: none; }
+.shell__foot { margin-top: auto; }

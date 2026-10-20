@@ -32,9 +32,9 @@ Spend effort on design decisions, not on CSS. The design system is the language:
 Never invent a component class in a screen. Either:
 
 - Topic-only layout: a local class in `screens.css`, in tokens.
-- Reusable element: add it to the design system, in this order: `components.css` (one block, variants through `data-variant`, native states, `data-force="hover|active|focus"` to pin a pseudo-state in the specimen, tokens only), `components.json` (`id`, `class`, `name`, `variants`, `states`), `components/<id>.html` (variants × states specimen, like `button.html`), `catalog/<id>.md` (role, markup, variants, states, rules, under 20 lines). Check it at `handoff/playground/?ds=<ds>#<id>` in light and dark.
+- Reusable element: follow [new-component](../new-component/SKILL.md).
 
-A design system change reaches every topic that uses it. Minimaly lives in `handoff/`, which an update replaces: add components to your own design system, not to Minimaly.
+A design system change reaches every topic that uses it.
 
 ## Validator codes
 

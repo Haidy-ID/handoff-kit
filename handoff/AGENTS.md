@@ -18,7 +18,9 @@ handoff/               the kit, replaced as a whole on update: never edit it in 
 ## Skills
 
 - Create a topic, a prototype-only topic, a journal entry or a story: [skills/new-topic.md](skills/new-topic.md).
-- Build or edit screens, add a component to a design system: [skills/build-mockup/SKILL.md](skills/build-mockup/SKILL.md).
+- Build or edit screens: [skills/build-mockup/SKILL.md](skills/build-mockup/SKILL.md).
+- Create or upgrade a design system component: [skills/new-component/SKILL.md](skills/new-component/SKILL.md).
+- Animated illustrations for stories and deliverables (optional): an illustration skill such as [Hairline](https://hairline.lucasmarkes.com/skills) (`npx skills add lucasmarkes/hairline`, MIT) makes one self-contained HTML figure per idea. Save it in the topic's `figures/` and embed it with `![caption](figures/<name>.html)`.
 
 ## Rules
 

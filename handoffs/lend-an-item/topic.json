@@ -16,6 +16,9 @@
   "components": [
     "button",
     "input",
+    "field",
+    "list",
+    "avatar",
     "badge",
     "icon"
   ],

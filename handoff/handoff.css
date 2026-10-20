@@ -290,3 +290,7 @@ section { margin-top: 48px; }
 .md-gap { display: flex; gap: 8px; align-items: baseline; }
 .md--doc { margin: 0 auto; }
 .md--doc h2:first-child { font-size: 32px; }
+.md-figure { margin: 16px 0; }
+.md-figure img, .md-figure iframe { display: block; width: 100%; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--color-surface-raised); }
+.md-figure iframe { aspect-ratio: 16 / 10; }
+.md-figure figcaption { margin-top: 8px; color: var(--text-3); font-size: 13px; text-align: center; }
