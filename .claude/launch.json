@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "handoff",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["serve.py", "8021"],
+      "port": 8021
+    }
+  ]
+}

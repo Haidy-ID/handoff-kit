@@ -46,6 +46,12 @@
         return /^https?:/i.test(href) ? href : new URL(href, fileUrl).href;
       };
       document.getElementById("doc").innerHTML = renderMarkdown(text, { link });
+      // The theme chosen on the handoff pages, for the reader and its figures (they read html[data-theme], like screens).
+      let theme = "light";
+      try { theme = localStorage.getItem("handoff-theme") || theme; } catch {}
+      document.documentElement.dataset.theme = theme;
+      const themeFigure = (frame) => { try { frame.contentDocument.documentElement.dataset.theme = theme; } catch {} };
+      document.querySelectorAll(".md-figure iframe").forEach((frame) => { themeFigure(frame); frame.addEventListener("load", () => themeFigure(frame)); });
       window.renderIcons?.();
     })().catch((e) => { document.getElementById("doc").textContent = e.message; });
   </script>

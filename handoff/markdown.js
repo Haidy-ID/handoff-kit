@@ -1,6 +1,6 @@
 // Small Markdown renderer for the topic journal and the Markdown deliverables (stories, studies). No dependency.
 // Headings, paragraphs, lists, quotes, code, bold, italic, links and figures ("![caption](file.png|file.html)" on its own line;
-// an .html figure, such as an animated illustration, plays in a sandboxed frame). "> Gap: …" renders as a gap callout:
+// an .html figure, such as an animated illustration, plays in a frame). "> Gap: …" renders as a gap callout:
 // a moment the story tells that no screen shows yet. Links go through options.link(href), which returns a URL or null.
 window.renderMarkdown = (text, { link = (href) => href } = {}) => {
   const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -32,11 +32,12 @@ window.renderMarkdown = (text, { link = (href) => href } = {}) => {
     if (!line.trim()) flush();
     else if ((m = line.match(/^(#{1,4})\s+(.*)/))) { flush(); const n = Math.min(m[1].length + 1, 5); out.push(`<h${n}>${inline(m[2])}</h${n}>`); }
     else if ((m = line.match(/^!\[([^\]]*)\]\(([^)\s]+)\)$/))) {
-      // A figure on its own line: an image, or an HTML figure (an animated illustration) in a sandboxed frame.
+      // A figure on its own line: an image, or an HTML figure (an animated illustration) in a frame. No sandbox: figures are
+      // files of the project, like the screens, and some browsers block sandboxed (opaque-origin) frames outright.
       flush();
       const url = safe(m[2]);
       const caption = m[1] ? `<figcaption>${inline(m[1])}</figcaption>` : "";
-      if (url) out.push(`<figure class="md-figure">${/\.html?(\?|#|$)/i.test(m[2]) ? `<iframe src="${esc(url)}" title="${esc(m[1] || "Figure")}" loading="lazy" sandbox="allow-scripts"></iframe>` : `<img src="${esc(url)}" alt="${esc(m[1])}" loading="lazy">`}${caption}</figure>`);
+      if (url) out.push(`<figure class="md-figure">${/\.html?(\?|#|$)/i.test(m[2]) ? `<iframe src="${esc(url)}" title="${esc(m[1] || "Figure")}" loading="lazy"></iframe>` : `<img src="${esc(url)}" alt="${esc(m[1])}" loading="lazy">`}${caption}</figure>`);
     }
     else if ((m = line.match(/^>\s*Gap:\s*(.*)/i))) { flush(); out.push(`<p class="md-gap"><span class="badge" data-variant="warning">Gap</span>${inline(m[1])}</p>`); }
     else if ((m = line.match(/^>\s?(.*)/))) { flush(); out.push(`<blockquote>${inline(m[1])}</blockquote>`); }

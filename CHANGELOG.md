@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.1 · 2026-10-20
+
+- Fix: Markdown figures stayed empty. Their frame was sandboxed, and some browsers block sandboxed frames outright; figures now load like screens.
+- Figures and the document reader follow the handoff theme: the page sets `data-theme` on the figure, which styles itself from it.
+
 ## 2.1.0 · 2026-10-20
 
 - Minimaly components: field (label, hint, error with shake), checkbox (drawn check, indeterminate), radio, switch, textarea (grows, counter), banner (dismiss folds it away), empty state, list (lead, body, trail, staggered entry), app shell (navigation rail that folds).

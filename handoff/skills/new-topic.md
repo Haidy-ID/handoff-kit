@@ -43,7 +43,7 @@ One heading per day, one line per change or decision, with its reason. `[label](
 
 ## Story
 
-A story is a Markdown deliverable: a user's day told step by step, each step linked to its screen (`[the form](screen:add-loan)`). A moment no screen shows yet is a gap: `> Gap: no screen shows a reminder for a late loan.` It renders as a Gap callout. Declare it in `deliverables`. A figure on its own line illustrates it: `![caption](figures/<name>.png)` for an image, `![caption](figures/<name>.html)` for an animated illustration, played in a sandboxed frame.
+A story is a Markdown deliverable: a user's day told step by step, each step linked to its screen (`[the form](screen:add-loan)`). A moment no screen shows yet is a gap: `> Gap: no screen shows a reminder for a late loan.` It renders as a Gap callout. Declare it in `deliverables`. A figure on its own line illustrates it: `![caption](figures/<name>.png)` for an image, `![caption](figures/<name>.html)` for an animated illustration, played in a frame. The page sets `data-theme="dark"` on the figure's `<html>` in dark theme: style the figure from that attribute, not from `prefers-color-scheme`.
 
 ## Rules
 
