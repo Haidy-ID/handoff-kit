@@ -1,8 +1,14 @@
 # Changelog
 
-## Unreleased
+## 2.2.0 · 2026-10-21
 
-- Handoff Kit is now Protopass: a prototype workshop to explore ideas, keep them organised and hand the ready ones to a developer or an AI. Folders, files and config keys keep their names: nothing to migrate.
+- Handoff Kit is now Protopass: a prototype workshop to explore ideas, keep them organised and hand the ready ones to a developer or an AI. The repository moved to `Haidy-ID/protopass` (the old address redirects). Folders, files and config keys keep their names: nothing to migrate. Topic tabs read "<topic> · <site name>"; the default site is "My prototypes".
+- Typing: the three dots dance a 12 s loop on one line (wave, ping-pong, wave, Newton's cradle), each figure melting into the next. Needs `ds.js`; the dots stay still under reduced motion.
+- Errors shake once when they appear: failed step, critical toast, critical banner, as already the async button error and an invalid field. Persistent critical tones (badge, menu item) stay still.
+- Hold to confirm: holding turns the fill, border, label and icon critical red; once confirmed it keeps that red (no green check) and turns `aria-disabled` for good.
+- App shell: folded, the rail is one square item wide, so items are 32 px squares and icons stay put.
+- Fixes: async button labels no longer sit offset in busy, done and error; focus rings at the top of a dialog body are no longer clipped.
+- Playground: the component list and the component scroll on their own; specimens with a select, menu or dialog keep room for it to open; the dialog specimen uses the documented input markup.
 
 ## 2.1.1 · 2026-10-20
 
