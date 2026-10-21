@@ -454,8 +454,10 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 /* Hold to confirm: a .btn with data-hold for an action that cannot be undone. Holding fills it; letting go early drains
    it faster than it filled. Only a full hold fires the "confirm" event. Built by ds.js. */
 .btn[data-hold] { position: relative; overflow: hidden; isolation: isolate; }
-.btn__fill { position: absolute; inset: 0; z-index: -1; background: var(--color-status-critical-subtle); transform: scaleX(0); transform-origin: left; }
-.btn[data-hold][data-state="done"] { border-color: var(--color-status-critical); color: var(--color-status-critical); }
+/* Holding and confirmed speak in critical red: the fill, the border, the label and its icon, the check included. */
+.btn__fill { position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--color-status-critical) 16%, transparent); transform: scaleX(0); transform-origin: left; }
+.btn[data-hold]:is([data-holding], [data-state="done"]) { border-color: var(--color-status-critical); color: var(--color-status-critical); }
+.btn[data-hold]:is([data-holding], [data-state="done"]) .icon { color: var(--color-status-critical); }
 
 
 /* Field: a label, its control, an optional hint and an error. Works around .input, .select, .textarea or a group of choices.

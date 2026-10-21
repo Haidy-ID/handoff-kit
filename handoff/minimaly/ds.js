@@ -709,7 +709,8 @@
 
   // Hold to confirm (interior.dev): .btn[data-hold] for an action that cannot be undone. Holding the pointer, Space or Enter
   // fills it over 1.8 s; letting go drains it 2.5 times faster, and pressing again resumes from what is left. Only a full
-  // hold fires "confirm" on the button, then data-confirmed ("Confirmed") shows for 1.6 s. A click alone does nothing.
+  // hold fires "confirm" on the button, then data-confirmed ("Confirmed") shows in full for 1.6 s and the button, its job
+  // done, turns disabled for good. A click alone does nothing.
   const HOLD = 1800;
   const HOLD_SHOWN = 1600;
   const DRAIN = 2.5;
@@ -724,6 +725,7 @@
     h.from = progressOf(h);
     h.since = performance.now();
     h.dir = dir;
+    btn.toggleAttribute("data-holding", dir > 0);
     clearTimeout(h.timer);
     h.anim.currentTime = h.from * HOLD;
     h.anim.playbackRate = dir > 0 ? 1 : -DRAIN;
@@ -736,15 +738,11 @@
     Object.assign(h, { dir: 0, from: 1 });
     h.anim.pause();
     h.anim.currentTime = HOLD;
+    btn.removeAttribute("data-holding");
     btn.dataset.state = "done";
     btn.dispatchEvent(new Event("confirm", { bubbles: true }));
     announce(btn.querySelector('[data-for="done"]').textContent);
-    setTimeout(() => {
-      Object.assign(h, { dir: 0, from: 0 });
-      h.anim.pause();
-      h.anim.currentTime = 0;
-      btn.dataset.state = "idle";
-    }, HOLD_SHOWN);
+    setTimeout(() => btn.setAttribute("aria-disabled", "true"), HOLD_SHOWN);
   };
   const buildHold = (btn) => {
     const idle = Object.assign(document.createElement("span"), { className: "btn__label" });
