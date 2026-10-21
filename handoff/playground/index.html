@@ -64,6 +64,7 @@
       const show = async () => {
         const c = list.find((x) => x.id === location.hash.slice(1)) || list[0];
         document.querySelectorAll("#nav a").forEach((a) => a.setAttribute("aria-current", a.hash === `#${c.id}`));
+        $("nav").querySelector('[aria-current="true"]')?.scrollIntoView({ block: "nearest" });
         $("name").textContent = c.name;
         $("meta").textContent = `Variants: ${c.variants.join(", ")} · States: ${c.states.join(", ")}`;
         const users = topics.filter((t) => t.ds === ds && t.components?.includes(c.id));
