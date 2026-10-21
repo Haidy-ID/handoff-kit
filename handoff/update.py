@@ -7,7 +7,7 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
-REPO = "Haidy-ID/handoff-kit"
+REPO = "Haidy-ID/protopass"
 KIT = Path(__file__).resolve().parent
 
 

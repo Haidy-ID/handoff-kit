@@ -2,7 +2,7 @@
 // GitHub release. Served by serve.py on this machine, it installs the update (POST /__handoff/update); published, it links the zip.
 (() => {
   const KIT = new URL(".", document.currentScript.src);
-  const REPO = "Haidy-ID/handoff-kit";
+  const REPO = "Haidy-ID/protopass";
   const LOCAL = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
   const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const icon = (name) => `<i class="icon" data-icon="${name}"></i>`;
