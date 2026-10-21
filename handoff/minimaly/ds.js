@@ -537,6 +537,50 @@
     if (el) streams.get(el)?.finish();
   });
 
+  // Typing: the three dots dance a 12 s loop on one line, each figure melting into the next:
+  // wave, ping-pong, wave, Newton's cradle. Every figure gets 2.4 s, every blend 0.6 s.
+  // Each figure is a function of time, so a blend runs both at once and the dots never stop mid-move.
+  // One keyframe track per dot, computed once and shared by every indicator. Reduced motion keeps the dots still.
+  const ROUTINE = ["wave", "pong", "wave", "pendulum"], FIGURE = 3000, DANCE = ROUTINE.length * FIGURE;
+  const figures = {
+    wave: (i, t) => {
+      const p = (((t - i * 160) / 1200) % 1 + 1) % 1, up = p < 0.6 ? Math.sin((Math.PI * p) / 0.6) : 0;
+      return [(i - 1) * 8, -3 * up, 1, 0.3 + 0.7 * up];
+    },
+    // The middle dot hops between the outer two, which swell on each hit.
+    pong: (i, t) => {
+      const u = (t / 1200) % 1;
+      if (i === 1) { const h = (u * 2) % 1; return [u < 0.5 ? -8 + 16 * h : 8 - 16 * h, -20 * h * (1 - h), 1, 1]; }
+      const hit = Math.max(0, 1 - ((u - (i ? 0.5 : 0) + 1) % 1) / 0.25);
+      return [i ? 13 : -13, 0, 1 + 0.35 * hit, 0.45 + 0.55 * hit];
+    },
+    // Newton's cradle: the outer dots swing out in turn and fall back, fastest at the hit. The middle one stays,
+    // and each hit flashes it and nudges it the way the momentum goes, like the pong paddles.
+    pendulum: (i, t) => {
+      const u = (t / 1200) % 1, side = i - 1, hit = Math.max(0, 1 - ((u * 2) % 1) / 0.25);
+      if (!side) return [(u < 0.5 ? -1.5 : 1.5) * hit, 0, 1 + 0.35 * hit, 0.55 + 0.45 * hit];
+      const swing = (side < 0) === (u < 0.5) ? Math.sin(Math.PI * ((u * 2) % 1)) : 0;
+      return [side * (8 + 6 * swing), -3 * swing * swing, 1, 0.55 + 0.45 * swing];
+    },
+  };
+  const blend = (a, b, from, to, t) => {
+    const x = Math.min(1, Math.max(0, (t - from) / (to - from))), w = x * x * (3 - 2 * x);
+    return a.map((v, k) => v + (b[k] - v) * w);
+  };
+  const danceAt = (i, t) => {
+    const k = Math.min(ROUTINE.length - 1, Math.floor(t / FIGURE)), next = ROUTINE[(k + 1) % ROUTINE.length];
+    return blend(figures[ROUTINE[k]](i, t), figures[next](i, t), (k + 1) * FIGURE - 600, (k + 1) * FIGURE, t);
+  };
+  let dance;
+  const startDance = (dots) => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches || dots.firstElementChild?.getAnimations().length) return;
+    dance ??= [0, 1, 2].map((i) => Array.from({ length: 361 }, (_, k) => {
+      const [x, y, s, o] = danceAt(i, (k / 360) * DANCE);
+      return { transform: `translate(${x - (i - 1) * 8}px, ${y}px) scale(${s})`, opacity: o };
+    }));
+    [...dots.children].slice(0, 3).forEach((dot, i) => dot.animate(dance[i], { duration: DANCE, iterations: Infinity }));
+  };
+
   // Steps: setSteps(list, current, failed) marks a run. Before current: done. current: active, or failed when failed is
   // true, and nothing after a failure pretends to have run. current = number of steps: the run is complete.
   window.setSteps = (list, current, failed = false) => {
@@ -822,6 +866,7 @@
     each(node, ".checkbox__box", buildCheckbox);
     each(node, ".field", buildField);
     each(node, ".textarea[data-max]:not(:has(.textarea__count))", buildTextarea);
+    each(node, ".typing__dots", startDance);
   };
   enhance(document.body);
   new MutationObserver((records) => {

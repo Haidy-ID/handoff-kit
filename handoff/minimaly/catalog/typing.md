@@ -1,6 +1,6 @@
 # Typing
 
-The agent is working on an answer. Three dots in agent violet, and what it is doing in words when that helps.
+The agent is working on an answer. Three dots in agent violet, and what it is doing in words when that helps. Needs `ds.js`: the dots dance a 12 s loop (wave, ping-pong, wave, Newton's cradle) and stay still under reduced motion.
 
 ```html
 <span class="typing" role="status"><span class="typing__dots"><i></i><i></i><i></i></span>Reading 12 documents</span>
