@@ -344,7 +344,8 @@
 @starting-style { .drawer[open] { transform: translateX(100%); } .drawer[data-side="left"][open] { transform: translateX(-100%); } }
 .dialog__head { display: flex; align-items: center; gap: var(--spacing-sm); min-height: 52px; padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-lg); }
 .dialog__title { flex: 1; min-width: 0; margin: 0; overflow: hidden; font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); white-space: nowrap; text-overflow: ellipsis; }
-.dialog__body { flex: 1; overflow: auto; overscroll-behavior: contain; padding: 0 var(--spacing-lg) var(--spacing-lg); color: var(--color-text-secondary); font-size: var(--font-size-md); line-height: var(--line-height-normal); }
+/* The scroll box clips at its padding: the top padding, taken back by the margin, leaves room for focus rings. */
+.dialog__body { flex: 1; overflow: auto; overscroll-behavior: contain; margin-top: calc(-1 * var(--spacing-xs)); padding: var(--spacing-xs) var(--spacing-lg) var(--spacing-lg); color: var(--color-text-secondary); font-size: var(--font-size-md); line-height: var(--line-height-normal); }
 .dialog__foot { display: flex; justify-content: flex-end; gap: var(--spacing-sm); padding: var(--spacing-md) var(--spacing-lg); border-top: var(--stroke-width-subtle) solid var(--color-border); }
 html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 
