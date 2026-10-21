@@ -58,7 +58,6 @@
 .btn__label { display: inline-flex; grid-area: 1 / 1; align-items: center; justify-content: center; gap: var(--spacing-xs); opacity: 0; visibility: hidden; transform: translateY(6px) scale(0.96); filter: blur(var(--blur-swap));
   transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-spring) var(--ease-spring), filter var(--duration-base) var(--ease-out), visibility var(--duration-base); }
 /* The leaving label rises out while the new one rises in from below, both through a blur. */
-.btn[data-state] > .btn__label:not([data-for="idle"]) { transform: translateY(6px) scale(0.96); }
 .btn[data-state="idle"] > .btn__label:not([data-for="idle"]), .btn:not([data-state="idle"]) > [data-for="idle"] { transform: translateY(-6px) scale(0.96); }
 :is(.btn[data-state="idle"] > [data-for="idle"], .btn[data-state="busy"] > [data-for="busy"], .btn[data-state="done"] > [data-for="done"], .btn[data-state="error"] > [data-for="error"]) { opacity: 1; visibility: visible; transform: none; filter: none; }
 /* Done: the check lands with a bounce and a small turn. */
