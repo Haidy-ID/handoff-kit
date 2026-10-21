@@ -17,7 +17,8 @@
 @keyframes spin { to { transform: rotate(1turn); } }
 /* swap-in = new content replacing old in place (a panel, a label): rises out of a light blur. */
 @keyframes swap-in { from { opacity: 0; transform: translateY(4px); filter: blur(var(--blur-swap)); } }
-/* shake = a field refused its value: a short damped shake, played once when the error appears. */
+/* shake = "no, there is an error": a short damped shake, played once when an error appears (refused value, failed step,
+   async button error, critical toast or banner). Persistent tones (critical badge, menu item) never shake. */
 @keyframes shake { 15% { transform: translateX(-5px); } 35% { transform: translateX(4px); } 55% { transform: translateX(-3px); } 75% { transform: translateX(2px); } }
 
 /* Pages of the same site crossfade into each other on navigation (cross-document view transition). */
@@ -365,6 +366,8 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .toast > .icon { color: inherit; }
 .toast[data-variant="success"] > .icon { color: var(--color-status-success); }
 .toast[data-variant="critical"] > .icon { color: var(--color-status-critical); }
+/* Critical: once settled, it shakes no. */
+.toast[data-variant="critical"]:not([data-leaving]) { animation: toast-in var(--duration-spring) var(--ease-spring), shake calc(var(--duration-slow) * 1.4) var(--ease-out) var(--duration-spring); }
 .toast .btn { height: 28px; border-color: transparent; background: none; color: inherit; }
 .toast .btn:hover { background: color-mix(in srgb, var(--color-surface-raised) 14%, transparent); border-color: transparent; }
 .toast .btn .icon { color: inherit; }
@@ -393,7 +396,7 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .steps > li[data-state="active"]::before { border-color: var(--color-agent-border); border-top-color: var(--color-agent); animation: spin calc(var(--duration-slow) * 2.5) linear infinite; }
 .steps > li[data-state="done"] { color: var(--color-text-secondary); }
 .steps > li[data-state="done"]::before { content: "✓"; border-color: var(--color-status-success); background: var(--color-status-success); animation: pop-in var(--duration-spring) var(--ease-bounce); }
-.steps > li[data-state="failed"] { color: var(--color-status-critical); }
+.steps > li[data-state="failed"] { color: var(--color-status-critical); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
 .steps > li[data-state="failed"]::before { content: "✕"; border-color: var(--color-status-critical); background: var(--color-status-critical); }
 .steps__meta { margin-left: auto; color: var(--color-text-tertiary); font: var(--font-weight-regular) var(--font-size-xs)/1 var(--font-family-mono); visibility: hidden; }
 .steps > li[data-state="done"] .steps__meta { visibility: visible; animation: fade-in var(--duration-base) var(--ease-out); }
@@ -535,6 +538,7 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .banner[data-variant="warning"] > .icon { color: var(--color-status-warning); }
 .banner[data-variant="critical"] { border-color: color-mix(in srgb, var(--color-status-critical) 30%, transparent); background: var(--color-status-critical-subtle); }
 .banner[data-variant="critical"] > .icon { color: var(--color-status-critical); }
+.banner[data-variant="critical"]:not([data-leaving]) { animation: enter-down var(--duration-spring) var(--ease-spring), shake calc(var(--duration-slow) * 1.4) var(--ease-out) var(--duration-spring); }
 /* Dismissed: fades, then the room it took closes, so the content under it rises instead of jumping. */
 .banner[data-leaving] { interpolate-size: allow-keywords; overflow: hidden; animation: banner-out var(--duration-slow) var(--ease-in) forwards; }
 @keyframes banner-out { 40% { opacity: 0; transform: scale(0.98); filter: blur(2px); } to { opacity: 0; height: 0; padding-block: 0; margin-block: 0; border-width: 0; } }

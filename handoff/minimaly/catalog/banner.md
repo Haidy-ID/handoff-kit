@@ -11,5 +11,5 @@ A message in the page flow about the page or the whole product: news, a result, 
 </div>
 ```
 
-- Variants: none (info, accent), `success`, `warning`, `critical` (use `role="alert"` for critical). Icons: `info`, `check-circle`, `warning`, `warning-octagon`.
+- Variants: none (info, accent), `success`, `warning`, `critical` (use `role="alert"` for critical; it shakes once when it appears). Icons: `info`, `check-circle`, `warning`, `warning-octagon`.
 - It slides in when it appears. `data-dismiss` folds it away, closes its room, removes it and fires `dismiss` on its parent (needs `ds.js`).

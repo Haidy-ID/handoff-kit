@@ -15,7 +15,7 @@ setSteps(list, 1, true);  // second failed, nothing after it ran
 setSteps(list, 2);        // all done
 ```
 
-- Each step: pending (hollow), active (violet spinner, the agent at work), done (green check), failed (red cross).
+- Each step: pending (hollow), active (violet spinner, the agent at work), done (green check), failed (red cross, the row shakes once).
 - Before `current`: done. After a failure, the next steps stay pending: nothing pretends to have run.
 - `.steps__meta`, a duration or a count, appears when its step is done. Its room is kept, so rows never shift.
 - The list carries `aria-busy` while running and the active step `aria-current="step"`.

@@ -10,7 +10,7 @@
 </head>
 <body>
   <div class="specimen" style="--cols: 2">
-    <span></span><span class="col">Running</span><span class="col">Failed at step 3</span>
+    <span></span><span class="col">Running</span><span class="col">Failed at step 3 <button class="btn" id="fail-again">Fail again</button></span>
     <span class="row">Steps</span>
     <ol class="steps" id="run" aria-label="Report generation" style="width: 280px">
       <li>Read the sources<span class="steps__meta">1.2s</span></li>
@@ -27,7 +27,10 @@
   </div>
   <script src="../ds.js"></script>
   <script>
-    setSteps(document.getElementById("failed"), 2, true);
+    const failed = document.getElementById("failed");
+    setSteps(failed, 2, true);
+    // Replays the failure: back to running for a moment, then failed again, so the shake plays.
+    document.getElementById("fail-again").onclick = () => { setSteps(failed, 2); setTimeout(() => setSteps(failed, 2, true), 600); };
     const run = document.getElementById("run");
     let i = 0;
     setSteps(run, i);
