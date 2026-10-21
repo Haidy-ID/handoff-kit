@@ -592,9 +592,10 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
    from [data-shell-toggle]); labels fade and the rail springs to its new width. The current page carries aria-current. */
 .shell { display: grid; grid-template-columns: 232px 1fr; grid-template-rows: auto 1fr; grid-template-areas: "nav top" "nav main"; height: 100vh; height: 100dvh; background: var(--color-surface); color: var(--color-text-primary);
   transition: grid-template-columns var(--duration-spring) var(--ease-spring); }
-.shell[data-collapsed] { grid-template-columns: 56px 1fr; }
+/* Folded, the rail is exactly one square item wide: the items become 32 px squares, their icons centred and unmoved. */
+.shell[data-collapsed] { grid-template-columns: calc(var(--control-height) + 2 * var(--spacing-sm) + var(--stroke-width-subtle)) 1fr; }
 .shell__nav { grid-area: nav; display: flex; flex-direction: column; gap: var(--spacing-xs); min-width: 0; overflow: hidden; padding: var(--spacing-md) var(--spacing-sm); border-right: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised); }
-.shell__brand { display: flex; align-items: center; gap: var(--spacing-sm); height: var(--control-height); margin-bottom: var(--spacing-md); padding: 0 var(--spacing-sm); font-weight: var(--font-weight-semibold); white-space: nowrap; }
+.shell__brand { display: flex; align-items: center; gap: var(--spacing-sm); height: var(--control-height); margin-bottom: var(--spacing-md); padding: 0 var(--spacing-xs); font-weight: var(--font-weight-semibold); white-space: nowrap; }
 .shell__brand .avatar { border-radius: var(--radius-sm); }
 .shell__top { grid-area: top; display: flex; align-items: center; gap: var(--spacing-md); height: 56px; padding: 0 var(--spacing-lg); border-bottom: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised); }
 .shell__title { flex: 1; min-width: 0; margin: 0; overflow: hidden; font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); white-space: nowrap; text-overflow: ellipsis; }
