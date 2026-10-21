@@ -1,6 +1,6 @@
 ---
 name: new-component
-description: Creates or upgrades a design system component for Handoff Kit (CSS, behavior, specimen, card, catalog entry) with complete states, keyboard support and motion built on the tokens. Use when a screen needs an element the design system lacks, or when a component must be improved.
+description: Creates or upgrades a design system component for Protopass (CSS, behavior, specimen, card, catalog entry) with complete states, keyboard support and motion built on the tokens. Use when a screen needs an element the design system lacks, or when a component must be improved.
 ---
 
 # new-component
@@ -10,7 +10,7 @@ A component "worth the name" has every state a user can meet, works with the key
 ## Where
 
 - Your project: in your own design system (`handoff.config.json` → `designSystems`). Start one by copying `handoff/minimaly/` to `design-systems/<name>/` and declaring it.
-- Never in `handoff/minimaly/` inside a project: an update replaces `handoff/` and erases it. Minimaly changes belong to the Handoff Kit repository.
+- Never in `handoff/minimaly/` inside a project: an update replaces `handoff/` and erases it. Minimaly changes belong to the Protopass repository.
 - Before writing, read `<ds>/catalog/README.md`, then the cards of the two closest components: reuse their anatomy, sizes and naming.
 
 ## Steps

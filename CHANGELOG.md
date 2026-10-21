@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Handoff Kit is now Protopass: a prototype workshop to explore ideas, keep them organised and hand the ready ones to a developer or an AI. Folders, files and config keys keep their names: nothing to migrate.
+
 ## 2.1.1 · 2026-10-20
 
 - Fix: Markdown figures stayed empty. Their frame was sandboxed, and some browsers block sandboxed frames outright; figures now load like screens.

@@ -47,12 +47,12 @@
   const mark = (installed, release) => toggle.toggleAttribute("data-update", Boolean(release && newer(release.tag_name, installed)));
 
   const check = async () => {
-    render(`<p class="popover__label">Handoff Kit</p>${row("Installed", "…")}${row("Latest", "Checking…")}`);
+    render(`<p class="popover__label">Protopass</p>${row("Installed", "…")}${row("Latest", "Checking…")}`);
     const [installed, release] = await Promise.all([installedVersion(), latestRelease({ fresh: true })]);
     mark(installed, release);
-    if (!release) return render(`<p class="popover__label">Handoff Kit</p>${row("Installed", installed)}<p class="update-panel__note">GitHub cannot be reached. Try again later.</p>`);
+    if (!release) return render(`<p class="popover__label">Protopass</p>${row("Installed", installed)}<p class="update-panel__note">GitHub cannot be reached. Try again later.</p>`);
     const latest = release.tag_name.replace(/^v/, "");
-    const head = `<p class="popover__label">Handoff Kit</p>${row("Installed", installed)}${row("Latest", latest)}`;
+    const head = `<p class="popover__label">Protopass</p>${row("Installed", installed)}${row("Latest", latest)}`;
     const notes = `<a class="btn" data-variant="ghost" href="${esc(release.html_url)}" target="_blank">${icon("arrow-square-out")}Release notes</a>`;
     if (!newer(latest, installed)) return render(`${head}<p class="update-panel__note">${icon("check")}Up to date.</p><div class="popover__foot">${notes}</div>`);
     const action = LOCAL
@@ -70,12 +70,12 @@
     const res = await fetch("/__handoff/update", { method: "POST", headers: { "X-Handoff": "update" } }).catch(() => null);
     const body = await res?.json().catch(() => null);
     if (res?.ok && body?.version) {
-      render(`<p class="popover__label">Handoff Kit</p><p class="update-panel__note">${icon("check")}Updated to ${esc(body.version)}. Reloading…</p>`);
+      render(`<p class="popover__label">Protopass</p><p class="update-panel__note">${icon("check")}Updated to ${esc(body.version)}. Reloading…</p>`);
       return setTimeout(() => location.reload(), 800);
     }
     // Another local server (python -m http.server, an editor preview) has no update route.
     const why = body?.error || "This server cannot install updates. Run python serve.py at the site root, then try again.";
-    render(`<p class="popover__label">Handoff Kit</p><p class="update-panel__note update-panel__note--error">${esc(why)}</p>`);
+    render(`<p class="popover__label">Protopass</p><p class="update-panel__note update-panel__note--error">${esc(why)}</p>`);
   };
 
   const close = () => {

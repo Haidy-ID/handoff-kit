@@ -1,6 +1,8 @@
-# Handoff Kit
+# Protopass
 
-Build UX/UI prototypes fast with an AI, iterate on them, and hand them to a team in one standard shape: intent, screens with their states, flows, Q&A, open questions, journal and stories. Each topic opens as a page with a pannable canvas, a clickable prototype, a token inspector and Copy to Figma. No build, no dependency: HTML, CSS and JS served as is.
+A prototype workshop: explore your ideas, keep them organised, and when one is ready, hand it to a developer or an AI with everything needed to build it.
+
+Prototypes are built fast with an AI, iterated on, and handed over in one standard shape: intent, screens with their states, flows, Q&A, open questions, journal and stories. Each topic opens as a page with a pannable canvas, a clickable prototype, a token inspector and Copy to Figma. No build, no dependency: HTML, CSS and JS served as is.
 
 ## Start
 

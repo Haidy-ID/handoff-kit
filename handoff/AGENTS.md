@@ -1,6 +1,6 @@
-# Handoff Kit: guide for agents
+# Protopass: guide for agents
 
-Static site of handoff pages for UX/UI prototypes. No build, no dependency: HTML, CSS and JS served as is by `python serve.py` (no cache, live reload, update route).
+A prototype workshop: explore ideas, keep them organised, and hand the ready ones to a developer or an AI with everything needed to build them. Static site of handoff pages for UX/UI prototypes. No build, no dependency: HTML, CSS and JS served as is by `python serve.py` (no cache, live reload, update route).
 
 ## Layout
 
