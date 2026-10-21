@@ -3,7 +3,7 @@
 Where the page sits, right after the brand in the header. Built from the page location: each parent links back, the current page ends the trail.
 
 ```html
-<a class="brand" href="../../">…My Handoffs</a>
+<a class="brand" href="../../">…My prototypes</a>
 <nav class="breadcrumb" aria-label="Breadcrumb">
   <span class="breadcrumb__sep">/</span><a href="../../?q=Lending">Lending</a>
   <span class="breadcrumb__sep">/</span><span aria-current="page">Lend an item</span>

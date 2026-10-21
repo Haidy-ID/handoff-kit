@@ -134,7 +134,7 @@
         </article>`;
 
   const first = topic.screens[0];
-  document.title = `${topic.title} · Handoff`;
+  document.title = `${topic.title} · ${site.name}`;
   // Motion tokens for the animations driven from JS; they fall to 0 under reduced motion.
   const motion = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   const ms = (name) => parseFloat(motion(name)) || 0;
