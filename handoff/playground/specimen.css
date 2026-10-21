@@ -1,4 +1,6 @@
 /* Specimen pages: neutral grid around the components, in Minimaly tokens. Another design system's specimens link their own stylesheet. */
+/* The Playground iframe takes the page height: a page with an overlay (select, menu, dialog) keeps room for it to open. */
+body:has(.select, [data-menu], [data-context-menu], dialog) { min-height: 320px; }
 body { margin: 0; padding: var(--spacing-xl); background: var(--color-surface-raised); color: var(--color-text-primary); font-family: var(--font-family); font-size: var(--font-size-md); line-height: var(--line-height-normal); }
 /* Column names on top, then each row's name above its row, across all columns. */
 .specimen { display: grid; grid-template-columns: repeat(var(--cols, 5), max-content); align-items: start; gap: var(--spacing-sm) var(--spacing-xl); }
