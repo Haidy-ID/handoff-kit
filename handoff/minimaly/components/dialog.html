@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="../ds.css">
   <link rel="stylesheet" href="../../playground/specimen.css">
 </head>
-<body>
+<!-- The Playground iframe takes the page height, and a modal is capped at 78vh: room for the open modal. -->
+<body style="min-height: 320px">
   <div class="specimen" style="--cols: 3">
     <span></span><span class="col">Modal</span><span class="col">Drawer</span><span class="col">Explicit choice</span>
     <span class="row">Live</span>
@@ -16,7 +17,7 @@
   </div>
   <dialog class="modal" id="rename" aria-labelledby="rename-title">
     <div class="dialog__head"><h2 class="dialog__title" id="rename-title">Rename project</h2><button class="btn" data-variant="icon" data-close aria-label="Close"><i class="icon" data-icon="x"></i></button></div>
-    <div class="dialog__body"><input class="input" value="Quarterly report" autofocus style="width: 100%"></div>
+    <div class="dialog__body"><label class="input" style="width: 100%"><input value="Quarterly report" aria-label="Project name" autofocus></label></div>
     <div class="dialog__foot"><button class="btn" data-close>Cancel</button><button class="btn" data-variant="primary" data-close>Rename</button></div>
   </dialog>
   <dialog class="drawer" id="details" aria-labelledby="details-title">
