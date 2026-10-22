@@ -529,5 +529,23 @@
       "expanded",
       "collapsed"
     ]
+  },
+  {
+    "id": "rich-editor",
+    "class": "rich-editor",
+    "name": "Rich editor",
+    "variants": [
+      "default",
+      "counter"
+    ],
+    "states": [
+      "empty",
+      "hover",
+      "focus",
+      "filled",
+      "full",
+      "invalid",
+      "disabled"
+    ]
   }
 ]

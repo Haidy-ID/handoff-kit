@@ -844,6 +844,221 @@
     toggle.setAttribute("aria-expanded", String(!collapsed));
   });
 
+  // Rich editor: a contenteditable area with a toolbar, built from data-placeholder, data-hint and data-max. Formatting
+  // goes through document.execCommand: deprecated, but the only dependency-free way to keep the native undo stack.
+  // Fires "input" and "change" on the root with detail { html, text }.
+  const MOD = /Mac|iPhone|iPad/.test(navigator.platform) ? "⌘" : "Ctrl+";
+  const RICH_TOOLS = [
+    ["bold", "text-b", "Bold", "B"], ["italic", "text-italic", "Italic", "I"], ["underline", "text-underline", "Underline", "U"], null,
+    ["bullets", "list-bullets", "Bulleted list"], ["numbers", "list-numbers", "Numbered list"], null,
+    ["link", "link-simple", "Link", "K"], ["undo", "arrow-counter-clockwise", "Undo", "Z"], ["redo", "arrow-clockwise", "Redo", "⇧Z"],
+  ];
+  const RICH_COMMANDS = { bold: "bold", italic: "italic", underline: "underline", bullets: "insertUnorderedList", numbers: "insertOrderedList", undo: "undo", redo: "redo" };
+  const RICH_KEYS = { b: "bold", i: "italic", u: "underline", k: "link", z: "undo", y: "redo" };
+  const richEditors = new WeakMap();
+  const buildRichEditor = (root) => {
+    const content = root.innerHTML;
+    const max = Number(root.dataset.max) || 0;
+    const tools = RICH_TOOLS.map((t) => {
+      if (!t) return '<span class="rich-editor__separator"></span>';
+      const [name, icon, label, key] = t;
+      const toggle = name !== "undo" && name !== "redo";
+      return `<button type="button" class="btn" data-variant="icon" data-format="${name}" aria-label="${label}" data-tip="${key ? `${label} ${MOD}${key}` : label}"${toggle ? ' aria-pressed="false"' : ""} tabindex="-1"><i class="icon" data-icon="${icon}"></i></button>`;
+    }).join("");
+    root.innerHTML = `<div class="rich-editor__box"><div class="rich-editor__toolbar" role="toolbar" aria-label="Formatting">${tools}</div>`
+      + '<div class="rich-editor__area" contenteditable="true" role="textbox" aria-multiline="true"></div><div class="rich-editor__placeholder" aria-hidden="true"></div>'
+      + '<div class="popover rich-editor__link" hidden><label class="input"><i class="icon" data-icon="link-simple"></i><input type="url" placeholder="https://" aria-label="Link address"></label>'
+      + '<div class="popover__foot"><button type="button" class="btn" data-variant="ghost" data-link="remove">Remove</button><button type="button" class="btn" data-variant="primary" data-link="apply">Apply</button></div></div></div>'
+      + (root.dataset.hint || max ? `<div class="rich-editor__foot"><span>${root.dataset.hint || ""}</span>${max ? '<span class="rich-editor__count" aria-hidden="true"></span>' : ""}</div>` : "");
+    const $ = (s) => root.querySelector(s);
+    const area = $(".rich-editor__area");
+    const pop = $(".rich-editor__link");
+    const url = pop.querySelector("input");
+    const buttons = [...root.querySelectorAll(".rich-editor__toolbar .btn")];
+    const linkBtn = $('[data-format="link"]');
+    area.innerHTML = content;
+    $(".rich-editor__placeholder").textContent = root.dataset.placeholder || "";
+    if (root.dataset.placeholder) area.setAttribute("aria-placeholder", root.dataset.placeholder);
+    if (root.hasAttribute("aria-label")) { area.setAttribute("aria-label", root.getAttribute("aria-label")); root.removeAttribute("aria-label"); }
+    let current = buttons[0];
+    let range = null;
+    let link = null;
+    let committed = area.innerHTML;
+    const value = () => ({ html: area.innerHTML, text: area.innerText });
+    const anchor = () => { const n = range?.startContainer; return (n?.nodeType === 1 ? n : n?.parentElement)?.closest(".rich-editor__area a"); };
+    // Back to the area with the selection it had, unless the caret is still there (keyboard shortcuts).
+    const restore = () => {
+      if (document.activeElement === area) return;
+      area.focus();
+      if (range) { const s = getSelection(); s.removeAllRanges(); s.addRange(range); }
+    };
+    const measure = () => {
+      const length = area.textContent.length;
+      root.toggleAttribute("data-empty", !length && !area.querySelector("ul, ol"));
+      if (!max) return;
+      $(".rich-editor__count").textContent = `${length.toLocaleString("en")} / ${max.toLocaleString("en")}`;
+      root.toggleAttribute("data-full", length >= max);
+    };
+    const save = () => {
+      const s = getSelection();
+      if (s.rangeCount && area.contains(s.anchorNode)) range = s.getRangeAt(0).cloneRange();
+    };
+    // Called on selectionchange inside the area: keeps the range for the toolbar and the pressed states in step.
+    const sync = () => {
+      save();
+      for (const b of buttons) {
+        if (!b.hasAttribute("aria-pressed")) continue;
+        const on = b === linkBtn ? !!anchor() : document.queryCommandState(RICH_COMMANDS[b.dataset.format]);
+        b.setAttribute("aria-pressed", String(on));
+      }
+    };
+    const closeLink = (refocus) => {
+      if (pop.hidden) return;
+      pop.hidden = true;
+      if (refocus) restore();
+    };
+    const openLink = () => {
+      save();
+      link = anchor();
+      url.value = link?.getAttribute("href") || "";
+      pop.querySelector('[data-link="remove"]').hidden = !link;
+      pop.hidden = false;
+      pop.style.left = `${Math.max(0, Math.min(linkBtn.offsetLeft, root.offsetWidth - pop.offsetWidth))}px`;
+      url.focus();
+      url.select();
+    };
+    const selectLink = () => {
+      if (!link?.isConnected) return;
+      const s = getSelection();
+      const r = document.createRange();
+      r.selectNodeContents(link);
+      s.removeAllRanges();
+      s.addRange(r);
+    };
+    const applyLink = () => {
+      let href = url.value.trim();
+      if (href && !/^(https?:|mailto:|tel:|\/|#)/i.test(href)) href = `https://${href}`;
+      closeLink(true);
+      if (!href) return;
+      selectLink();
+      if (!getSelection().isCollapsed) return document.execCommand("createLink", false, href);
+      const a = document.createElement("a");
+      a.setAttribute("href", href);
+      a.textContent = href;
+      document.execCommand("insertHTML", false, a.outerHTML);
+    };
+    const act = (name) => {
+      if (name === "link") return openLink();
+      restore();
+      document.execCommand(RICH_COMMANDS[name]);
+    };
+    // Markdown at the start of a line: "- " or "* " starts a bulleted list, "1. " a numbered one.
+    const markdown = () => {
+      const s = getSelection();
+      const node = s.anchorNode;
+      if (!s.isCollapsed || node.nodeType !== 3 || node.parentElement.closest("li")) return;
+      const line = document.createRange();
+      const block = node.parentElement.closest("div, p");
+      line.setStart(block !== area && area.contains(block) ? block : area, 0);
+      line.setEnd(node, s.anchorOffset);
+      const text = line.toString();
+      const list = /^[-*]\s$/.test(text) ? "insertUnorderedList" : /^1\.\s$/.test(text) ? "insertOrderedList" : "";
+      if (!list) return;
+      s.removeAllRanges();
+      s.addRange(line);
+      document.execCommand("delete");
+      document.execCommand(list);
+    };
+    const syncState = () => {
+      const disabled = root.getAttribute("aria-disabled") === "true";
+      area.contentEditable = String(!disabled);
+      if (disabled) area.setAttribute("aria-disabled", "true");
+      else area.removeAttribute("aria-disabled");
+      for (const b of buttons) b.tabIndex = !disabled && b === current ? 0 : -1;
+      const field = root.closest(".field");
+      if (field?.hasAttribute("data-invalid")) area.setAttribute("aria-invalid", "true");
+      else area.removeAttribute("aria-invalid");
+    };
+
+    // Toolbar: mousedown keeps the selection in the area; one tab stop, ← → Home End move along the buttons.
+    $(".rich-editor__toolbar").addEventListener("mousedown", (e) => e.preventDefault());
+    $(".rich-editor__toolbar").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-format]");
+      if (b) act(b.dataset.format);
+    });
+    $(".rich-editor__toolbar").addEventListener("keydown", (e) => {
+      const i = buttons.indexOf(document.activeElement);
+      const next = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: buttons.length - 1 }[e.key];
+      if (i < 0 || next === undefined) return;
+      e.preventDefault();
+      current = buttons[(next + buttons.length) % buttons.length];
+      syncState();
+      current.focus();
+    });
+    area.addEventListener("keydown", (e) => {
+      if (!(e.metaKey || e.ctrlKey) || e.altKey) return;
+      const key = e.key.toLowerCase();
+      const name = key === "z" && e.shiftKey ? "redo" : e.shiftKey ? null : RICH_KEYS[key];
+      if (!name) return;
+      e.preventDefault();
+      act(name);
+    });
+    // data-max caps typed and pasted text; pasting keeps the words, not the formatting of the source.
+    const room = () => max - area.textContent.length + getSelection().toString().length;
+    area.addEventListener("beforeinput", (e) => {
+      if (max && e.inputType === "insertText" && e.data && e.data.length > room()) e.preventDefault();
+    });
+    area.addEventListener("paste", (e) => {
+      e.preventDefault();
+      const text = e.clipboardData.getData("text/plain");
+      document.execCommand("insertText", false, max ? text.slice(0, Math.max(0, room())) : text);
+    });
+    area.addEventListener("input", (e) => {
+      e.stopPropagation();
+      if (e.inputType === "insertText" && e.data === " ") markdown();
+      measure();
+      root.dispatchEvent(new CustomEvent("input", { bubbles: true, detail: value() }));
+    });
+    area.addEventListener("focusin", () => closeLink(false));
+    root.addEventListener("focusout", (e) => {
+      if (root.contains(e.relatedTarget)) return;
+      closeLink(false);
+      if (area.innerHTML === committed) return;
+      committed = area.innerHTML;
+      root.dispatchEvent(new CustomEvent("change", { bubbles: true, detail: value() }));
+    });
+    url.addEventListener("input", (e) => e.stopPropagation());
+    pop.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && e.target === url) { e.preventDefault(); applyLink(); }
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); closeLink(true); }
+    });
+    pop.addEventListener("click", (e) => {
+      const action = e.target.closest("[data-link]")?.dataset.link;
+      if (action === "apply") applyLink();
+      if (action === "remove") { closeLink(true); selectLink(); document.execCommand("unlink"); }
+    });
+    const field = root.closest(".field");
+    const label = field?.querySelector(":scope > .field__label");
+    if (label) {
+      area.setAttribute("aria-labelledby", idOf(label));
+      label.addEventListener("click", () => area.focus());
+    }
+    const notes = field ? [...field.querySelectorAll(":scope > :is(.field__hint, .field__error)")].map(idOf) : [];
+    if (notes.length) area.setAttribute("aria-describedby", notes.join(" "));
+    const watch = new MutationObserver(syncState);
+    watch.observe(root, { attributes: true, attributeFilter: ["aria-disabled"] });
+    if (field) watch.observe(field, { attributes: true, attributeFilter: ["data-invalid"] });
+    richEditors.set(area, sync);
+    syncState();
+    measure();
+    window.renderIcons(root);
+  };
+  document.addEventListener("selectionchange", () => {
+    const n = getSelection().anchorNode;
+    const area = (n?.nodeType === 1 ? n : n?.parentElement)?.closest(".rich-editor__area");
+    if (area) richEditors.get(area)?.();
+  });
+
   // Markup present at load and markup rendered later get the same behaviours.
   const each = (node, selector, fn) => {
     if (node.nodeType !== 1) return;
@@ -865,6 +1080,7 @@
     each(node, ".field", buildField);
     each(node, ".textarea[data-max]:not(:has(.textarea__count))", buildTextarea);
     each(node, ".typing__dots", startDance);
+    each(node, ".rich-editor:not(:has(.rich-editor__box))", buildRichEditor);
   };
   enhance(document.body);
   new MutationObserver((records) => {

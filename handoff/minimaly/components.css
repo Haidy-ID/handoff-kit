@@ -3,8 +3,8 @@
    data-force="hover" pins the hover state for specimen pages. Tokens only, no raw values. */
 
 /* Borders and padding stay inside the declared size (32 px controls), whatever the page reset. */
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell),
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell) * { box-sizing: border-box; }
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .rich-editor),
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .rich-editor) * { box-sizing: border-box; }
 
 /* Motion: keyframes shared by the components and the pages built on them.
    enter = fade up (page sections, cards), pop-in = fade and grow (tooltips, popovers), fade-in, fade-out.
@@ -612,3 +612,30 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .nav__label, .nav__count, .nav__section, .shell__brand-name { transition: opacity var(--duration-base) var(--ease-out); }
 .shell[data-collapsed] :is(.nav__label, .nav__count, .nav__section, .shell__brand-name) { opacity: 0; pointer-events: none; }
 .shell__foot { margin-top: auto; }
+
+/* Rich editor: a writing field with a formatting toolbar, built by ds.js from data-placeholder, data-hint and data-max.
+   The placeholder is a real element stacked on the area (grid), not a ::before, so Copy to Figma keeps it. */
+.rich-editor { display: flex; flex-direction: column; gap: var(--spacing-xs); min-width: 0; }
+.rich-editor__box { position: relative; display: grid; grid-template-rows: auto 1fr; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface-raised);
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out); }
+.rich-editor__box:hover, .rich-editor[data-force="hover"] .rich-editor__box { border-color: var(--color-border-strong); }
+.rich-editor__box:focus-within { border-color: var(--color-accent); box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-accent); }
+.rich-editor__toolbar { display: flex; align-items: center; gap: 2px; padding: var(--spacing-xs); border-bottom: var(--stroke-width-subtle) solid var(--color-border); }
+.rich-editor__toolbar [data-format="undo"] { margin-left: auto; }
+.rich-editor__separator { flex: none; width: var(--stroke-width-subtle); height: var(--spacing-lg); margin: 0 var(--spacing-xs); background: var(--color-border); }
+.rich-editor__area, .rich-editor__placeholder { grid-area: 2 / 1; padding: var(--spacing-sm) var(--spacing-md); font: var(--font-size-sm)/var(--line-height-normal) var(--font-family); }
+.rich-editor__area { min-height: calc(var(--control-height) * 2.5); max-height: 280px; overflow: auto; outline: 0; color: var(--color-text-primary); overflow-wrap: anywhere; cursor: text; }
+.rich-editor__area :is(p, ul, ol) { margin: 0; }
+.rich-editor__area :is(ul, ol) { padding-left: var(--spacing-xl); }
+.rich-editor__area a { color: var(--color-accent); }
+.rich-editor__placeholder { display: none; color: var(--color-text-tertiary); pointer-events: none; }
+.rich-editor[data-empty] .rich-editor__placeholder { display: block; }
+/* Link popover: opens under the link button, over the text. */
+.rich-editor__link { position: absolute; z-index: 10; top: calc(var(--control-height) + var(--spacing-sm) + var(--spacing-xs)); width: 280px; }
+.rich-editor__link .btn[hidden] { display: none; }
+.rich-editor__foot { display: flex; align-items: baseline; gap: var(--spacing-md); color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--line-height-normal); }
+.rich-editor__count { margin-left: auto; color: var(--color-text-tertiary); font: var(--font-size-xs)/1 var(--font-family-mono); font-variant-numeric: tabular-nums; transition: color var(--duration-fast) var(--ease-out); }
+.rich-editor[data-full] .rich-editor__count { color: var(--color-status-critical); }
+.field[data-invalid] > .rich-editor .rich-editor__box { border-color: var(--color-status-critical); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
+.field[data-invalid] > .rich-editor .rich-editor__box:focus-within { box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-status-critical); }
+.rich-editor[aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
