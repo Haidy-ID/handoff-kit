@@ -654,5 +654,22 @@
       "invalid",
       "disabled"
     ]
+  },
+  {
+    "id": "date-picker",
+    "class": "date-picker",
+    "name": "Date picker",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "empty",
+      "picked",
+      "open",
+      "today",
+      "out of range",
+      "disabled",
+      "invalid"
+    ]
   }
 ]

@@ -3,8 +3,8 @@
    data-force="hover" pins the hover state for specimen pages. Tokens only, no raw values. */
 
 /* Borders and padding stay inside the declared size (32 px controls), whatever the page reset. */
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor),
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor) * { box-sizing: border-box; }
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker),
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker) * { box-sizing: border-box; }
 
 /* Motion: keyframes shared by the components and the pages built on them.
    enter = fade up (page sections, cards), pop-in = fade and grow (tooltips, popovers), fade-in, fade-out.
@@ -795,3 +795,38 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .field[data-invalid] > .rich-editor .rich-editor__box { border-color: var(--color-status-critical); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
 .field[data-invalid] > .rich-editor .rich-editor__box:focus-within { box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-status-critical); }
 .rich-editor[aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
+
+/* Date picker: a date field that opens a month calendar, built by ds.js from data-value, data-min, data-max and
+   data-placeholder. The calendar is a .popover, so it opens and closes like one; its days are an ARIA grid of six weeks,
+   so changing month never resizes it. Today carries a ring, the chosen day is ink, days out of range fade. */
+.date-picker { position: relative; display: inline-flex; flex-direction: column; }
+.date-picker__field { width: 100%; color: var(--color-text-tertiary); font: var(--font-size-sm)/var(--line-height-tight) var(--font-family); text-align: left; cursor: pointer; }
+.date-picker__field:focus-visible { outline: 0; }
+.date-picker__field[aria-expanded="true"] { border-color: var(--color-accent); box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-accent); }
+.date-picker__field .icon { color: var(--color-text-secondary); }
+.date-picker__value { flex: 1; min-width: 0; overflow: hidden; color: var(--color-text-primary); white-space: nowrap; text-overflow: ellipsis; }
+.date-picker[data-empty] .date-picker__value { color: var(--color-text-tertiary); }
+.date-picker[aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
+.field[data-invalid] > .date-picker .date-picker__field { border-color: var(--color-status-critical); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
+.field[data-invalid] > .date-picker .date-picker__field:is(:focus-within, [aria-expanded="true"]) { box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-status-critical); }
+.date-picker__calendar { position: absolute; top: calc(100% + var(--spacing-xs)); left: 0; z-index: 1000; width: max-content; gap: var(--spacing-xs); }
+.date-picker__calendar[data-side="top"] { top: auto; bottom: calc(100% + var(--spacing-xs)); }
+/* No room on the right: it aligns with the field's right edge instead. */
+.date-picker__calendar[data-align="end"] { right: 0; left: auto; transform-origin: top right; }
+.date-picker__calendar[data-align="end"][data-side="top"] { transform-origin: bottom right; }
+.date-picker__head { display: flex; align-items: center; gap: var(--spacing-xs); }
+.date-picker__title { flex: 1; color: var(--color-text-primary); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-align: center; }
+.date-picker__grid { border-collapse: collapse; }
+.date-picker__grid th { height: var(--spacing-xl); padding: 0; color: var(--color-text-tertiary); font: var(--font-weight-medium) var(--font-size-xs)/1 var(--font-family); }
+.date-picker__grid td { padding: calc(var(--spacing-xs) / 4) calc(var(--spacing-xs) / 2); }
+.date-picker__day { display: grid; place-items: center; width: var(--control-height); height: var(--control-height); padding: 0; border: 0; border-radius: var(--radius-md); background: none; color: var(--color-text-primary);
+  font: var(--font-size-sm)/1 var(--font-family); font-variant-numeric: tabular-nums; cursor: pointer; transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
+.date-picker__day:hover, .date-picker__day[data-force="hover"] { background: var(--color-surface-hover); }
+.date-picker__day:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 1px; }
+.date-picker__day[data-outside] { color: var(--color-text-tertiary); }
+.date-picker__day[aria-current="date"] { color: var(--color-accent); font-weight: var(--font-weight-semibold); box-shadow: inset 0 0 0 var(--stroke-width-subtle) var(--color-accent-border); }
+.date-picker__grid [aria-selected="true"] > .date-picker__day { background: var(--color-ink); box-shadow: none; color: var(--color-on-ink); }
+/* Out of range: faded and struck through, so it never reads as a day of the next month. */
+.date-picker__day[aria-disabled="true"] { opacity: 0.4; background: none; text-decoration: line-through; cursor: not-allowed; }
+/* A new month swaps in through the blur, the title with it. */
+.date-picker__calendar[data-swap] :is(.date-picker__title, tbody) { animation: swap-in var(--duration-slow) var(--ease-out); }

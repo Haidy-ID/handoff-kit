@@ -1267,6 +1267,168 @@
     if (area) richEditors.get(area)?.();
   });
 
+  // Date picker: a field that opens a month calendar, built from data-value, data-min, data-max (ISO dates) and
+  // data-placeholder. The days are an ARIA grid with one tab stop: ← → move a day, ↑ ↓ a week, PageUp PageDown a month,
+  // Home End to the start and end of the week, Enter or Space picks, Escape closes. Picking fires "change" on the root
+  // (event.detail.value, the ISO date). Weeks start on Monday; names come from the page language.
+  const isoOf = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const dateOf = (s) => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
+    const d = m && new Date(+m[1], m[2] - 1, +m[3]);
+    return d && d.getMonth() === m[2] - 1 ? d : null;
+  };
+  const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+  // Same day in another month, or its last day when the month is shorter (31 January → 28 February).
+  const addMonths = (d, n) => new Date(d.getFullYear(), d.getMonth() + n, Math.min(d.getDate(), new Date(d.getFullYear(), d.getMonth() + n + 1, 0).getDate()));
+  const dayOfWeek = (d) => (d.getDay() + 6) % 7;
+  const pickerBounds = (root) => [dateOf(root.dataset.min), dateOf(root.dataset.max)];
+  const clampDate = (root, d) => { const [min, max] = pickerBounds(root); return min && d < min ? min : max && d > max ? max : d; };
+  let pickerIds = 0;
+  let openPicker = null;
+  const syncDatePicker = (root) => {
+    const { field, format } = root.picker;
+    const value = dateOf(root.dataset.value);
+    const text = value ? format.short.format(value) : root.dataset.placeholder || "";
+    root.querySelector(".date-picker__value").textContent = text;
+    root.toggleAttribute("data-empty", !value);
+    const label = root.closest(".field")?.querySelector(":scope > .field__label")?.textContent.trim() || root.picker.name;
+    field.setAttribute("aria-label", label ? `${label}, ${text}` : text);
+    field.disabled = root.getAttribute("aria-disabled") === "true";
+    if (root.closest(".field")?.hasAttribute("data-invalid")) field.setAttribute("aria-invalid", "true");
+    else field.removeAttribute("aria-invalid");
+    if (openPicker === root) renderMonth(root);
+  };
+  // The 42 day buttons are built once and rewritten in place, so the focused one never leaves the page.
+  const renderMonth = (root, swap) => {
+    const { focus, format, calendar } = root.picker;
+    const [min, max] = pickerBounds(root);
+    const first = new Date(focus.getFullYear(), focus.getMonth(), 1);
+    const start = addDays(first, -dayOfWeek(first));
+    const today = isoOf(new Date());
+    calendar.querySelectorAll(".date-picker__day").forEach((b, i) => {
+      const d = addDays(start, i);
+      const iso = isoOf(d);
+      b.dataset.date = iso;
+      b.textContent = d.getDate();
+      b.setAttribute("aria-label", format.full.format(d));
+      b.tabIndex = iso === isoOf(focus) ? 0 : -1;
+      b.toggleAttribute("data-outside", d.getMonth() !== first.getMonth());
+      iso === today ? b.setAttribute("aria-current", "date") : b.removeAttribute("aria-current");
+      (min && d < min) || (max && d > max) ? b.setAttribute("aria-disabled", "true") : b.removeAttribute("aria-disabled");
+      iso === root.dataset.value ? b.parentElement.setAttribute("aria-selected", "true") : b.parentElement.removeAttribute("aria-selected");
+    });
+    calendar.querySelector(".date-picker__title").textContent = format.month.format(first);
+    calendar.querySelector('[data-month="-1"]').disabled = !!min && addDays(first, -1) < min;
+    calendar.querySelector('[data-month="1"]').disabled = !!max && new Date(first.getFullYear(), first.getMonth() + 1, 1) > max;
+    if (swap) {
+      calendar.removeAttribute("data-swap");
+      void calendar.offsetWidth; // restarts the swap when months change quickly
+      calendar.setAttribute("data-swap", "");
+    }
+  };
+  // Moves the grid's tab stop to a day (kept within data-min and data-max); a day of another month shows that month.
+  const moveToDay = (root, d, focus = true) => {
+    const target = clampDate(root, d);
+    const swap = target.getMonth() !== root.picker.focus.getMonth() || target.getFullYear() !== root.picker.focus.getFullYear();
+    root.picker.focus = target;
+    renderMonth(root, swap);
+    if (focus) root.picker.calendar.querySelector(`[data-date="${isoOf(target)}"]`).focus();
+  };
+  const closeDatePicker = (refocus) => {
+    if (!openPicker) return;
+    const { field, calendar } = openPicker.picker;
+    openPicker = null;
+    calendar.hidden = true;
+    field.setAttribute("aria-expanded", "false");
+    if (refocus) field.focus();
+  };
+  const openDatePicker = (root) => {
+    closeDatePicker();
+    const { field, calendar } = root.picker;
+    root.picker.focus = clampDate(root, dateOf(root.dataset.value) || new Date());
+    calendar.removeAttribute("data-swap");
+    openPicker = root;
+    renderMonth(root);
+    calendar.hidden = false;
+    // Below the field, above it when only there is room; aligned on its right edge when the right side is short.
+    const r = field.getBoundingClientRect();
+    const below = r.bottom + 4 + calendar.offsetHeight <= innerHeight || r.top - 4 - calendar.offsetHeight < 0;
+    calendar.dataset.side = below ? "bottom" : "top";
+    r.left + calendar.offsetWidth > innerWidth - 8 ? (calendar.dataset.align = "end") : delete calendar.dataset.align;
+    field.setAttribute("aria-expanded", "true");
+    calendar.querySelector('.date-picker__day[tabindex="0"]').focus();
+  };
+  const pickDate = (root, iso) => {
+    const changed = root.dataset.value !== iso;
+    root.dataset.value = iso;
+    syncDatePicker(root);
+    closeDatePicker(true);
+    if (changed) root.dispatchEvent(new CustomEvent("change", { bubbles: true, detail: { value: iso } }));
+  };
+  const buildDatePicker = (root) => {
+    const id = `date-picker-${++pickerIds}`;
+    const lang = root.closest("[lang]")?.lang || undefined;
+    const fmt = (options) => new Intl.DateTimeFormat(lang, options);
+    const week = Array.from({ length: 7 }, (_, i) => new Date(2024, 0, 1 + i)); // 1 January 2024 is a Monday
+    const days = Array.from({ length: 6 }, () => `<tr>${'<td><button type="button" class="date-picker__day" tabindex="-1"></button></td>'.repeat(7)}</tr>`).join("");
+    root.innerHTML = `<button type="button" class="input date-picker__field" id="${id}-field" aria-haspopup="dialog" aria-expanded="false" aria-controls="${id}"><i class="icon" data-icon="calendar-blank"></i><span class="date-picker__value"></span></button>`
+      + `<div class="popover date-picker__calendar" id="${id}" role="dialog" aria-label="Choose a date" hidden><div class="date-picker__head">`
+      + '<button type="button" class="btn" data-variant="icon" data-month="-1" aria-label="Previous month"><i class="icon" data-icon="caret-left"></i></button>'
+      + `<span class="date-picker__title" id="${id}-title" aria-live="polite"></span>`
+      + '<button type="button" class="btn" data-variant="icon" data-month="1" aria-label="Next month"><i class="icon" data-icon="caret-right"></i></button></div>'
+      + `<table class="date-picker__grid" role="grid" aria-labelledby="${id}-title"><thead><tr>${week.map((d) => `<th scope="col" abbr="${fmt({ weekday: "long" }).format(d)}">${fmt({ weekday: "short" }).format(d)}</th>`).join("")}</tr></thead><tbody>${days}</tbody></table></div>`;
+    root.picker = {
+      field: root.querySelector(".date-picker__field"),
+      calendar: root.querySelector(".date-picker__calendar"),
+      name: root.getAttribute("aria-label"),
+      focus: new Date(),
+      format: { short: fmt({ day: "numeric", month: "short", year: "numeric" }), full: fmt({ weekday: "long", day: "numeric", month: "long", year: "numeric" }), month: fmt({ month: "long", year: "numeric" }) },
+    };
+    root.removeAttribute("aria-label");
+    const field = root.closest(".field");
+    const label = field?.querySelector(":scope > label.field__label");
+    if (label) label.htmlFor = root.picker.field.id;
+    const notes = field ? [...field.querySelectorAll(":scope > :is(.field__hint, .field__error)")].map(idOf) : [];
+    if (notes.length) root.picker.field.setAttribute("aria-describedby", notes.join(" "));
+    const watch = new MutationObserver(() => syncDatePicker(root));
+    watch.observe(root, { attributes: true, attributeFilter: ["data-value", "data-min", "data-max", "data-placeholder", "aria-disabled"] });
+    if (field) watch.observe(field, { attributes: true, attributeFilter: ["data-invalid"] });
+    syncDatePicker(root);
+    window.renderIcons(root);
+  };
+  document.addEventListener("click", (e) => {
+    const root = e.target.closest?.(".date-picker");
+    if (!root?.picker) return;
+    if (e.target.closest(".date-picker__field")) openPicker === root ? closeDatePicker(true) : openDatePicker(root);
+    const month = e.target.closest("[data-month]");
+    if (month) moveToDay(root, addMonths(root.picker.focus, +month.dataset.month), false);
+    const day = e.target.closest(".date-picker__day");
+    if (day && day.getAttribute("aria-disabled") !== "true") pickDate(root, day.dataset.date);
+  });
+  document.addEventListener("keydown", (e) => {
+    const root = e.target.closest?.(".date-picker");
+    if (!root?.picker) return;
+    if (e.target === root.picker.field) {
+      if ((e.key === "ArrowDown" || e.key === "ArrowUp") && openPicker !== root) { e.preventDefault(); openDatePicker(root); }
+      return;
+    }
+    if (e.key === "Escape") {
+      // Stopped here, so a dialog around the picker stays open.
+      e.preventDefault();
+      e.stopPropagation();
+      return closeDatePicker(true);
+    }
+    if (!e.target.matches(".date-picker__day")) return;
+    const focus = root.picker.focus;
+    const to = {
+      ArrowLeft: addDays(focus, -1), ArrowRight: addDays(focus, 1), ArrowUp: addDays(focus, -7), ArrowDown: addDays(focus, 7),
+      PageUp: addMonths(focus, -1), PageDown: addMonths(focus, 1), Home: addDays(focus, -dayOfWeek(focus)), End: addDays(focus, 6 - dayOfWeek(focus)),
+    }[e.key];
+    if (to) { e.preventDefault(); moveToDay(root, to); }
+  });
+  document.addEventListener("mousedown", (e) => { if (openPicker && !openPicker.contains(e.target)) closeDatePicker(); });
+  document.addEventListener("focusout", (e) => { if (openPicker && e.target.closest?.(".date-picker") === openPicker && e.relatedTarget && !openPicker.contains(e.relatedTarget)) closeDatePicker(); });
+
   // Markup present at load and markup rendered later get the same behaviours.
   const each = (node, selector, fn) => {
     if (node.nodeType !== 1) return;
@@ -1295,6 +1457,7 @@
     each(node, ".steps", buildSteps);
     each(node, ".divider", buildDivider);
     each(node, ".rich-editor:not(:has(.rich-editor__box))", buildRichEditor);
+    each(node, ".date-picker:not(:has(.date-picker__field))", buildDatePicker);
   };
   enhance(document.body);
   new MutationObserver((records) => {
