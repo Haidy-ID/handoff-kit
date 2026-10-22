@@ -686,5 +686,20 @@
       "filtered",
       "empty"
     ]
+  },
+  {
+    "id": "attachment",
+    "class": "attachment",
+    "name": "Attachment",
+    "variants": [
+      "default",
+      "compact"
+    ],
+    "states": [
+      "default",
+      "uploading",
+      "error",
+      "removed"
+    ]
   }
 ]

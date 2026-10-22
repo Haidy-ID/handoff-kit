@@ -3,8 +3,8 @@
    data-force="hover" pins the hover state for specimen pages. Tokens only, no raw values. */
 
 /* Borders and padding stay inside the declared size (32 px controls), whatever the page reset. */
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette),
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette) * { box-sizing: border-box; }
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment),
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment) * { box-sizing: border-box; }
 
 /* Motion: keyframes shared by the components and the pages built on them.
    enter = fade up (page sections, cards), pop-in = fade and grow (tooltips, popovers), fade-in, fade-out.
@@ -849,3 +849,48 @@ html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 .command-palette__item[aria-selected="true"], .command-palette__item[data-force="hover"] { background: var(--color-surface-hover); }
 .command-palette__item[aria-selected="true"] > .icon { color: var(--color-text-primary); }
 :is(.command-palette__group, .command-palette__item, .command-palette__empty)[hidden] { display: none; }
+
+/* Attachment: a file joined to a message or a form, built by ds.js from data-name and data-size (icon from the extension,
+   name truncated before its extension, size in mono). data-state="uploading" fills a thin bar along the bottom from
+   data-progress; data-state="error" tints it critical, shakes once and offers retry. .attachments lines them up. */
+.attachments { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); margin: 0; padding: 0; list-style: none; }
+.attachments:empty { display: none; }
+/* Files share a row and grow to fill it, so under a dropzone each one is as wide as the zone. */
+.attachment { position: relative; display: flex; flex: 1 1 200px; align-items: center; gap: var(--spacing-sm); min-width: 0; max-width: 320px; padding: var(--spacing-xs); overflow: hidden;
+  border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-raised); font-size: var(--font-size-sm);
+  transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-spring) var(--ease-spring), border-color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out); }
+/* A new file settles into the row. */
+@starting-style { .attachment { opacity: 0; transform: scale(0.96); } }
+.attachment__icon { display: grid; flex: none; place-items: center; width: var(--control-height); height: var(--control-height); border-radius: var(--radius-sm); background: var(--color-surface-sunken); color: var(--color-text-secondary); }
+.attachment__icon > .icon { grid-area: 1 / 1; }
+.attachment__icon > [data-icon="warning-circle"] { display: none; }
+.attachment__body { display: flex; flex: 1; flex-direction: column; gap: calc(var(--spacing-xs) / 2); min-width: 0; }
+/* The name gives way before its extension: "quarterly-rep….pdf". */
+.attachment__name { display: flex; min-width: 0; color: var(--color-text-primary); font-weight: var(--font-weight-medium); white-space: nowrap; }
+.attachment__base { overflow: hidden; text-overflow: ellipsis; }
+.attachment__ext { flex: none; }
+.attachment__meta { display: flex; gap: var(--spacing-sm); color: var(--color-text-tertiary); font: var(--font-size-xs)/var(--line-height-tight) var(--font-family-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.attachment__percent, .attachment__error, .attachment > [data-attachment="retry"] { display: none; }
+.attachment > .btn { flex: none; }
+/* The pill clips the bar to its corners, so the focus ring of its buttons sits inside them. */
+.attachment > .btn:focus-visible { outline-offset: calc(var(--stroke-width-mid) * -1); }
+.attachment__bar { position: absolute; right: 0; bottom: 0; left: 0; display: none; height: calc(var(--spacing-xs) / 2); background: var(--color-surface-hover); }
+.attachment__fill { display: block; width: calc(var(--progress, 0) * 1%); height: 100%; background: var(--color-accent); transition: width var(--duration-slow) var(--ease-out); }
+.attachment[data-state="uploading"] .attachment__bar { display: block; }
+.attachment[data-state="uploading"] .attachment__percent { display: inline; color: var(--color-text-secondary); }
+.attachment[data-state="uploading"] .attachment__name { color: var(--color-text-secondary); }
+.attachment[data-state="error"] { border-color: color-mix(in srgb, var(--color-status-critical) 30%, transparent); background: var(--color-status-critical-subtle); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
+.attachment[data-state="error"] .attachment__icon { background: none; color: var(--color-status-critical); }
+.attachment[data-state="error"] .attachment__icon > .icon { display: none; }
+.attachment[data-state="error"] .attachment__icon > [data-icon="warning-circle"] { display: inline-flex; }
+.attachment[data-state="error"] .attachment__size { display: none; }
+.attachment[data-state="error"] .attachment__error { display: inline; overflow: hidden; color: var(--color-status-critical); font-family: var(--font-family); text-overflow: ellipsis; }
+.attachment[data-state="error"] > [data-attachment="retry"] { display: inline-flex; }
+/* Compact: one line, for a row of files above a composer's field. */
+.attachment[data-variant="compact"] { flex: 0 1 auto; max-width: min(100%, 240px); gap: var(--spacing-xs); padding: 0 0 0 var(--spacing-sm); border-radius: var(--radius-sm); }
+.attachment[data-variant="compact"] .attachment__icon { width: auto; height: auto; background: none; }
+.attachment[data-variant="compact"] .attachment__body { flex-direction: row; align-items: baseline; gap: var(--spacing-sm); }
+.attachment[data-variant="compact"] .attachment__name { font-size: var(--font-size-xs); }
+/* Removed: fades and shrinks, then ds.js takes it out. */
+.attachment[data-leaving] { animation: attachment-out var(--duration-base) var(--ease-in) forwards; pointer-events: none; }
+@keyframes attachment-out { to { opacity: 0; transform: scale(0.96); filter: blur(var(--blur-swap)); } }

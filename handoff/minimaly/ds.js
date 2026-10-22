@@ -1517,6 +1517,74 @@
     filterCommands(e.target);
   }, true);
 
+  // Attachment: built from data-name and data-size. The page sets data-state (uploading, error) and data-progress (0 to
+  // 100); data-error says what failed. Remove fires "remove" on the attachment, folds it away and moves the focus to the
+  // next file; retry fires "retry". An error is announced once.
+  const FILE_ICONS = { pdf: "file-pdf", doc: "file-doc", docx: "file-doc", xls: "file-xls", xlsx: "file-xls", csv: "file-csv", ppt: "file-ppt", pptx: "file-ppt", zip: "file-zip",
+    txt: "file-text", md: "file-text", png: "file-image", jpg: "file-image", jpeg: "file-image", gif: "file-image", webp: "file-image", svg: "file-image", heic: "file-image",
+    mp3: "file-audio", wav: "file-audio", m4a: "file-audio", mp4: "file-video", mov: "file-video", webm: "file-video", js: "file-code", ts: "file-code", json: "file-code", html: "file-code", css: "file-code" };
+  const fileSize = (bytes, lang) => {
+    const units = ["B", "KB", "MB", "GB"];
+    let n = +bytes;
+    let i = 0;
+    for (; n >= 1024 && i < units.length - 1; i++) n /= 1024;
+    return `${n.toLocaleString(lang, { maximumFractionDigits: i && n < 10 ? 1 : 0 })} ${units[i]}`;
+  };
+  const syncAttachment = (el) => {
+    const bar = el.querySelector(".attachment__bar");
+    if (!bar) return;
+    const pct = Math.round(Math.min(100, Math.max(0, +el.dataset.progress || 0)));
+    el.style.setProperty("--progress", pct);
+    el.querySelector(".attachment__percent").textContent = `${pct}%`;
+    bar.setAttribute("aria-valuenow", pct);
+    const error = el.dataset.error || "Upload failed";
+    el.querySelector(".attachment__error").textContent = error;
+    if (el.dataset.state === "error" && el.shownState !== "error") announce(`${el.dataset.name}: ${error}`);
+    el.shownState = el.dataset.state;
+  };
+  const buildAttachment = (el) => {
+    const name = el.dataset.name || "";
+    const dot = name.lastIndexOf(".");
+    const ext = dot > 0 ? name.slice(dot) : "";
+    el.innerHTML = `<span class="attachment__icon" aria-hidden="true"><i class="icon" data-icon="${FILE_ICONS[ext.slice(1).toLowerCase()] || "file"}"></i><i class="icon" data-icon="warning-circle"></i></span>`
+      + '<span class="attachment__body"><span class="attachment__name"><span class="attachment__base"></span><span class="attachment__ext"></span></span>'
+      + '<span class="attachment__meta"><span class="attachment__size"></span><span class="attachment__percent"></span><span class="attachment__error"></span></span></span>'
+      + '<button type="button" class="btn" data-variant="icon" data-attachment="retry"><i class="icon" data-icon="arrow-clockwise"></i></button>'
+      + '<button type="button" class="btn" data-variant="icon" data-attachment="remove"><i class="icon" data-icon="x"></i></button>'
+      + '<span class="attachment__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span class="attachment__fill"></span></span>';
+    el.querySelector(".attachment__name").dataset.tip = name;
+    el.querySelector(".attachment__base").textContent = name.slice(0, name.length - ext.length);
+    el.querySelector(".attachment__ext").textContent = ext;
+    if (el.dataset.size) el.querySelector(".attachment__size").textContent = fileSize(el.dataset.size, el.closest("[lang]")?.lang || undefined);
+    el.querySelector('[data-attachment="retry"]').setAttribute("aria-label", `Retry ${name}`);
+    el.querySelector('[data-attachment="remove"]').setAttribute("aria-label", `Remove ${name}`);
+    el.querySelector(".attachment__bar").setAttribute("aria-label", `Uploading ${name}`);
+    el.shownState = el.dataset.state;
+    syncAttachment(el);
+    window.renderIcons(el);
+  };
+  const removeAttachment = (el) => {
+    if (el.hasAttribute("data-leaving")) return;
+    const files = [...el.parentElement.querySelectorAll(":scope > .attachment:not([data-leaving])")];
+    const i = files.indexOf(el);
+    // Focus moves on to the next file, else the previous one, else the field of the composer it belongs to.
+    const next = (files[i + 1] || files[i - 1])?.querySelector('[data-attachment="remove"]') || el.closest(".composer")?.querySelector(".composer__input");
+    if (el.contains(document.activeElement)) next?.focus();
+    el.setAttribute("data-leaving", "");
+    el.dispatchEvent(new CustomEvent("remove", { bubbles: true, detail: { name: el.dataset.name } }));
+    el.addEventListener("animationend", (a) => a.animationName === "attachment-out" && el.remove());
+    if (!parseFloat(getComputedStyle(el).animationDuration)) el.remove();
+  };
+  document.addEventListener("click", (e) => {
+    const button = e.target.closest?.(".attachment > [data-attachment]");
+    if (!button) return;
+    const el = button.closest(".attachment");
+    if (button.dataset.attachment === "remove") return removeAttachment(el);
+    // Retry hides once the upload restarts: the focus waits on the remove button.
+    if (button === document.activeElement) el.querySelector('[data-attachment="remove"]').focus();
+    el.dispatchEvent(new CustomEvent("retry", { bubbles: true, detail: { name: el.dataset.name } }));
+  });
+
   // Markup present at load and markup rendered later get the same behaviours.
   const each = (node, selector, fn) => {
     if (node.nodeType !== 1) return;
@@ -1547,6 +1615,7 @@
     each(node, ".rich-editor:not(:has(.rich-editor__box))", buildRichEditor);
     each(node, ".date-picker:not(:has(.date-picker__field))", buildDatePicker);
     each(node, ".command-palette", buildCommandPalette);
+    each(node, ".attachment:not(:has(.attachment__body))", buildAttachment);
   };
   enhance(document.body);
   new MutationObserver((records) => {
@@ -1556,11 +1625,12 @@
         if (r.target.matches(".pagination")) renderPagination(r.target);
         if (r.target.matches(".field")) syncField(r.target);
         if (r.target.matches(".tool-call")) syncToolCall(r.target);
+        if (r.target.matches(".attachment")) syncAttachment(r.target);
         continue;
       }
       const value = (r.target.nodeType === 1 ? r.target : r.target.parentElement)?.closest(".value");
       if (value) watchValue(value);
       if (r.type === "childList") r.addedNodes.forEach(enhance);
     }
-  }).observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["aria-pressed", "aria-selected", "data-page", "data-invalid", "data-state"] });
+  }).observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["aria-pressed", "aria-selected", "data-page", "data-invalid", "data-state", "data-progress", "data-error"] });
 })();
