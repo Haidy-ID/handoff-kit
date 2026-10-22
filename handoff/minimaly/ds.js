@@ -824,6 +824,182 @@
     if (box) countText(box);
   });
 
+  // Composer: Send is enabled once there is text; Enter sends, Shift+Enter breaks the line. Sending fires "send" on the
+  // form (event.detail.text) and empties the field; the page sets aria-busy while the agent answers and listens for
+  // "stop" from the Stop button.
+  const syncComposer = (form) => { form.querySelector(".composer__send").disabled = !form.querySelector(".composer__input").value.trim(); };
+  document.addEventListener("input", (e) => {
+    const form = e.target.closest?.(".composer");
+    if (form) syncComposer(form);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" || e.shiftKey || e.isComposing || !e.target.matches?.(".composer__input")) return;
+    e.preventDefault();
+    const form = e.target.closest(".composer");
+    if (!form.querySelector(".composer__send").disabled && form.getAttribute("aria-busy") !== "true") form.requestSubmit();
+  });
+  document.addEventListener("submit", (e) => {
+    const form = e.target.closest?.(".composer");
+    if (!form) return;
+    e.preventDefault();
+    const field = form.querySelector(".composer__input");
+    const text = field.value.trim();
+    if (!text || form.getAttribute("aria-busy") === "true") return;
+    field.value = "";
+    syncComposer(form);
+    form.dispatchEvent(new CustomEvent("send", { bubbles: true, detail: { text } }));
+  });
+  document.addEventListener("click", (e) => {
+    const form = e.target.closest?.(".composer");
+    if (!form) return;
+    if (e.target.closest(".composer__stop")) form.dispatchEvent(new CustomEvent("stop", { bubbles: true }));
+    // The whole box is the field: a click on its padding or bar puts the caret in it.
+    else if (!e.target.closest("button, a, input, textarea, select")) form.querySelector(".composer__input").focus();
+  });
+
+  // Tool call: the status mark (spinner, check, cross) is built once; CSS shows the one matching data-state. Its label
+  // follows data-state for screen readers.
+  const TOOL_STATES = { running: "Running", done: "Done", failed: "Failed" };
+  const syncToolCall = (el) => el.querySelector(".tool-call__status")?.setAttribute("aria-label", TOOL_STATES[el.dataset.state] || "");
+  const buildToolCall = (el) => {
+    const summary = el.querySelector("summary");
+    if (!summary || summary.querySelector(".tool-call__status")) return;
+    summary.insertAdjacentHTML("beforeend", '<span class="tool-call__status" role="img"><span class="tool-call__spinner"></span><i class="icon" data-icon="check-circle"></i><i class="icon" data-icon="x-circle"></i></span>');
+    syncToolCall(el);
+    window.renderIcons(summary);
+  };
+
+  // Dropzone: files dropped on it or picked through its input. Files that do not match the input's accept, or weigh
+  // more than data-max-mb, are refused: the zone flashes data-invalid. Accepted files fire "files" (event.detail.files).
+  const takeFiles = (zone, list) => {
+    const input = zone.querySelector('input[type="file"]');
+    const kinds = (input.accept || "").split(",").map((k) => k.trim().toLowerCase()).filter(Boolean);
+    const fits = (f) => !kinds.length || kinds.some((k) => (k.startsWith(".") ? f.name.toLowerCase().endsWith(k) : k.endsWith("/*") ? f.type.startsWith(k.slice(0, -1)) : f.type === k));
+    const max = Number(zone.dataset.maxMb) * 1024 * 1024 || Infinity;
+    const files = [...list].filter((f) => fits(f) && f.size <= max);
+    zone.removeAttribute("data-invalid");
+    if (files.length < list.length) requestAnimationFrame(() => zone.setAttribute("data-invalid", ""));
+    if (files.length) zone.dispatchEvent(new CustomEvent("files", { bubbles: true, detail: { files } }));
+  };
+  for (const type of ["dragenter", "dragover"]) document.addEventListener(type, (e) => {
+    const zone = e.target.closest?.(".dropzone");
+    if (!zone || zone.querySelector("input:disabled")) return;
+    e.preventDefault();
+    zone.setAttribute("data-over", "");
+  });
+  document.addEventListener("dragleave", (e) => {
+    const zone = e.target.closest?.(".dropzone");
+    if (zone && !zone.contains(e.relatedTarget)) zone.removeAttribute("data-over");
+  });
+  document.addEventListener("drop", (e) => {
+    const zone = e.target.closest?.(".dropzone");
+    if (!zone) return;
+    e.preventDefault();
+    zone.removeAttribute("data-over");
+    if (!zone.querySelector("input:disabled")) takeFiles(zone, e.dataTransfer.files);
+  });
+  document.addEventListener("change", (e) => {
+    const zone = e.target.matches?.('.dropzone input[type="file"]') && e.target.closest(".dropzone");
+    if (zone) { takeFiles(zone, e.target.files); e.target.value = ""; }
+  });
+
+  // Stepper: each stage gets its mark (to do, current, done: three icons, CSS shows one) between two dashed lines.
+  const buildStepper = (list) => {
+    for (const li of list.children) {
+      if (li.querySelector(".stepper__track")) continue;
+      li.insertAdjacentHTML("afterbegin", '<span class="stepper__track" aria-hidden="true"><span class="stepper__line"><span class="stepper__fill"></span></span><span class="stepper__mark"><i class="icon" data-icon="circle-dashed"></i><i class="icon" data-icon="circle-half"></i><i class="icon" data-icon="check"></i></span><span class="stepper__line"><span class="stepper__fill"></span></span></span>');
+    }
+    window.renderIcons(list);
+  };
+
+  // Combobox: typing filters the options on their title and detail; the first match is active. ↑ ↓ move, Enter picks,
+  // Escape closes, a click picks. Picking writes the title in the field and fires "select" (event.detail: value, option).
+  let comboIds = 0;
+  const comboParts = (box) => ({ field: box.querySelector("input"), list: box.querySelector(".combobox__list"), options: [...box.querySelectorAll(".combobox__option")], empty: box.querySelector(".combobox__empty") });
+  const setActive = (box, option, scroll = false) => {
+    const { field, options } = comboParts(box);
+    for (const o of options) o.setAttribute("aria-selected", String(o === option));
+    option ? field.setAttribute("aria-activedescendant", option.id) : field.removeAttribute("aria-activedescendant");
+    if (scroll) option?.scrollIntoView({ block: "nearest" });
+  };
+  const openCombo = (box, open) => {
+    const { field, list } = comboParts(box);
+    list.hidden = !open;
+    field.setAttribute("aria-expanded", String(open));
+  };
+  const filterCombo = (box) => {
+    const { field, options, empty } = comboParts(box);
+    const q = field.value.trim().toLowerCase();
+    for (const o of options) o.hidden = !!q && !o.textContent.toLowerCase().includes(q);
+    const shown = options.filter((o) => !o.hidden);
+    if (empty) empty.hidden = shown.length > 0;
+    setActive(box, shown[0]);
+  };
+  const pickCombo = (box, option) => {
+    const { field } = comboParts(box);
+    field.value = option.querySelector(".combobox__title")?.textContent || option.textContent.trim();
+    openCombo(box, false);
+    box.dispatchEvent(new CustomEvent("select", { bubbles: true, detail: { value: option.dataset.value || field.value, option } }));
+  };
+  const buildCombobox = (box) => {
+    const { field, list, options, empty } = comboParts(box);
+    if (!field || !list || list.id) return;
+    list.id = `combobox-${++comboIds}`;
+    list.setAttribute("role", "listbox");
+    list.hidden = true;
+    Object.assign(field, { autocomplete: "off" });
+    field.setAttribute("role", "combobox");
+    field.setAttribute("aria-controls", list.id);
+    field.setAttribute("aria-autocomplete", "list");
+    field.setAttribute("aria-expanded", "false");
+    options.forEach((o, i) => { o.id ||= `${list.id}-${i}`; o.setAttribute("role", "option"); o.setAttribute("aria-selected", "false"); });
+    if (empty) empty.hidden = true;
+  };
+  document.addEventListener("input", (e) => {
+    const box = e.target.closest?.(".combobox");
+    if (!box) return;
+    openCombo(box, true);
+    filterCombo(box);
+  });
+  document.addEventListener("focusin", (e) => {
+    const box = e.target.matches?.(".combobox input") && e.target.closest(".combobox");
+    if (box) { openCombo(box, true); filterCombo(box); }
+  });
+  document.addEventListener("focusout", (e) => {
+    const box = e.target.matches?.(".combobox input") && e.target.closest(".combobox");
+    if (box && !box.contains(e.relatedTarget)) openCombo(box, false);
+  });
+  document.addEventListener("keydown", (e) => {
+    const box = e.target.matches?.(".combobox input") && e.target.closest(".combobox");
+    if (!box) return;
+    const { list, options } = comboParts(box);
+    const shown = options.filter((o) => !o.hidden);
+    const at = shown.findIndex((o) => o.getAttribute("aria-selected") === "true");
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      if (list.hidden) { openCombo(box, true); filterCombo(box); return; }
+      const step = e.key === "ArrowDown" ? 1 : -1;
+      setActive(box, shown[(at + step + shown.length) % shown.length], true);
+    } else if (e.key === "Enter" && !list.hidden && shown[at]) {
+      e.preventDefault();
+      pickCombo(box, shown[at]);
+    } else if (e.key === "Escape" && !list.hidden) {
+      e.preventDefault();
+      openCombo(box, false);
+    }
+  });
+  // mousedown, not click: the field keeps the focus, so focusout does not close the list before the pick.
+  document.addEventListener("mousedown", (e) => {
+    const option = e.target.closest?.(".combobox__option");
+    if (!option) return;
+    e.preventDefault();
+    pickCombo(option.closest(".combobox"), option);
+  });
+  document.addEventListener("mousemove", (e) => {
+    const option = e.target.closest?.(".combobox__option");
+    if (option && option.getAttribute("aria-selected") !== "true") setActive(option.closest(".combobox"), option);
+  });
+
   // Banner: [data-dismiss] inside a .banner folds it away, then removes it and fires "dismiss" on the parent.
   document.addEventListener("click", (e) => {
     const banner = e.target.closest?.(".banner [data-dismiss]")?.closest(".banner");
@@ -833,6 +1009,19 @@
     const done = () => { banner.remove(); parent?.dispatchEvent(new CustomEvent("dismiss", { bubbles: true, detail: banner })); };
     banner.addEventListener("animationend", (a) => a.animationName === "banner-out" && done());
     if (!parseFloat(getComputedStyle(banner).animationDuration)) done();
+  });
+
+  // Number stepper: the arrows of .input__stepper step the number field of their .input, within its min, max and step.
+  // They stay out of the Tab order: on the field, ↑ and ↓ do the same natively.
+  document.addEventListener("click", (e) => {
+    const arrow = e.target.closest?.(".input__stepper [data-step]");
+    const field = arrow?.closest(".input")?.querySelector('input[type="number"]');
+    if (!field || field.disabled) return;
+    const before = field.value;
+    arrow.dataset.step === "up" ? field.stepUp() : field.stepDown();
+    if (field.value === before) return;
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+    field.dispatchEvent(new Event("change", { bubbles: true }));
   });
 
   // App shell: [data-shell-toggle] folds the navigation rail to icons and back. Its aria-expanded follows.
@@ -865,6 +1054,10 @@
     each(node, ".field", buildField);
     each(node, ".textarea[data-max]:not(:has(.textarea__count))", buildTextarea);
     each(node, ".typing__dots", startDance);
+    each(node, ".composer", syncComposer);
+    each(node, ".tool-call", buildToolCall);
+    each(node, ".stepper", buildStepper);
+    each(node, ".combobox", buildCombobox);
   };
   enhance(document.body);
   new MutationObserver((records) => {
@@ -873,11 +1066,12 @@
         if (r.target.parentElement?.matches(".segmented, .tabs")) placeIndicator(r.target.parentElement);
         if (r.target.matches(".pagination")) renderPagination(r.target);
         if (r.target.matches(".field")) syncField(r.target);
+        if (r.target.matches(".tool-call")) syncToolCall(r.target);
         continue;
       }
       const value = (r.target.nodeType === 1 ? r.target : r.target.parentElement)?.closest(".value");
       if (value) watchValue(value);
       if (r.type === "childList") r.addedNodes.forEach(enhance);
     }
-  }).observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["aria-pressed", "aria-selected", "data-page", "data-invalid"] });
+  }).observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["aria-pressed", "aria-selected", "data-page", "data-invalid", "data-state"] });
 })();

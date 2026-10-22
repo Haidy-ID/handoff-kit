@@ -3,8 +3,8 @@
    data-force="hover" pins the hover state for specimen pages. Tokens only, no raw values. */
 
 /* Borders and padding stay inside the declared size (32 px controls), whatever the page reset. */
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell),
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell) * { box-sizing: border-box; }
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox),
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox) * { box-sizing: border-box; }
 
 /* Motion: keyframes shared by the components and the pages built on them.
    enter = fade up (page sections, cards), pop-in = fade and grow (tooltips, popovers), fade-in, fade-out.
@@ -45,6 +45,9 @@
 .btn[data-variant="primary"] { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-accent); }
 .btn[data-variant="primary"] .icon { color: var(--color-on-accent); }
 .btn[data-variant="primary"]:hover, .btn[data-variant="primary"][data-force="hover"] { background: var(--color-accent); opacity: 0.9; }
+/* Soft: a quiet filled button, for secondary actions that sit on raised surfaces next to a primary. */
+.btn[data-variant="soft"] { border-color: transparent; background: var(--color-surface-sunken); }
+.btn[data-variant="soft"]:hover, .btn[data-variant="soft"][data-force="hover"] { border-color: transparent; background: var(--color-surface-hover); }
 .btn[data-variant="ghost"] { border-color: transparent; background: none; }
 .btn[data-variant="ghost"]:hover, .btn[data-variant="ghost"][data-force="hover"] { border-color: transparent; background: var(--color-surface-hover); }
 .btn[data-variant="icon"] { width: var(--control-height); padding: 0; border-color: transparent; background: none; }
@@ -78,6 +81,9 @@
   font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); white-space: nowrap;
   transition: background var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out);
 }
+/* A leading status icon carries the tone in shape too, not only in color. */
+.badge { gap: var(--spacing-xs); }
+.badge .icon { --icon-size: 12px; }
 .badge[data-variant="critical"] { background: var(--color-status-critical-subtle); color: var(--color-status-critical); }
 .badge[data-variant="warning"] { background: var(--color-status-warning-subtle); color: var(--color-status-warning); }
 .badge[data-variant="success"] { background: var(--color-status-success-subtle); color: var(--color-status-success); }
@@ -183,6 +189,22 @@
 .select__option[aria-selected="true"] { font-weight: var(--font-weight-medium); }
 .select__option[aria-selected="true"] .icon { visibility: visible; }
 
+/* Combobox: a search field whose results drop under it, each with an icon, a title and a detail line. Typing filters
+   the options; ↑ ↓ move, Enter picks, Escape closes. The list is a .popover, so it opens and closes like one. */
+.combobox { position: relative; display: inline-flex; flex-direction: column; }
+.combobox > .input { width: 100%; }
+.combobox__list { position: absolute; top: calc(100% + var(--spacing-xs)); left: 0; right: 0; z-index: 1000; width: auto; max-height: 320px; overflow: auto; gap: 0; margin: 0; padding: var(--spacing-xs); list-style: none; }
+.combobox__option { display: flex; align-items: center; gap: var(--spacing-md); min-height: var(--control-height); padding: var(--spacing-sm); border-radius: var(--radius-md); cursor: pointer; transition: background var(--duration-fast) var(--ease-out); }
+.combobox__option[hidden] { display: none; }
+.combobox__option > .icon:first-child { color: var(--color-text-secondary); }
+.combobox__text { display: flex; flex: 1; flex-direction: column; gap: 2px; min-width: 0; }
+.combobox__title { overflow: hidden; color: var(--color-text-primary); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); white-space: nowrap; text-overflow: ellipsis; }
+.combobox__meta { overflow: hidden; color: var(--color-text-tertiary); font-size: var(--font-size-xs); white-space: nowrap; text-overflow: ellipsis; }
+.combobox__option > .icon:last-child:not(:first-child) { --icon-size: 12px; color: var(--color-text-secondary); opacity: 0; transform: translateX(-4px); transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-spring) var(--ease-spring); }
+.combobox__option:hover, .combobox__option[aria-selected="true"], .combobox__option[data-force="hover"] { background: var(--color-surface-hover); }
+.combobox__option[aria-selected="true"] > .icon:last-child:not(:first-child) { opacity: 1; transform: none; }
+.combobox__empty { padding: var(--spacing-sm); color: var(--color-text-tertiary); font-size: var(--font-size-sm); }
+
 /* Icon: Phosphor icon inlined by ds.js. 16 px by default, --icon-size to change it, color follows the text. */
 .icon { display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--icon-size, 16px); height: var(--icon-size, 16px); color: inherit; }
 .icon svg { width: 100%; height: 100%; fill: currentColor; }
@@ -202,6 +224,21 @@
 .input:focus-within { border-color: var(--color-accent); box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-accent); }
 .input input { flex: 1; min-width: 0; height: 100%; padding: 0; border: 0; outline: 0; background: none; color: var(--color-text-primary); font: var(--font-size-sm)/var(--line-height-tight) var(--font-family); }
 .input input::placeholder { color: var(--color-text-tertiary); }
+/* Add-ons: a unit or currency before or after the value (.input__addon), a trailing action (.btn), a number stepper.
+   They sit flush against the border as segments of the box, so the whole box stays 32 px high. */
+.input__addon { display: flex; align-items: center; align-self: stretch; padding: 0 var(--spacing-md); background: var(--color-surface-sunken); color: var(--color-text-secondary); white-space: nowrap; }
+.input > :is(.input__addon, .btn, .input__stepper):first-child { margin-left: calc(var(--spacing-md) * -1); border-right: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-xs) 0 0 var(--radius-xs); }
+.input > :is(.input__addon, .btn, .input__stepper):last-child { margin-right: calc(var(--spacing-md) * -1); border-left: var(--stroke-width-subtle) solid var(--color-border); border-radius: 0 var(--radius-xs) var(--radius-xs) 0; }
+.input > .btn { align-self: stretch; height: auto; border-width: 0; }
+.input > .btn:last-child { border-left-width: var(--stroke-width-subtle); }
+.input > .btn[data-variant="primary"] { border-color: var(--color-accent); }
+.input input[type="number"] { appearance: textfield; font-variant-numeric: tabular-nums; }
+.input input[type="number"]::-webkit-inner-spin-button, .input input[type="number"]::-webkit-outer-spin-button { margin: 0; appearance: none; }
+.input__stepper { display: flex; flex-direction: column; align-self: stretch; }
+.input__stepper button { display: flex; flex: 1; align-items: center; justify-content: center; width: 24px; padding: 0; border: 0; background: none; color: var(--color-text-secondary); cursor: pointer; transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
+.input__stepper button + button { border-top: var(--stroke-width-subtle) solid var(--color-border); }
+.input__stepper button:hover, .input__stepper button[data-force="hover"] { background: var(--color-surface-hover); color: var(--color-text-primary); }
+.input__stepper .icon { --icon-size: 12px; }
 
 /* Select: native select in a 32 px box, optional inline label before the value, chevron drawn in CSS. */
 .select {
@@ -302,6 +339,8 @@
 }
 .tabs__tab:hover, .tabs__tab[data-force="hover"] { color: var(--color-text-primary); }
 .tabs__tab[aria-selected="true"] { color: var(--color-text-primary); }
+/* Count after a tab or a segmented option label: mono, quiet, never part of the accessible name's emphasis. */
+:is(.tabs__count, .btn__count) { color: var(--color-text-tertiary); font: var(--font-weight-regular) var(--font-size-xs)/1 var(--font-family-mono); font-variant-numeric: tabular-nums; }
 .tabs__tab:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; border-radius: var(--radius-xs); }
 .tabs__tab:disabled { opacity: 0.4; cursor: not-allowed; }
 .tabs__indicator { position: absolute; bottom: -1px; left: 0; height: 2px; border-radius: var(--radius-full); background: var(--color-text-primary); }
@@ -372,6 +411,67 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .toast .btn:hover { background: color-mix(in srgb, var(--color-surface-raised) 14%, transparent); border-color: transparent; }
 .toast .btn .icon { color: inherit; }
 
+/* Composer: where a person writes to an agent. A form: the field grows with the text, actions sit under it, Send waits
+   for text. Enter sends, Shift+Enter breaks the line. aria-busy="true" while the agent answers: Send gives way to Stop. */
+.composer { display: flex; flex-direction: column; gap: var(--spacing-xs); padding: var(--spacing-sm); border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface-raised); cursor: text;
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out); }
+.composer:hover { border-color: var(--color-border-strong); }
+.composer:focus-within { border-color: var(--color-accent); box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-accent); }
+.composer[aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
+.composer__input { field-sizing: content; min-height: calc(var(--font-size-md) * var(--line-height-normal) * 2); max-height: 200px; margin: 0; padding: var(--spacing-xs) var(--spacing-xs) 0; border: 0; outline: 0; background: none; resize: none;
+  color: var(--color-text-primary); font: var(--font-size-md)/var(--line-height-normal) var(--font-family); }
+.composer__input::placeholder { color: var(--color-text-tertiary); }
+.composer__bar { display: flex; align-items: center; gap: var(--spacing-xs); cursor: default; }
+.composer__bar > :is(.composer__send, .composer__stop) { margin-left: auto; }
+.composer__stop { display: none; }
+.composer[aria-busy="true"] .composer__send { display: none; }
+.composer[aria-busy="true"] .composer__stop { display: inline-flex; animation: pop-in var(--duration-spring) var(--ease-bounce); }
+
+/* Reasoning: the agent's thinking, folded under one line. data-state="thinking" breathes the label in agent violet;
+   once done, the label says how long it took. Native <details>: click, Enter and Space open it. */
+.reasoning { interpolate-size: allow-keywords; color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+.reasoning summary { display: inline-flex; align-items: center; gap: var(--spacing-xs); min-height: var(--control-height); list-style: none; cursor: pointer; transition: color var(--duration-fast) var(--ease-out); }
+.reasoning summary::-webkit-details-marker { display: none; }
+.reasoning summary:hover, .reasoning summary[data-force="hover"] { color: var(--color-text-primary); }
+.reasoning summary:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; border-radius: var(--radius-xs); }
+.reasoning summary .icon:last-child { --icon-size: 12px; transition: transform var(--duration-base) var(--ease-out); }
+.reasoning[open] summary .icon:last-child { transform: rotate(90deg); }
+.reasoning[data-state="thinking"] summary { color: var(--color-agent); animation: breathe calc(var(--duration-slow) * 5) var(--ease-out) infinite; }
+@keyframes breathe { 50% { opacity: 0.45; } }
+.reasoning::details-content { height: 0; overflow: hidden; transition: height var(--duration-slow) var(--ease-out), content-visibility var(--duration-slow) allow-discrete; }
+.reasoning[open]::details-content { height: auto; }
+.reasoning__body { margin: 0 0 var(--spacing-sm) 7px; padding: var(--spacing-xs) 0 var(--spacing-xs) var(--spacing-md); border-left: var(--stroke-width-mid) solid var(--color-agent-border); color: var(--color-text-tertiary); line-height: var(--line-height-normal); }
+@media (prefers-reduced-motion: reduce) { .reasoning[data-state="thinking"] summary { animation: none; } }
+
+/* Tool call: one action the agent takes (a search, a read, a write), its target and its outcome. data-state: running,
+   done, failed. ds.js adds the status mark; the page only changes data-state. The result folds under the row. */
+.tool-call { interpolate-size: allow-keywords; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-raised); font-size: var(--font-size-sm); }
+.tool-call summary { display: flex; align-items: center; gap: var(--spacing-sm); min-height: var(--control-height); padding: var(--spacing-xs) var(--spacing-sm); list-style: none; cursor: pointer; border-radius: inherit; transition: background var(--duration-fast) var(--ease-out); }
+.tool-call summary::-webkit-details-marker { display: none; }
+.tool-call summary:hover, .tool-call summary[data-force="hover"] { background: var(--color-surface-hover); }
+.tool-call summary:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: -2px; }
+.tool-call__icon { color: var(--color-text-secondary); }
+.tool-call__name { color: var(--color-text-primary); font-weight: var(--font-weight-medium); white-space: nowrap; }
+.tool-call__target { flex: 1; min-width: 0; overflow: hidden; color: var(--color-text-tertiary); font: var(--font-size-xs)/1 var(--font-family-mono); white-space: nowrap; text-overflow: ellipsis; }
+.tool-call__status { display: grid; flex: none; place-items: center; width: 16px; height: 16px; }
+.tool-call__status > * { grid-area: 1 / 1; display: none; }
+.tool-call__spinner { width: 14px; height: 14px; box-sizing: border-box; border: var(--stroke-width-mid) solid var(--color-agent-border); border-top-color: var(--color-agent); border-radius: var(--radius-full); animation: spin calc(var(--duration-slow) * 2.5) linear infinite; }
+.tool-call[data-state="running"] .tool-call__spinner { display: block; }
+.tool-call[data-state="done"] .tool-call__status [data-icon="check-circle"] { display: inline-flex; color: var(--color-status-success); animation: pop-in var(--duration-spring) var(--ease-bounce); }
+.tool-call[data-state="failed"] .tool-call__status [data-icon="x-circle"] { display: inline-flex; color: var(--color-status-critical); animation: pop-in var(--duration-spring) var(--ease-bounce); }
+.tool-call[data-state="running"] .tool-call__name { color: var(--color-agent); }
+.tool-call[data-state="failed"] { border-color: color-mix(in srgb, var(--color-status-critical) 30%, transparent); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
+.tool-call::details-content { height: 0; overflow: hidden; transition: height var(--duration-slow) var(--ease-out), content-visibility var(--duration-slow) allow-discrete; }
+.tool-call[open]::details-content { height: auto; }
+.tool-call__result { margin: 0; padding: var(--spacing-sm) var(--spacing-md); border-top: var(--stroke-width-subtle) solid var(--color-border); color: var(--color-text-secondary); font: var(--font-size-xs)/var(--line-height-normal) var(--font-family-mono); white-space: pre-wrap; }
+.tool-call[data-state="failed"] .tool-call__result { color: var(--color-status-critical); }
+@media (prefers-reduced-motion: reduce) { .tool-call__spinner { animation: none; } }
+
+/* Citation: a numbered source inside an agent's answer. The number opens the source; its tooltip names it. */
+.cite { display: inline-flex; align-items: center; justify-content: center; min-width: 16px; height: 16px; margin: 0 1px; padding: 0 var(--spacing-xs); vertical-align: 1px; border-radius: var(--radius-sm); background: var(--color-agent-subtle); color: var(--color-agent); font: var(--font-weight-semibold) 10px/1 var(--font-family-mono); text-decoration: none; transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
+.cite:hover, .cite[data-force="hover"] { background: var(--color-agent); color: var(--color-on-accent); }
+.cite:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; }
+
 /* Streaming text: an agent's answer revealed word by word by streamText(). A caret follows the last word while it streams. */
 .stream { margin: 0; color: var(--color-text-primary); font-size: var(--font-size-md); line-height: var(--line-height-normal); }
 .stream[aria-busy="true"]::after { content: ""; display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: text-bottom; background: var(--color-agent); animation: blink 1s steps(1) infinite; }
@@ -400,6 +500,32 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .steps > li[data-state="failed"]::before { content: "✕"; border-color: var(--color-status-critical); background: var(--color-status-critical); }
 .steps__meta { margin-left: auto; color: var(--color-text-tertiary); font: var(--font-weight-regular) var(--font-size-xs)/1 var(--font-family-mono); visibility: hidden; }
 .steps > li[data-state="done"] .steps__meta { visibility: visible; animation: fade-in var(--duration-base) var(--ease-out); }
+
+/* Stepper: the stages of a process, side by side (an application, an onboarding). data-state on each li: done, current
+   (with aria-current="step"), or nothing (to do). ds.js draws the marks and the dashed lines between them. */
+.stepper { display: flex; margin: 0; padding: 0; list-style: none; font-size: var(--font-size-sm); }
+.stepper > li { display: flex; flex: 1; flex-direction: column; align-items: center; gap: 2px; min-width: 0; text-align: center; }
+.stepper__track { display: flex; align-items: center; align-self: stretch; margin-bottom: var(--spacing-sm); }
+.stepper__line { position: relative; flex: 1; margin: 0 var(--spacing-sm); border-top: var(--stroke-width-subtle) dashed var(--color-border-strong); }
+.stepper > li:first-child .stepper__line:first-child, .stepper > li:last-child .stepper__line:last-child { visibility: hidden; }
+/* A finished stage draws a solid line over the dashed one, toward the next stage: its own half first, then the next one's. */
+.stepper__fill { position: absolute; top: calc(var(--stroke-width-subtle) * -1); right: 0; left: 0; border-top: var(--stroke-width-subtle) solid var(--color-status-success); transform: scaleX(0); transform-origin: left; transition: transform var(--duration-slow) var(--ease-in); }
+.stepper > li[data-state="done"] .stepper__line:last-child .stepper__fill { transform: none; transition-timing-function: var(--ease-out); }
+.stepper > li[data-state="done"] + li .stepper__line:first-child .stepper__fill { transform: none; transition-timing-function: var(--ease-out); transition-delay: var(--duration-slow); }
+.stepper__mark { display: grid; flex: none; place-items: center; width: 24px; height: 24px; border-radius: var(--radius-full); background: var(--color-surface-sunken); color: var(--color-text-tertiary); transition: background var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out); }
+.stepper__mark > .icon { --icon-size: 14px; grid-area: 1 / 1; display: none; }
+.stepper > li:not([data-state]) .stepper__mark [data-icon="circle-dashed"] { display: inline-flex; }
+.stepper > li[data-state="current"] .stepper__mark { background: var(--color-accent-subtle); color: var(--color-accent); animation: halo calc(var(--duration-slow) * 6) var(--ease-out) infinite; }
+@keyframes halo { from { box-shadow: 0 0 0 0 var(--color-accent-border); } 60%, to { box-shadow: 0 0 0 6px transparent; } }
+.stepper > li[data-state="current"] .stepper__mark [data-icon="circle-half"] { display: inline-flex; animation: pop-in var(--duration-spring) var(--ease-bounce); }
+.stepper > li[data-state="done"] .stepper__mark { background: var(--color-status-success-subtle); color: var(--color-status-success); }
+.stepper > li[data-state="done"] .stepper__mark [data-icon="check"] { display: inline-flex; animation: pop-in var(--duration-spring) var(--ease-bounce); }
+.stepper__status { color: var(--color-text-tertiary); font-size: var(--font-size-xs); }
+/* The status words swap through a blur when a stage starts or ends; the label brightens. */
+.stepper > li:is([data-state="current"], [data-state="done"]) .stepper__status { animation: swap-in var(--duration-slow) var(--ease-out); }
+.stepper__label { max-width: 100%; overflow: hidden; color: var(--color-text-secondary); font-weight: var(--font-weight-medium); white-space: nowrap; text-overflow: ellipsis; transition: color var(--duration-base) var(--ease-out); }
+.stepper > li:is([data-state="current"], [data-state="done"]) .stepper__label { color: var(--color-text-primary); }
+@media (prefers-reduced-motion: reduce) { .stepper > li[data-state="current"] .stepper__mark { animation: none; } }
 
 /* Progress: a run with a measurable end. setProgress() moves the fill and the readout together, in whole percents,
    so they never disagree. Without a value yet, the fill crawls towards a third and waits there. */
@@ -518,11 +644,31 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .textarea { position: relative; display: flex; flex-direction: column; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface-raised); cursor: text;
   transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out); }
 .textarea:hover { border-color: var(--color-border-strong); }
+/* Filled: a sunken field for writing inside raised cards; it rises to the raised surface while focused. */
+.textarea[data-variant="filled"] { background: var(--color-surface-sunken); transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out); }
+.textarea[data-variant="filled"]:focus-within { background: var(--color-surface-raised); }
 .textarea:focus-within { border-color: var(--color-accent); box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-accent); }
 .textarea textarea { field-sizing: content; min-height: calc(var(--control-height) * 2.5); max-height: 280px; padding: var(--spacing-sm) var(--spacing-md); border: 0; outline: 0; background: none; color: var(--color-text-primary); font: var(--font-size-sm)/var(--line-height-normal) var(--font-family); resize: none; }
 .textarea textarea::placeholder { color: var(--color-text-tertiary); }
 .textarea__count { align-self: flex-end; padding: 0 var(--spacing-sm) var(--spacing-xs); color: var(--color-text-tertiary); font: var(--font-size-xs)/1 var(--font-family-mono); font-variant-numeric: tabular-nums; transition: color var(--duration-fast) var(--ease-out); }
 .textarea[data-full] .textarea__count { color: var(--color-status-critical); }
+
+/* Dropzone: files dropped or picked. A <label> around a visually hidden file input, so a click, Enter or Space opens the
+   picker and Tab reaches it. data-over while files hover it; data-invalid when a file is refused (type or size). */
+.dropzone { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs); padding: var(--spacing-xl) var(--spacing-lg); border: var(--stroke-width-subtle) dashed var(--color-border-strong); border-radius: var(--radius-lg); background: var(--color-surface); color: var(--color-text-secondary); font-size: var(--font-size-sm); text-align: center; cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out); }
+.dropzone input[type="file"] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.dropzone:hover, .dropzone[data-force="hover"] { border-color: var(--color-accent-border); }
+.dropzone:has(input:focus-visible) { border-color: var(--color-accent); box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-accent); }
+.dropzone[data-over] { border-style: solid; border-color: var(--color-accent); background: var(--color-accent-subtle); }
+.dropzone[data-invalid] { border-color: var(--color-status-critical); background: var(--color-status-critical-subtle); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
+.dropzone:has(input:disabled) { opacity: 0.4; pointer-events: none; }
+.dropzone__icon { display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: var(--spacing-sm); border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface-raised); box-shadow: var(--shadow-sm); color: var(--color-text-secondary); transition: transform var(--duration-spring) var(--ease-spring); }
+.dropzone[data-over] .dropzone__icon { transform: translateY(-4px); color: var(--color-accent); }
+.dropzone__title { color: var(--color-text-primary); font-weight: var(--font-weight-medium); }
+.dropzone__browse { color: var(--color-text-primary); text-decoration: underline; text-underline-offset: 3px; }
+.dropzone__hint { color: var(--color-text-tertiary); font-size: var(--font-size-xs); }
+.dropzone[data-invalid] .dropzone__hint { color: var(--color-status-critical); }
 
 /* Banner: a message in the page flow. Tone by data-variant: info (default), success, warning, critical.
    data-dismiss on its close button folds it away (ds.js); it slides in when it appears. */

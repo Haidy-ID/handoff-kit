@@ -6,6 +6,7 @@
     "variants": [
       "default",
       "primary",
+      "soft",
       "ghost",
       "icon"
     ],
@@ -25,7 +26,8 @@
       "critical",
       "warning",
       "success",
-      "accent"
+      "accent",
+      "with icon"
     ],
     "states": [
       "default"
@@ -137,7 +139,10 @@
     "name": "Input",
     "variants": [
       "default",
-      "search"
+      "search",
+      "add-ons",
+      "action",
+      "number"
     ],
     "states": [
       "empty",
@@ -164,7 +169,8 @@
     "name": "Segmented",
     "variants": [
       "text",
-      "icon"
+      "icon",
+      "count"
     ],
     "states": [
       "default",
@@ -241,7 +247,8 @@
     "class": "tabs",
     "name": "Tabs",
     "variants": [
-      "default"
+      "default",
+      "count"
     ],
     "states": [
       "selected",
@@ -468,7 +475,8 @@
     "name": "Textarea",
     "variants": [
       "default",
-      "counter"
+      "counter",
+      "filled"
     ],
     "states": [
       "empty",
@@ -528,6 +536,105 @@
     "states": [
       "expanded",
       "collapsed"
+    ]
+  },
+  {
+    "id": "composer",
+    "class": "composer",
+    "name": "Composer",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "empty",
+      "filled",
+      "focus",
+      "busy",
+      "disabled"
+    ]
+  },
+  {
+    "id": "reasoning",
+    "class": "reasoning",
+    "name": "Reasoning",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "thinking",
+      "done",
+      "open"
+    ]
+  },
+  {
+    "id": "tool-call",
+    "class": "tool-call",
+    "name": "Tool call",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "running",
+      "done",
+      "failed",
+      "open",
+      "hover"
+    ]
+  },
+  {
+    "id": "cite",
+    "class": "cite",
+    "name": "Citation",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default",
+      "hover"
+    ]
+  },
+  {
+    "id": "dropzone",
+    "class": "dropzone",
+    "name": "Dropzone",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "over",
+      "refused",
+      "disabled"
+    ]
+  },
+  {
+    "id": "stepper",
+    "class": "stepper",
+    "name": "Stepper",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "to do",
+      "current",
+      "done"
+    ]
+  },
+  {
+    "id": "combobox",
+    "class": "combobox",
+    "name": "Combobox",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "closed",
+      "open",
+      "active",
+      "empty",
+      "picked"
     ]
   }
 ]
