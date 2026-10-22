@@ -1585,6 +1585,56 @@
     el.dispatchEvent(new CustomEvent("retry", { bubbles: true, detail: { name: el.dataset.name } }));
   });
 
+  // Slider: the native range input stays (pointer, keys, screen reader) and gets a drawn track, fill and thumb. Its value
+  // sets --value; the readout and aria-valuetext follow, with data-unit after the number. data-scale writes the min and max
+  // under it; data-marks puts a dot on each step (up to 20). Script that sets the value dispatches "input" on the field.
+  let sliderIds = 0;
+  const syncSlider = (input) => {
+    const root = input.closest(".slider");
+    const min = Number(input.min || 0);
+    const max = Number(input.max || 100);
+    const pct = max > min ? ((Number(input.value) - min) / (max - min)) * 100 : 0;
+    root.style.setProperty("--value", pct);
+    const text = `${Number(input.value).toLocaleString(root.closest("[lang]")?.lang || undefined)}${root.dataset.unit || ""}`;
+    const readout = root.querySelector(".slider__value");
+    if (readout) readout.textContent = text;
+    root.dataset.unit ? input.setAttribute("aria-valuetext", text) : input.removeAttribute("aria-valuetext");
+    root.querySelectorAll(".slider__mark").forEach((m) => m.toggleAttribute("data-on", Number(m.style.getPropertyValue("--at")) <= pct));
+  };
+  const buildSlider = (root) => {
+    const input = root.querySelector('input[type="range"]');
+    if (!input) return;
+    const control = Object.assign(document.createElement("span"), { className: "slider__control" });
+    input.replaceWith(control);
+    control.innerHTML = '<span class="slider__track" aria-hidden="true"><span class="slider__fill"></span></span><span class="slider__thumb" aria-hidden="true"></span>';
+    control.prepend(input);
+    input.id ||= `slider-${++sliderIds}`;
+    const label = root.querySelector(".slider__label");
+    if (label?.matches("label")) label.htmlFor = input.id;
+    const readout = root.querySelector(".slider__value");
+    if (readout) { readout.htmlFor = input.id; readout.setAttribute("aria-hidden", "true"); }
+    const min = Number(input.min || 0);
+    const max = Number(input.max || 100);
+    const steps = (max - min) / Number(input.step || 1);
+    if (root.hasAttribute("data-marks") && steps <= 20) {
+      const track = control.querySelector(".slider__track");
+      for (let i = 0; i <= steps; i++) {
+        const mark = Object.assign(document.createElement("span"), { className: "slider__mark" });
+        mark.style.setProperty("--at", (i / steps) * 100);
+        track.append(mark);
+      }
+    }
+    if (root.hasAttribute("data-scale")) {
+      const unit = root.dataset.unit || "";
+      root.insertAdjacentHTML("beforeend", '<span class="slider__scale" aria-hidden="true"><span></span><span></span></span>');
+      const [low, high] = root.querySelectorAll(".slider__scale > span");
+      low.textContent = `${min}${unit}`;
+      high.textContent = `${max}${unit}`;
+    }
+    syncSlider(input);
+  };
+  document.addEventListener("input", (e) => { if (e.target.matches?.('.slider input[type="range"]')) syncSlider(e.target); });
+
   // Markup present at load and markup rendered later get the same behaviours.
   const each = (node, selector, fn) => {
     if (node.nodeType !== 1) return;
@@ -1616,6 +1666,7 @@
     each(node, ".date-picker:not(:has(.date-picker__field))", buildDatePicker);
     each(node, ".command-palette", buildCommandPalette);
     each(node, ".attachment:not(:has(.attachment__body))", buildAttachment);
+    each(node, ".slider:not(:has(.slider__control))", buildSlider);
   };
   enhance(document.body);
   new MutationObserver((records) => {

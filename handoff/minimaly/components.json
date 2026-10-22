@@ -701,5 +701,22 @@
       "error",
       "removed"
     ]
+  },
+  {
+    "id": "slider",
+    "class": "slider",
+    "name": "Slider",
+    "variants": [
+      "default",
+      "value and scale",
+      "step marks"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "pressed",
+      "disabled"
+    ]
   }
 ]

@@ -3,8 +3,8 @@
    data-force="hover" pins the hover state for specimen pages. Tokens only, no raw values. */
 
 /* Borders and padding stay inside the declared size (32 px controls), whatever the page reset. */
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment),
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment) * { box-sizing: border-box; }
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider),
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider) * { box-sizing: border-box; }
 
 /* Motion: keyframes shared by the components and the pages built on them.
    enter = fade up (page sections, cards), pop-in = fade and grow (tooltips, popovers), fade-in, fade-out.
@@ -894,3 +894,31 @@ html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 /* Removed: fades and shrinks, then ds.js takes it out. */
 .attachment[data-leaving] { animation: attachment-out var(--duration-base) var(--ease-in) forwards; pointer-events: none; }
 @keyframes attachment-out { to { opacity: 0; transform: scale(0.96); filter: blur(var(--blur-swap)); } }
+
+/* Slider: a native range input, invisible, stretched over a track, an ink fill and a thumb that are real elements built by
+   ds.js (Copy to Figma keeps them). The input keeps the pointer, the keys and the screen reader; --value (0 to 100) places
+   the fill and the thumb. Optional readout (.slider__value), min and max under it (data-scale), a dot per step (data-marks). */
+.slider { display: grid; grid-template-columns: 1fr auto; align-items: baseline; column-gap: var(--spacing-md); min-width: 0; font-size: var(--font-size-sm); }
+.slider__label { color: var(--color-text-primary); font-weight: var(--font-weight-medium); }
+.slider__value { grid-column: 2; color: var(--color-text-primary); font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-tight) var(--font-family-mono); font-variant-numeric: tabular-nums; }
+.slider__control { position: relative; grid-column: 1 / -1; display: flex; align-items: center; height: var(--control-height); }
+.slider__control > input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; appearance: none; }
+/* The invisible native thumb is as wide as the drawn one, so the pointer and the drawing agree at every value. */
+.slider__control > input::-webkit-slider-thumb { width: var(--size-mark); height: var(--control-height); appearance: none; }
+.slider__control > input::-moz-range-thumb { width: var(--size-mark); height: var(--control-height); border: 0; }
+.slider__track { position: relative; flex: 1; height: var(--spacing-xs); border-radius: var(--radius-full); background: var(--color-border); }
+.slider__fill { position: absolute; top: 0; bottom: 0; left: 0; width: calc(var(--size-mark) / 2 + var(--value, 0) * (100% - var(--size-mark)) / 100); border-radius: inherit; background: var(--color-ink); transition: width var(--duration-fast) var(--ease-out); }
+.slider__mark { position: absolute; top: 50%; left: calc(var(--size-mark) / 2 + var(--at) * (100% - var(--size-mark)) / 100); width: calc(var(--spacing-xs) / 2); height: calc(var(--spacing-xs) / 2); border-radius: var(--radius-full); background: var(--color-text-tertiary); transform: translate(-50%, -50%); }
+.slider__mark[data-on] { background: var(--color-on-ink); }
+/* The thumb of the switch: a raised circle with a soft shadow, ringed in ink so it reads on the fill and the bare track, in both themes. */
+.slider__thumb { position: absolute; top: calc(50% - var(--size-mark) / 2); left: calc(var(--value, 0) * (100% - var(--size-mark)) / 100); width: var(--size-mark); height: var(--size-mark); border-radius: var(--radius-full);
+  background: var(--color-surface-raised); box-shadow: var(--shadow-sm), inset 0 0 0 var(--stroke-width-mid) var(--color-ink); pointer-events: none;
+  transition: left var(--duration-fast) var(--ease-out), transform var(--duration-spring) var(--ease-spring); }
+.slider__control:hover .slider__thumb, .slider[data-force="hover"] .slider__thumb { transform: scale(1.1); }
+/* Held: the thumb swells under the finger and follows it without easing; keys and clicks glide. */
+.slider__control:active .slider__thumb { transform: scale(1.25); transition: transform var(--duration-spring) var(--ease-spring); }
+.slider__control:active .slider__fill { transition: none; }
+.slider__control > input:focus-visible ~ .slider__thumb { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; }
+.slider__scale { grid-column: 1 / -1; display: flex; justify-content: space-between; color: var(--color-text-tertiary); font: var(--font-size-xs)/var(--line-height-tight) var(--font-family-mono); font-variant-numeric: tabular-nums; }
+.slider:has(input:disabled) { opacity: 0.4; }
+.slider:has(input:disabled) .slider__control > input { cursor: not-allowed; }
