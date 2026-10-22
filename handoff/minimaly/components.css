@@ -427,8 +427,8 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .composer[aria-busy="true"] .composer__send { display: none; }
 .composer[aria-busy="true"] .composer__stop { display: inline-flex; animation: pop-in var(--duration-spring) var(--ease-bounce); }
 
-/* Reasoning: the agent's thinking, folded under one line. data-state="thinking" breathes the label in agent violet;
-   once done, the label says how long it took. Native <details>: click, Enter and Space open it. */
+/* Reasoning: the agent's thinking, folded under one line. data-state="thinking" shows the typing dots and an agent
+   violet label; once done, a sparkle and the time it took. Native <details>: click, Enter and Space open it. */
 .reasoning { interpolate-size: allow-keywords; color: var(--color-text-secondary); font-size: var(--font-size-sm); }
 .reasoning summary { display: inline-flex; align-items: center; gap: var(--spacing-xs); min-height: var(--control-height); list-style: none; cursor: pointer; transition: color var(--duration-fast) var(--ease-out); }
 .reasoning summary::-webkit-details-marker { display: none; }
@@ -436,12 +436,13 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .reasoning summary:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; border-radius: var(--radius-xs); }
 .reasoning summary .icon:last-child { --icon-size: 12px; transition: transform var(--duration-base) var(--ease-out); }
 .reasoning[open] summary .icon:last-child { transform: rotate(90deg); }
-.reasoning[data-state="thinking"] summary { color: var(--color-agent); animation: breathe calc(var(--duration-slow) * 5) var(--ease-out) infinite; }
-@keyframes breathe { 50% { opacity: 0.45; } }
+/* Thinking: the dancing dots of typing stand in for the icon, and the label turns agent violet. */
+.reasoning[data-state="thinking"] summary { color: var(--color-agent); }
+.reasoning summary .typing__dots { padding: var(--spacing-xs) var(--spacing-md); }
+.reasoning:not([data-state="thinking"]) summary .typing__dots, .reasoning[data-state="thinking"] summary > .icon:first-child { display: none; }
 .reasoning::details-content { height: 0; overflow: hidden; transition: height var(--duration-slow) var(--ease-out), content-visibility var(--duration-slow) allow-discrete; }
 .reasoning[open]::details-content { height: auto; }
 .reasoning__body { margin: 0 0 var(--spacing-sm) 7px; padding: var(--spacing-xs) 0 var(--spacing-xs) var(--spacing-md); border-left: var(--stroke-width-mid) solid var(--color-agent-border); color: var(--color-text-tertiary); line-height: var(--line-height-normal); }
-@media (prefers-reduced-motion: reduce) { .reasoning[data-state="thinking"] summary { animation: none; } }
 
 /* Tool call: one action the agent takes (a search, a read, a write), its target and its outcome. data-state: running,
    done, failed. ds.js adds the status mark; the page only changes data-state. The result folds under the row. */
@@ -506,7 +507,11 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .stepper { display: flex; margin: 0; padding: 0; list-style: none; font-size: var(--font-size-sm); }
 .stepper > li { display: flex; flex: 1; flex-direction: column; align-items: center; gap: 2px; min-width: 0; text-align: center; }
 .stepper__track { display: flex; align-items: center; align-self: stretch; margin-bottom: var(--spacing-sm); }
-.stepper__line { position: relative; flex: 1; margin: 0 var(--spacing-sm); border-top: var(--stroke-width-subtle) dashed var(--color-border-strong); }
+/* Each stage holds the half lines on both sides of its mark: they keep a gap to the mark and meet the next stage's half,
+   so one continuous line runs from mark to mark. */
+.stepper__line { position: relative; flex: 1; border-top: var(--stroke-width-subtle) dashed var(--color-border-strong); }
+.stepper__line:first-child { margin-right: var(--spacing-sm); }
+.stepper__line:last-child { margin-left: var(--spacing-sm); }
 .stepper > li:first-child .stepper__line:first-child, .stepper > li:last-child .stepper__line:last-child { visibility: hidden; }
 /* A finished stage draws a solid line over the dashed one, toward the next stage: its own half first, then the next one's. */
 .stepper__fill { position: absolute; top: calc(var(--stroke-width-subtle) * -1); right: 0; left: 0; border-top: var(--stroke-width-subtle) solid var(--color-status-success); transform: scaleX(0); transform-origin: left; transition: transform var(--duration-slow) var(--ease-in); }
