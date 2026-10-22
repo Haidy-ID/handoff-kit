@@ -3,8 +3,8 @@
    data-force="hover" pins the hover state for specimen pages. Tokens only, no raw values. */
 
 /* Borders and padding stay inside the declared size (32 px controls), whatever the page reset. */
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider),
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider) * { box-sizing: border-box; }
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input),
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input) * { box-sizing: border-box; }
 
 /* Motion: keyframes shared by the components and the pages built on them.
    enter = fade up (page sections, cards), pop-in = fade and grow (tooltips, popovers), fade-in, fade-out.
@@ -922,3 +922,30 @@ html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 .slider__scale { grid-column: 1 / -1; display: flex; justify-content: space-between; color: var(--color-text-tertiary); font: var(--font-size-xs)/var(--line-height-tight) var(--font-family-mono); font-variant-numeric: tabular-nums; }
 .slider:has(input:disabled) { opacity: 0.4; }
 .slider:has(input:disabled) .slider__control > input { cursor: not-allowed; }
+
+/* Tag input: removable tags (chips) and a text field in one box. Enter or a comma adds what is typed, Backspace in the empty
+   field removes the last tag, × removes one; a tag already there is refused: it shakes. Inside a .combobox, its list
+   suggests tags. ds.js adds the remove buttons and fires "change" with the tags. */
+.tag-input { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-xs); min-width: 0; min-height: var(--control-height); padding: var(--spacing-xs);
+  border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface-raised); cursor: text;
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out); }
+.tag-input:hover, .tag-input[data-force="hover"] { border-color: var(--color-border-strong); }
+.tag-input:focus-within { border-color: var(--color-accent); box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-accent); }
+.combobox > .tag-input { width: 100%; }
+/* Text starts where it starts in an .input: the box padding plus the field's own. */
+.tag-input > input { flex: 1 0 calc(var(--control-height) * 2); min-width: 0; padding: 0 0 0 calc(var(--spacing-md) - var(--spacing-xs)); border: 0; outline: 0; background: none; color: var(--color-text-primary); font: var(--font-size-sm)/var(--line-height-tight) var(--font-family); }
+.tag-input > input::placeholder { color: var(--color-text-tertiary); }
+.tag-input__tag { padding-right: 0; transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-spring) var(--ease-bounce), border-color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out); }
+@starting-style { .tag-input__tag { opacity: 0; transform: scale(0.8); } }
+/* The × is a 32 px high target over a 22 px chip: it overflows the chip into the box padding, never out of the box. */
+.tag-input__remove { display: grid; flex: none; place-items: center; width: calc(var(--spacing-lg) + var(--spacing-xs)); height: var(--control-height); margin-block: calc((var(--spacing-xs) + var(--stroke-width-subtle)) * -1);
+  padding: 0; border: 0; background: none; color: var(--color-text-tertiary); cursor: pointer; transition: color var(--duration-fast) var(--ease-out); }
+.tag-input__remove .icon { --icon-size: var(--size-icon-sm); border-radius: var(--radius-xs); }
+.tag-input__remove:hover, .tag-input__remove[data-force="hover"] { color: var(--color-text-primary); }
+.tag-input__remove:focus-visible { outline: 0; color: var(--color-text-primary); }
+.tag-input__remove:focus-visible .icon { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 1px; }
+.tag-input__tag[data-invalid] { border-color: color-mix(in srgb, var(--color-status-critical) 30%, transparent); background: var(--color-status-critical-subtle); color: var(--color-status-critical); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
+.tag-input:has(> input:disabled) { opacity: 0.4; cursor: not-allowed; }
+.tag-input:has(> input:disabled) .tag-input__remove { visibility: hidden; }
+.field[data-invalid] > .tag-input, .field[data-invalid] > .combobox > .tag-input { border-color: var(--color-status-critical); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
+.field[data-invalid] > .tag-input:focus-within, .field[data-invalid] > .combobox > .tag-input:focus-within { box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-status-critical); }

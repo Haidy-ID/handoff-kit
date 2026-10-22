@@ -718,5 +718,23 @@
       "pressed",
       "disabled"
     ]
+  },
+  {
+    "id": "tag-input",
+    "class": "tag-input",
+    "name": "Tag input",
+    "variants": [
+      "default",
+      "suggestions"
+    ],
+    "states": [
+      "empty",
+      "tags",
+      "hover",
+      "focus",
+      "duplicate",
+      "invalid",
+      "disabled"
+    ]
   }
 ]

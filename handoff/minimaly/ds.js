@@ -810,13 +810,13 @@
   let fieldIds = 0;
   const idOf = (el) => el.id || (el.id = `field-${++fieldIds}`);
   const syncField = (field) => {
-    const control = field.querySelector(":scope > :is(.input, .select, .textarea) :is(input, select, textarea)");
+    const control = field.querySelector(":scope > :is(.input, .select, .textarea, .combobox, .tag-input) :is(input, select, textarea)");
     if (!control) return;
     if (field.hasAttribute("data-invalid")) control.setAttribute("aria-invalid", "true");
     else control.removeAttribute("aria-invalid");
   };
   const buildField = (field) => {
-    const control = field.querySelector(":scope > :is(.input, .select, .textarea) :is(input, select, textarea)");
+    const control = field.querySelector(":scope > :is(.input, .select, .textarea, .combobox, .tag-input) :is(input, select, textarea)");
     const label = field.querySelector(":scope > label.field__label");
     if (control && label) label.htmlFor = idOf(control);
     const notes = [...field.querySelectorAll(":scope > :is(.field__hint, .field__error)")].map(idOf);
@@ -949,7 +949,9 @@
   const filterCombo = (box) => {
     const { field, options, empty } = comboParts(box);
     const q = field.value.trim().toLowerCase();
-    for (const o of options) o.hidden = !!q && !o.textContent.toLowerCase().includes(q);
+    // Suggestions of a tag input already added as tags stay out of the list until their tag is removed.
+    const taken = new Set([...box.querySelectorAll(".tag-input__tag")].map((t) => t.dataset.value.toLowerCase()));
+    for (const o of options) o.hidden = (!!q && !o.textContent.toLowerCase().includes(q)) || taken.has((o.dataset.value || o.textContent.trim()).toLowerCase());
     const shown = options.filter((o) => !o.hidden);
     if (empty) empty.hidden = shown.length > 0;
     setActive(box, shown[0]);
@@ -1635,6 +1637,104 @@
   };
   document.addEventListener("input", (e) => { if (e.target.matches?.('.slider input[type="range"]')) syncSlider(e.target); });
 
+  // Tag input: chips and a text field in one box. Enter or a comma adds what is typed; a tag already there (any case) is
+  // refused: it shakes and the text stays. Backspace in the empty field removes the last tag, × removes one. Fires "change"
+  // on the root (event.detail.value, the tag values). Inside a .combobox, picking a suggestion adds it as a tag.
+  const tagsOf = (root) => [...root.querySelectorAll(":scope > .tag-input__tag")];
+  const tagRemover = (label) => {
+    const b = Object.assign(document.createElement("button"), { type: "button", className: "tag-input__remove", innerHTML: '<i class="icon" data-icon="x"></i>' });
+    b.setAttribute("aria-label", `Remove ${label}`);
+    return b;
+  };
+  const tagsChanged = (root) => {
+    const box = root.parentElement;
+    if (box?.matches(".combobox") && box.querySelector(".combobox__list")?.id) filterCombo(box);
+    root.dispatchEvent(new CustomEvent("change", { bubbles: true, detail: { value: tagsOf(root).map((t) => t.dataset.value) } }));
+  };
+  const addTag = (root, label, value = label) => {
+    label = label.trim();
+    value = String(value).trim();
+    if (!label) return false;
+    const twin = tagsOf(root).find((t) => t.dataset.value.toLowerCase() === value.toLowerCase());
+    if (twin) {
+      twin.removeAttribute("data-invalid");
+      void twin.offsetWidth; // replays the shake when the same tag is refused twice in a row
+      twin.setAttribute("data-invalid", "");
+      announce(`${twin.textContent} is already added`);
+      return false;
+    }
+    const tag = Object.assign(document.createElement("span"), { className: "chip tag-input__tag", textContent: label });
+    tag.dataset.value = value;
+    tag.append(tagRemover(label));
+    root.querySelector(":scope > input").before(tag);
+    window.renderIcons(tag);
+    announce(`${label} added`);
+    tagsChanged(root);
+    return true;
+  };
+  const removeTag = (tag) => {
+    const root = tag.parentElement;
+    tag.remove();
+    announce(`${tag.textContent} removed`);
+    tagsChanged(root);
+  };
+  const buildTagInput = (root) => {
+    const field = root.querySelector(":scope > input");
+    if (!field || root.tagInput) return;
+    root.tagInput = true;
+    for (const chip of root.querySelectorAll(":scope > .chip")) {
+      chip.classList.add("tag-input__tag");
+      chip.dataset.value ??= chip.textContent.trim();
+      chip.append(tagRemover(chip.textContent.trim()));
+    }
+    field.autocomplete = "off";
+    // The root fires the tag list as "change": the field's own change stays inside.
+    field.addEventListener("change", (e) => e.stopPropagation());
+    if (root.parentElement?.matches(".combobox") && root.parentElement.querySelector(".combobox__list")?.id) filterCombo(root.parentElement);
+    window.renderIcons(root);
+  };
+  document.addEventListener("input", (e) => {
+    const field = e.target.matches?.(".tag-input > input") && e.target;
+    if (!field) return;
+    const root = field.closest(".tag-input");
+    for (const t of tagsOf(root)) t.removeAttribute("data-invalid");
+    if (!field.value.includes(",")) return;
+    // Typed or pasted commas: every complete part becomes a tag, the rest stays in the field.
+    const parts = field.value.split(",");
+    field.value = parts.pop().trimStart();
+    for (const part of parts) addTag(root, part);
+    if (root.parentElement?.matches(".combobox")) filterCombo(root.parentElement);
+  });
+  document.addEventListener("keydown", (e) => {
+    const field = e.target.matches?.(".tag-input > input") && e.target;
+    // A suggestion picked by the combobox already handled this Enter.
+    if (!field || e.defaultPrevented || e.isComposing) return;
+    const root = field.closest(".tag-input");
+    if (e.key === "Enter" && field.value.trim()) {
+      e.preventDefault();
+      if (addTag(root, field.value)) field.value = "";
+      if (root.parentElement?.matches(".combobox")) filterCombo(root.parentElement);
+    } else if (e.key === "Backspace" && !field.value && tagsOf(root).length) {
+      e.preventDefault();
+      removeTag(tagsOf(root).at(-1));
+    }
+  });
+  document.addEventListener("click", (e) => {
+    const root = e.target.closest?.(".tag-input");
+    if (!root) return;
+    const remove = e.target.closest(".tag-input__remove");
+    if (remove) removeTag(remove.parentElement);
+    // The whole box is the field: a click on a tag, the padding or a × puts the caret back in it.
+    if (!e.target.closest("input")) root.querySelector(":scope > input").focus();
+  });
+  document.addEventListener("select", (e) => {
+    const root = e.detail?.option && e.target.matches?.(".combobox") && e.target.querySelector(":scope > .tag-input");
+    if (!root) return;
+    const field = root.querySelector(":scope > input");
+    addTag(root, e.detail.option.querySelector(".combobox__title")?.textContent || field.value, e.detail.value);
+    field.value = "";
+  });
+
   // Markup present at load and markup rendered later get the same behaviours.
   const each = (node, selector, fn) => {
     if (node.nodeType !== 1) return;
@@ -1667,6 +1767,7 @@
     each(node, ".command-palette", buildCommandPalette);
     each(node, ".attachment:not(:has(.attachment__body))", buildAttachment);
     each(node, ".slider:not(:has(.slider__control))", buildSlider);
+    each(node, ".tag-input", buildTagInput);
   };
   enhance(document.body);
   new MutationObserver((records) => {
