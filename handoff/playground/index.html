@@ -14,7 +14,7 @@
   <header class="bar">
     <span class="bar__start">
       <span class="bar__trail"><a class="brand" id="brand" href="../../" data-tip="Back to home"></a><nav class="breadcrumb" aria-label="Breadcrumb"><span class="breadcrumb__sep">/</span><span aria-current="page">Components</span></nav></span>
-      <label class="select" data-tip="Design system whose components are shown"><span class="select__label">Design system</span><select id="ds"></select><i class="icon select__icon" data-icon="caret-down"></i></label>
+      <label class="select" data-tip="Design system whose components are shown"><span class="select__label">Design system</span><select id="ds"></select><i class="icon select__icon" data-icon="caret-down"></i></label><a class="btn" data-variant="ghost" id="check" href="check.html" data-tip="Load every specimen in light and dark and list what breaks"><i class="icon" data-icon="list-checks"></i>Check all</a>
     </span>
     <span class="segmented" role="group" aria-label="Theme"><button class="btn" data-theme="light" aria-pressed="true" data-tip="Show the components in light mode">Light</button><button class="btn" data-theme="dark" aria-pressed="false" data-tip="Show the components in dark mode">Dark</button></span>
   </header>
@@ -49,6 +49,7 @@
       $("ds").innerHTML = DESIGN_SYSTEMS.map((d) => `<option${d === ds ? " selected" : ""}>${d}</option>`).join("");
       $("ds").addEventListener("change", (e) => { location.search = `?ds=${encodeURIComponent(e.target.value)}`; });
       document.title = `${ds} · Components`;
+      $("check").href = `check.html?ds=${encodeURIComponent(ds)}`;
       $("nav").innerHTML = list.map((c) => `<a href="#${c.id}">${c.name}</a>`).join("");
       // Every topic of every group, to show where a component is used (topic.json → ds and components).
       const topics = (await Promise.all(site.groups.map(async (g) => {

@@ -89,6 +89,10 @@
 
   /* Controls: anything clickable is at least this high */
   --control-height: 32px;
+  --size-mark: 16px;      /* status marks: checkbox, radio, step and tool marks, citations */
+  --size-icon-sm: 12px;   /* small icons inside badges, chips, carets */
+  --size-row: 40px;       /* table rows, toasts */
+  --size-bar: 56px;       /* top bars: app shell, sticky header */
 
   /* Stroke */
   --stroke-width-subtle: 1px;
@@ -136,6 +140,11 @@
   --color-text-secondary: var(--neutral-600);
   --color-text-tertiary: var(--neutral-500);
 
+  /* Ink: the main action and the chosen state (primary button, checked box, radio, switch). Accent keeps focus, links,
+     the active tab or toggle, progress and the current step. */
+  --color-ink: var(--neutral-950);
+  --color-on-ink: var(--base-white);
+
   --color-accent: var(--primary-600);
   --color-accent-subtle: var(--primary-50);
   --color-accent-border: var(--primary-200);
@@ -170,6 +179,9 @@
   --color-text-primary: var(--neutral-50);
   --color-text-secondary: var(--neutral-400);
   --color-text-tertiary: var(--neutral-500);
+
+  --color-ink: var(--neutral-50);
+  --color-on-ink: var(--neutral-950);
 
   --color-accent: var(--primary-400);
   --color-accent-subtle: var(--primary-950);

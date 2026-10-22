@@ -581,6 +581,20 @@
     [...dots.children].slice(0, 3).forEach((dot, i) => dot.animate(dance[i], { duration: DANCE, iterations: Infinity }));
   };
 
+  // Steps: each row gets its mark (spinner, check, cross); CSS shows the one matching data-state.
+  const buildSteps = (list) => {
+    for (const li of list.children) {
+      if (!li.querySelector(".steps__mark")) li.insertAdjacentHTML("afterbegin", '<span class="steps__mark" aria-hidden="true"><span class="steps__spinner"></span><i class="icon" data-icon="check"></i><i class="icon" data-icon="x"></i></span>');
+    }
+    window.renderIcons(list);
+  };
+  // Divider: the two rules on each side of the label are real elements, so Copy to Figma keeps them.
+  const buildDivider = (el) => {
+    if (el.querySelector(".divider__line")) return;
+    const line = () => Object.assign(document.createElement("span"), { className: "divider__line", ariaHidden: "true" });
+    el.prepend(line());
+    el.append(line());
+  };
   // Steps: setSteps(list, current, failed) marks a run. Before current: done. current: active, or failed when failed is
   // true, and nothing after a failure pretends to have run. current = number of steps: the run is complete.
   window.setSteps = (list, current, failed = false) => {
@@ -659,7 +673,11 @@
       th.append(b);
       th.setAttribute("aria-sort", "none");
     }
+    for (const b of table.tHead.querySelectorAll("th[aria-sort] button")) {
+      if (!b.querySelector(".table__sort")) b.insertAdjacentHTML("beforeend", '<span class="table__sort" aria-hidden="true">↕</span>');
+    }
   };
+  const SORT_MARKS = { none: "↕", ascending: "↑", descending: "↓" };
   const sortKey = (cell) => {
     const text = (cell.dataset.value ?? cell.textContent).trim();
     const n = Number(text.replace(/−/g, "-").replace(/[,\s%]/g, ""));
@@ -674,6 +692,7 @@
     const next = { none: "ascending", ascending: "descending", descending: "none" }[th.getAttribute("aria-sort")];
     table.tHead.querySelectorAll("th[aria-sort]").forEach((h) => h.setAttribute("aria-sort", "none"));
     th.setAttribute("aria-sort", next);
+    table.tHead.querySelectorAll("th[aria-sort]").forEach((h) => { const mark = h.querySelector(".table__sort"); if (mark) mark.textContent = SORT_MARKS[h.getAttribute("aria-sort")]; });
     const col = th.cellIndex;
     const dir = next === "descending" ? -1 : 1;
     const sorted = next === "none" ? [...rows].sort((a, b) => a.dataset.order - b.dataset.order) : [...rows].sort((a, b) => {
@@ -1273,6 +1292,8 @@
     each(node, ".tool-call", buildToolCall);
     each(node, ".stepper", buildStepper);
     each(node, ".combobox", buildCombobox);
+    each(node, ".steps", buildSteps);
+    each(node, ".divider", buildDivider);
     each(node, ".rich-editor:not(:has(.rich-editor__box))", buildRichEditor);
   };
   enhance(document.body);

@@ -1,6 +1,6 @@
 # Button
 
-32 px, 12 px medium text, 4 px radius. Default is outlined on the raised surface, primary is the blue accent (one per view), soft is filled grey without border (a quiet secondary next to a primary), ghost has no border, icon is a 32 px square for icon-only actions.
+32 px, 12 px medium text, 4 px radius. Default is outlined on the raised surface, primary is ink: black, white in dark (one per view), soft is filled grey without border (a quiet secondary next to a primary), ghost has no border, icon is a 32 px square for icon-only actions.
 
 ```html
 <button class="btn"><i class="icon" data-icon="funnel"></i>Filters</button>

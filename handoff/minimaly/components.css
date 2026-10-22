@@ -42,9 +42,9 @@
 .btn:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; }
 .btn[aria-pressed="true"] { background: var(--color-accent-subtle); border-color: var(--color-accent-border); color: var(--color-accent); }
 .btn[aria-pressed="true"] .icon { color: var(--color-accent); }
-.btn[data-variant="primary"] { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-accent); }
-.btn[data-variant="primary"] .icon { color: var(--color-on-accent); }
-.btn[data-variant="primary"]:hover, .btn[data-variant="primary"][data-force="hover"] { background: var(--color-accent); opacity: 0.9; }
+.btn[data-variant="primary"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-on-ink); }
+.btn[data-variant="primary"] .icon { color: var(--color-on-ink); }
+.btn[data-variant="primary"]:hover, .btn[data-variant="primary"][data-force="hover"] { background: var(--color-ink); opacity: 0.85; }
 /* Soft: a quiet filled button, for secondary actions that sit on raised surfaces next to a primary. */
 .btn[data-variant="soft"] { border-color: transparent; background: var(--color-surface-sunken); }
 .btn[data-variant="soft"]:hover, .btn[data-variant="soft"][data-force="hover"] { border-color: transparent; background: var(--color-surface-hover); }
@@ -72,7 +72,7 @@
 .btn__label[data-for="busy"] .icon { animation: spin calc(var(--duration-slow) * 2.5) linear infinite; }
 .btn__label[data-for="done"] .icon { color: var(--color-status-success); }
 .btn__label[data-for="error"] .icon { color: var(--color-status-critical); }
-.btn[data-variant="primary"] .btn__label .icon { color: var(--color-on-accent); }
+.btn[data-variant="primary"] .btn__label .icon { color: var(--color-on-ink); }
 
 /* Badge: status label, not clickable. Mono, tinted by tone. */
 .badge {
@@ -83,7 +83,7 @@
 }
 /* A leading status icon carries the tone in shape too, not only in color. */
 .badge { gap: var(--spacing-xs); }
-.badge .icon { --icon-size: 12px; }
+.badge .icon { --icon-size: var(--size-icon-sm); }
 .badge[data-variant="critical"] { background: var(--color-status-critical-subtle); color: var(--color-status-critical); }
 .badge[data-variant="warning"] { background: var(--color-status-warning-subtle); color: var(--color-status-warning); }
 .badge[data-variant="success"] { background: var(--color-status-success-subtle); color: var(--color-status-success); }
@@ -96,7 +96,7 @@
   background: var(--color-surface-sunken); color: var(--color-text-primary);
   font: var(--font-weight-medium) var(--font-size-xs)/1 var(--font-family); white-space: nowrap;
 }
-.chip .icon { --icon-size: 12px; color: var(--color-text-secondary); }
+.chip .icon { --icon-size: var(--size-icon-sm); color: var(--color-text-secondary); }
 .chip[data-variant="round"] { border-radius: var(--radius-full); background: var(--color-surface-raised); }
 .chip[data-variant="accent"] { background: var(--color-accent-subtle); border-color: var(--color-accent-border); color: var(--color-accent); }
 .chip[data-variant="accent"] .icon { color: var(--color-accent); }
@@ -137,10 +137,10 @@
 
 /* Divider: horizontal rule with a centered label. Accent by default, quiet for low emphasis. */
 .divider { display: flex; align-items: center; gap: var(--spacing-md); }
-.divider::before, .divider::after { content: ""; flex: 1; height: var(--stroke-width-subtle); background: var(--color-accent); }
-.divider span { padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-full); background: var(--color-accent); color: var(--color-on-accent); font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); }
-.divider[data-variant="quiet"]::before, .divider[data-variant="quiet"]::after { background: var(--color-border); }
-.divider[data-variant="quiet"] span { border: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised); color: var(--color-text-tertiary); font-weight: var(--font-weight-regular); }
+.divider__line { flex: 1; height: var(--stroke-width-subtle); background: var(--color-accent); }
+.divider > span:not(.divider__line) { padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-full); background: var(--color-accent); color: var(--color-on-accent); font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); }
+.divider[data-variant="quiet"] .divider__line { background: var(--color-border); }
+.divider[data-variant="quiet"] > span:not(.divider__line) { border: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised); color: var(--color-text-tertiary); font-weight: var(--font-weight-regular); }
 
 /* Tooltip: dark bubble. Position it from the page (position: fixed or absolute). */
 .tooltip {
@@ -200,7 +200,7 @@
 .combobox__text { display: flex; flex: 1; flex-direction: column; gap: 2px; min-width: 0; }
 .combobox__title { overflow: hidden; color: var(--color-text-primary); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); white-space: nowrap; text-overflow: ellipsis; }
 .combobox__meta { overflow: hidden; color: var(--color-text-tertiary); font-size: var(--font-size-xs); white-space: nowrap; text-overflow: ellipsis; }
-.combobox__option > .icon:last-child:not(:first-child) { --icon-size: 12px; color: var(--color-text-secondary); opacity: 0; transform: translateX(-4px); transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-spring) var(--ease-spring); }
+.combobox__option > .icon:last-child:not(:first-child) { --icon-size: var(--size-icon-sm); color: var(--color-text-secondary); opacity: 0; transform: translateX(-4px); transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-spring) var(--ease-spring); }
 .combobox__option:hover, .combobox__option[aria-selected="true"], .combobox__option[data-force="hover"] { background: var(--color-surface-hover); }
 .combobox__option[aria-selected="true"] > .icon:last-child:not(:first-child) { opacity: 1; transform: none; }
 .combobox__empty { padding: var(--spacing-sm); color: var(--color-text-tertiary); font-size: var(--font-size-sm); }
@@ -231,14 +231,14 @@
 .input > :is(.input__addon, .btn, .input__stepper):last-child { margin-right: calc(var(--spacing-md) * -1); border-left: var(--stroke-width-subtle) solid var(--color-border); border-radius: 0 var(--radius-xs) var(--radius-xs) 0; }
 .input > .btn { align-self: stretch; height: auto; border-width: 0; }
 .input > .btn:last-child { border-left-width: var(--stroke-width-subtle); }
-.input > .btn[data-variant="primary"] { border-color: var(--color-accent); }
+.input > .btn[data-variant="primary"] { border-color: var(--color-ink); }
 .input input[type="number"] { appearance: textfield; font-variant-numeric: tabular-nums; }
 .input input[type="number"]::-webkit-inner-spin-button, .input input[type="number"]::-webkit-outer-spin-button { margin: 0; appearance: none; }
 .input__stepper { display: flex; flex-direction: column; align-self: stretch; }
 .input__stepper button { display: flex; flex: 1; align-items: center; justify-content: center; width: 24px; padding: 0; border: 0; background: none; color: var(--color-text-secondary); cursor: pointer; transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
 .input__stepper button + button { border-top: var(--stroke-width-subtle) solid var(--color-border); }
 .input__stepper button:hover, .input__stepper button[data-force="hover"] { background: var(--color-surface-hover); color: var(--color-text-primary); }
-.input__stepper .icon { --icon-size: 12px; }
+.input__stepper .icon { --icon-size: var(--size-icon-sm); }
 
 /* Select: native select in a 32 px box, optional inline label before the value, chevron drawn in CSS. */
 .select {
@@ -314,6 +314,7 @@
 .value { position: relative; border-radius: var(--radius-xs); font-variant-numeric: tabular-nums; }
 .value[data-trend] { animation: value-flash var(--duration-flash) var(--ease-out); }
 @keyframes value-flash { from { background: var(--color-flash); box-shadow: 0 0 0 var(--spacing-xs) var(--color-flash); color: var(--color-accent); } }
+/* The arrow is a pseudo-element on purpose: it only lives during the flash, so Copy to Figma never meets it. */
 .value:is([data-trend="up"], [data-trend="down"])::after { position: absolute; left: 100%; padding-left: var(--spacing-xs); color: var(--color-accent); animation: fade-out var(--duration-flash) var(--ease-in) both; }
 .value[data-trend="up"]::after { content: "↑"; }
 .value[data-trend="down"]::after { content: "↓"; }
@@ -392,7 +393,7 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 /* Toast: short news about something that just happened, bottom right. Built by toast() in ds.js. */
 .toasts { position: fixed; right: var(--spacing-lg); bottom: var(--spacing-lg); z-index: 1100; display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-sm); pointer-events: none; }
 .toast {
-  display: flex; align-items: center; gap: var(--spacing-sm); max-width: 360px; min-height: 40px; padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-xs) var(--spacing-md);
+  display: flex; align-items: center; gap: var(--spacing-sm); max-width: 360px; min-height: var(--size-row); padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-lg); background: var(--color-text-primary); box-shadow: var(--shadow-md); color: var(--color-surface-raised);
   font-size: var(--font-size-sm); line-height: var(--line-height-normal); pointer-events: auto;
   animation: toast-in var(--duration-spring) var(--ease-spring);
@@ -434,7 +435,7 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .reasoning summary::-webkit-details-marker { display: none; }
 .reasoning summary:hover, .reasoning summary[data-force="hover"] { color: var(--color-text-primary); }
 .reasoning summary:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; border-radius: var(--radius-xs); }
-.reasoning summary .icon:last-child { --icon-size: 12px; transition: transform var(--duration-base) var(--ease-out); }
+.reasoning summary .icon:last-child { --icon-size: var(--size-icon-sm); transition: transform var(--duration-base) var(--ease-out); }
 .reasoning[open] summary .icon:last-child { transform: rotate(90deg); }
 /* Thinking: the dancing dots of typing stand in for the icon, and the label turns agent violet. */
 .reasoning[data-state="thinking"] summary { color: var(--color-agent); }
@@ -454,7 +455,7 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .tool-call__icon { color: var(--color-text-secondary); }
 .tool-call__name { color: var(--color-text-primary); font-weight: var(--font-weight-medium); white-space: nowrap; }
 .tool-call__target { flex: 1; min-width: 0; overflow: hidden; color: var(--color-text-tertiary); font: var(--font-size-xs)/1 var(--font-family-mono); white-space: nowrap; text-overflow: ellipsis; }
-.tool-call__status { display: grid; flex: none; place-items: center; width: 16px; height: 16px; }
+.tool-call__status { display: grid; flex: none; place-items: center; width: var(--size-mark); height: var(--size-mark); }
 .tool-call__status > * { grid-area: 1 / 1; display: none; }
 .tool-call__spinner { width: 14px; height: 14px; box-sizing: border-box; border: var(--stroke-width-mid) solid var(--color-agent-border); border-top-color: var(--color-agent); border-radius: var(--radius-full); animation: spin calc(var(--duration-slow) * 2.5) linear infinite; }
 .tool-call[data-state="running"] .tool-call__spinner { display: block; }
@@ -469,12 +470,13 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { .tool-call__spinner { animation: none; } }
 
 /* Citation: a numbered source inside an agent's answer. The number opens the source; its tooltip names it. */
-.cite { display: inline-flex; align-items: center; justify-content: center; min-width: 16px; height: 16px; margin: 0 1px; padding: 0 var(--spacing-xs); vertical-align: 1px; border-radius: var(--radius-sm); background: var(--color-agent-subtle); color: var(--color-agent); font: var(--font-weight-semibold) 10px/1 var(--font-family-mono); text-decoration: none; transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
+.cite { display: inline-flex; align-items: center; justify-content: center; min-width: var(--size-mark); height: var(--size-mark); margin: 0 1px; padding: 0 var(--spacing-xs); vertical-align: 1px; border-radius: var(--radius-sm); background: var(--color-agent-subtle); color: var(--color-agent); font: var(--font-weight-semibold) 10px/1 var(--font-family-mono); text-decoration: none; transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
 .cite:hover, .cite[data-force="hover"] { background: var(--color-agent); color: var(--color-on-accent); }
 .cite:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; }
 
 /* Streaming text: an agent's answer revealed word by word by streamText(). A caret follows the last word while it streams. */
 .stream { margin: 0; color: var(--color-text-primary); font-size: var(--font-size-md); line-height: var(--line-height-normal); }
+/* The caret only lives while the text streams: a pseudo-element is enough, Copy to Figma never meets it. */
 .stream[aria-busy="true"]::after { content: ""; display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: text-bottom; background: var(--color-agent); animation: blink 1s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
@@ -488,17 +490,21 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
    The meta (a duration, a count) shows once its step is done; its room is kept, so rows never shift. */
 .steps { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; font-size: var(--font-size-md); }
 .steps > li { display: flex; align-items: center; gap: var(--spacing-sm); min-height: var(--control-height); color: var(--color-text-tertiary); transition: color var(--duration-base) var(--ease-out); }
-.steps > li::before {
-  content: ""; flex: none; display: grid; place-items: center; width: 16px; height: 16px; box-sizing: border-box;
-  border: var(--stroke-width-mid) solid var(--color-border-strong); border-radius: var(--radius-full);
-  color: var(--color-on-accent); font: var(--font-weight-semibold) 10px/1 var(--font-family);
-}
+/* The mark is a real element built by ds.js (ring, spinner, check, cross): CSS shows the one matching data-state. */
+.steps__mark { display: grid; flex: none; place-items: center; width: var(--size-mark); height: var(--size-mark); box-sizing: border-box; border: var(--stroke-width-mid) solid var(--color-border-strong); border-radius: var(--radius-full); color: var(--color-on-accent); transition: background var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out); }
+.steps__mark > * { grid-area: 1 / 1; display: none; }
+.steps__mark .icon { --icon-size: 10px; }
+.steps__spinner { width: var(--size-mark); height: var(--size-mark); box-sizing: border-box; border: var(--stroke-width-mid) solid var(--color-agent-border); border-top-color: var(--color-agent); border-radius: var(--radius-full); animation: spin calc(var(--duration-slow) * 2.5) linear infinite; }
 .steps > li[data-state="active"] { color: var(--color-text-primary); }
-.steps > li[data-state="active"]::before { border-color: var(--color-agent-border); border-top-color: var(--color-agent); animation: spin calc(var(--duration-slow) * 2.5) linear infinite; }
+.steps > li[data-state="active"] .steps__mark { border-color: transparent; }
+.steps > li[data-state="active"] .steps__spinner { display: block; }
 .steps > li[data-state="done"] { color: var(--color-text-secondary); }
-.steps > li[data-state="done"]::before { content: "✓"; border-color: var(--color-status-success); background: var(--color-status-success); animation: pop-in var(--duration-spring) var(--ease-bounce); }
+.steps > li[data-state="done"] .steps__mark { border-color: var(--color-status-success); background: var(--color-status-success); animation: pop-in var(--duration-spring) var(--ease-bounce); }
+.steps > li[data-state="done"] .steps__mark [data-icon="check"] { display: inline-flex; }
 .steps > li[data-state="failed"] { color: var(--color-status-critical); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
-.steps > li[data-state="failed"]::before { content: "✕"; border-color: var(--color-status-critical); background: var(--color-status-critical); }
+.steps > li[data-state="failed"] .steps__mark { border-color: var(--color-status-critical); background: var(--color-status-critical); }
+.steps > li[data-state="failed"] .steps__mark [data-icon="x"] { display: inline-flex; }
+@media (prefers-reduced-motion: reduce) { .steps__spinner { animation: none; } }
 .steps__meta { margin-left: auto; color: var(--color-text-tertiary); font: var(--font-weight-regular) var(--font-size-xs)/1 var(--font-family-mono); visibility: hidden; }
 .steps > li[data-state="done"] .steps__meta { visibility: visible; animation: fade-in var(--duration-base) var(--ease-out); }
 
@@ -555,7 +561,7 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 /* Table: data rows. data-sortable makes header buttons sort: ascending, descending, then back to the original order.
    Rows glide to their new place instead of jumping. */
 .table { width: 100%; border-collapse: collapse; font-size: var(--font-size-md); }
-.table th, .table td { height: 40px; padding: 0 var(--spacing-md); border-bottom: var(--stroke-width-subtle) solid var(--color-border); text-align: left; white-space: nowrap; }
+.table th, .table td { height: var(--size-row); padding: 0 var(--spacing-md); border-bottom: var(--stroke-width-subtle) solid var(--color-border); text-align: left; white-space: nowrap; }
 .table th { height: var(--control-height); color: var(--color-text-tertiary); font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); text-transform: uppercase; }
 .table td { color: var(--color-text-primary); font-variant-numeric: tabular-nums; }
 .table [data-align="end"] { text-align: right; }
@@ -563,9 +569,8 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .table tbody tr:hover { background: var(--color-surface-hover); }
 .table th button { display: inline-flex; align-items: center; gap: var(--spacing-xs); height: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-transform: inherit; cursor: pointer; }
 .table th button:hover, .table th[aria-sort]:not([aria-sort="none"]) button { color: var(--color-text-primary); }
-.table th button::after { content: "↕"; opacity: 0.4; }
-.table th[aria-sort="ascending"] button::after { content: "↑"; opacity: 1; }
-.table th[aria-sort="descending"] button::after { content: "↓"; opacity: 1; }
+.table__sort { opacity: 0.4; transition: opacity var(--duration-fast) var(--ease-out); }
+.table th:is([aria-sort="ascending"], [aria-sort="descending"]) .table__sort { opacity: 1; }
 
 /* Table of contents with scroll spy: the link of the section being read carries aria-current, set by ds.js. */
 .toc { display: flex; flex-direction: column; gap: 2px; border-left: var(--stroke-width-subtle) solid var(--color-border); font-size: var(--font-size-sm); }
@@ -575,7 +580,7 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 
 /* Sticky header: stays on top of a scrolling page. Once content passes under it, ds.js sets data-stuck: a hairline
    appears and the subtitle fades out. Its height never changes, so the content under it never jumps. */
-.sticky-header { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: var(--spacing-md); height: 56px; padding: 0 var(--spacing-lg); border-bottom: var(--stroke-width-subtle) solid transparent; background: var(--color-surface-raised); transition: border-color var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out); }
+.sticky-header { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: var(--spacing-md); height: var(--size-bar); padding: 0 var(--spacing-lg); border-bottom: var(--stroke-width-subtle) solid transparent; background: var(--color-surface-raised); transition: border-color var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out); }
 .sticky-header[data-stuck] { border-bottom-color: var(--color-border); box-shadow: var(--shadow-sm); }
 .sticky-header__titles { display: flex; flex: 1; flex-direction: column; min-width: 0; }
 .sticky-header__title { margin: 0; overflow: hidden; font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); white-space: nowrap; text-overflow: ellipsis; }
@@ -616,30 +621,30 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
    The box, dot and track are real elements (Copy to Figma keeps them). ds.js draws the check inside .checkbox__box. */
 .checkbox, .radio, .switch { position: relative; display: inline-flex; align-items: center; gap: var(--spacing-sm); min-height: var(--control-height); color: var(--color-text-primary); font-size: var(--font-size-sm); cursor: pointer; user-select: none; }
 .checkbox > input, .radio > input, .switch > input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
-.checkbox__box, .radio__dot { display: inline-grid; place-items: center; flex: none; width: 16px; height: 16px; border: var(--stroke-width-mid) solid var(--color-border-strong); background: var(--color-surface-raised);
+.checkbox__box, .radio__dot { display: inline-grid; place-items: center; flex: none; width: var(--size-mark); height: var(--size-mark); border: var(--stroke-width-mid) solid var(--color-border-strong); background: var(--color-surface-raised);
   transition: background var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-spring) var(--ease-bounce), transform var(--duration-fast) var(--ease-out); }
-.checkbox__box { border-radius: var(--radius-xs); color: var(--color-on-accent); }
+.checkbox__box { border-radius: var(--radius-xs); color: var(--color-on-ink); }
 .checkbox__box svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 /* The check draws itself along its path when checked, and erases faster when unchecked. */
 .checkbox__box path { stroke-dasharray: 16; stroke-dashoffset: 16; transition: stroke-dashoffset var(--duration-fast) var(--ease-in); }
 .checkbox__dash { display: none; }
-.checkbox > input:checked + .checkbox__box { border-color: var(--color-accent); background: var(--color-accent); }
+.checkbox > input:checked + .checkbox__box { border-color: var(--color-ink); background: var(--color-ink); }
 .checkbox > input:checked + .checkbox__box .checkbox__check { stroke-dashoffset: 0; transition: stroke-dashoffset var(--duration-slow) var(--ease-out) calc(var(--duration-fast) / 2); }
-.checkbox > input:indeterminate + .checkbox__box { border-color: var(--color-accent); background: var(--color-accent); }
+.checkbox > input:indeterminate + .checkbox__box { border-color: var(--color-ink); background: var(--color-ink); }
 .checkbox > input:indeterminate + .checkbox__box .checkbox__check { display: none; }
 .checkbox > input:indeterminate + .checkbox__box .checkbox__dash { display: inline; stroke-dashoffset: 0; }
 .radio__dot { border-radius: var(--radius-full); }
 /* The dot grows from the ring with a bounce: an inset shadow, which Copy to Figma keeps. */
-.radio > input:checked + .radio__dot { border-color: var(--color-accent); box-shadow: inset 0 0 0 4px var(--color-accent); }
+.radio > input:checked + .radio__dot { border-color: var(--color-ink); box-shadow: inset 0 0 0 4px var(--color-ink); }
 .switch__track { position: relative; display: inline-flex; align-items: center; flex: none; width: 30px; height: 18px; padding: 2px; border-radius: var(--radius-full); background: var(--color-border-strong); transition: background var(--duration-base) var(--ease-out); }
 .switch__thumb { width: 14px; height: 14px; border-radius: var(--radius-full); background: var(--color-surface-raised); box-shadow: var(--shadow-sm); transition: transform var(--duration-spring) var(--ease-spring), width var(--duration-fast) var(--ease-out); }
-.switch > input:checked + .switch__track { background: var(--color-accent); }
+.switch > input:checked + .switch__track { background: var(--color-ink); }
 .switch > input:checked + .switch__track .switch__thumb { transform: translateX(12px); }
 /* Pressing stretches the thumb toward where it will go, like a finger pushing it. */
 .switch:active .switch__thumb { width: 17px; }
 .switch:active > input:checked + .switch__track .switch__thumb { transform: translateX(9px); }
 .checkbox:active .checkbox__box, .radio:active .radio__dot { transform: scale(0.9); }
-.checkbox:hover .checkbox__box, .radio:hover .radio__dot, .checkbox[data-force="hover"] .checkbox__box, .radio[data-force="hover"] .radio__dot { border-color: var(--color-accent); }
+.checkbox:hover .checkbox__box, .radio:hover .radio__dot, .checkbox[data-force="hover"] .checkbox__box, .radio[data-force="hover"] .radio__dot { border-color: var(--color-ink); }
 :is(.checkbox, .radio, .switch) > input:focus-visible + * { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; }
 :is(.checkbox, .radio, .switch):has(> input:disabled) { opacity: 0.4; cursor: not-allowed; }
 .checkbox__text, .radio__text, .switch__text { display: flex; flex-direction: column; }
@@ -748,7 +753,7 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .shell__nav { grid-area: nav; display: flex; flex-direction: column; gap: var(--spacing-xs); min-width: 0; overflow: hidden; padding: var(--spacing-md) var(--spacing-sm); border-right: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised); }
 .shell__brand { display: flex; align-items: center; gap: var(--spacing-sm); height: var(--control-height); margin-bottom: var(--spacing-md); padding: 0 var(--spacing-xs); font-weight: var(--font-weight-semibold); white-space: nowrap; }
 .shell__brand .avatar { border-radius: var(--radius-sm); }
-.shell__top { grid-area: top; display: flex; align-items: center; gap: var(--spacing-md); height: 56px; padding: 0 var(--spacing-lg); border-bottom: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised); }
+.shell__top { grid-area: top; display: flex; align-items: center; gap: var(--spacing-md); height: var(--size-bar); padding: 0 var(--spacing-lg); border-bottom: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised); }
 .shell__title { flex: 1; min-width: 0; margin: 0; overflow: hidden; font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); white-space: nowrap; text-overflow: ellipsis; }
 .shell__main { grid-area: main; overflow: auto; padding: var(--spacing-xl); }
 .nav__section { margin: var(--spacing-md) 0 var(--spacing-xs); padding: 0 var(--spacing-sm); color: var(--color-text-tertiary); font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); text-transform: uppercase; white-space: nowrap; }

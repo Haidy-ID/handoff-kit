@@ -47,6 +47,7 @@ A component "worth the name" has every state a user can meet, works with the key
 
 8. **Verify.**
    - `handoff/playground/?ds=<ds>#<id>` in light and dark: every cell renders, nothing overflows.
+   - `handoff/playground/check.html?ds=<ds>` (the Playground's **Check all**): every specimen of the design system reports OK.
    - Use it in a topic screen, then `node handoff/skills/build-mockup/validate.mjs <group>/<topic>` (0 error) and the render linter `lint.html?topic=<group>/<topic>` (0 error).
    - Keyboard pass: Tab reaches it, the keys of step 1 work, focus is visible.
    - Motion pass with the browser visible: open, close, change state, under normal and reduced motion. A hidden browser pane does not paint frames: animations look frozen there, it proves nothing.

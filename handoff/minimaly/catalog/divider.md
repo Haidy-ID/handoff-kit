@@ -1,6 +1,6 @@
 # Divider
 
-Horizontal rule with a centered label, for a break in a feed or a list.
+Horizontal rule with a centered label, for a break in a feed or a list. Needs `ds.js`, which draws the two rules as real elements.
 
 ```html
 <div class="divider"><span>NEW MESSAGES</span></div>
