@@ -437,7 +437,7 @@
   let pressedBackdrop = null;
   const onBackdrop = (e) => {
     const d = e.target;
-    if (!d.matches?.("dialog:is(.modal, .drawer)[open]") || d.hasAttribute("data-static")) return null;
+    if (!d.matches?.("dialog:is(.modal, .drawer):modal") || d.hasAttribute("data-static")) return null;
     const r = d.getBoundingClientRect();
     return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom ? d : null;
   };
@@ -1429,6 +1429,94 @@
   document.addEventListener("mousedown", (e) => { if (openPicker && !openPicker.contains(e.target)) closeDatePicker(); });
   document.addEventListener("focusout", (e) => { if (openPicker && e.target.closest?.(".date-picker") === openPicker && e.relatedTarget && !openPicker.contains(e.relatedTarget)) closeDatePicker(); });
 
+  // Command palette: ⌘K or Ctrl+K opens the page's dialog.command-palette and closes it again; data-open works too.
+  // Typing filters the items on their title and hides the groups left empty; the first match is active. ↑ ↓ move, Enter
+  // or a click runs the active item: the palette closes and fires "select" (event.detail: value, item). Closing clears it.
+  let paletteIds = 0;
+  const paletteParts = (dialog) => ({ field: dialog.querySelector(".command-palette__search input"), list: dialog.querySelector(".command-palette__list"), items: [...dialog.querySelectorAll(".command-palette__item")] });
+  const activateCommand = (dialog, item, scroll = false) => {
+    const { field, items } = paletteParts(dialog);
+    for (const i of items) i.setAttribute("aria-selected", String(i === item));
+    item ? field.setAttribute("aria-activedescendant", item.id) : field.removeAttribute("aria-activedescendant");
+    if (scroll) item?.scrollIntoView({ block: "nearest" });
+  };
+  const filterCommands = (dialog) => {
+    const { field, list, items } = paletteParts(dialog);
+    const q = field.value.trim().toLowerCase();
+    for (const i of items) i.hidden = !!q && !(i.querySelector(".command-palette__title") || i).textContent.toLowerCase().includes(q);
+    for (const g of dialog.querySelectorAll(".command-palette__group")) g.hidden = !g.querySelector(".command-palette__item:not([hidden])");
+    const shown = items.filter((i) => !i.hidden);
+    const empty = dialog.querySelector(".command-palette__empty");
+    if (empty) empty.hidden = shown.length > 0;
+    list.scrollTop = 0;
+    activateCommand(dialog, shown[0]);
+  };
+  const runCommand = (dialog, item) => {
+    // A palette shown in the page flow (non-modal) stays; the modal one closes before the page acts.
+    if (dialog.matches(":modal")) dialog.close();
+    dialog.dispatchEvent(new CustomEvent("select", { bubbles: true, detail: { value: item.dataset.value ?? (item.querySelector(".command-palette__title") || item).textContent.trim(), item } }));
+  };
+  const buildCommandPalette = (dialog) => {
+    const { field, list, items } = paletteParts(dialog);
+    if (!field || !list || list.id) return;
+    list.id = `command-palette-${++paletteIds}`;
+    list.setAttribute("role", "listbox");
+    field.autocomplete = "off";
+    field.setAttribute("role", "combobox");
+    field.setAttribute("aria-controls", list.id);
+    field.setAttribute("aria-autocomplete", "list");
+    field.setAttribute("aria-expanded", "true");
+    dialog.querySelectorAll(".command-palette__group").forEach((g, i) => {
+      g.setAttribute("role", "group");
+      const label = g.querySelector(".command-palette__label");
+      if (label) g.setAttribute("aria-labelledby", label.id ||= `${list.id}-group-${i}`);
+    });
+    items.forEach((item, i) => { item.id ||= `${list.id}-${i}`; item.setAttribute("role", "option"); });
+    filterCommands(dialog);
+  };
+  document.addEventListener("keydown", (e) => {
+    if (e.defaultPrevented || e.key.toLowerCase() !== "k" || !(e.metaKey || e.ctrlKey) || e.altKey || e.shiftKey) return;
+    const open = document.querySelector("dialog.command-palette:modal");
+    const palette = open || document.querySelector("dialog.command-palette:not([open])");
+    if (!palette) return;
+    e.preventDefault();
+    open ? open.close() : palette.showModal();
+  });
+  document.addEventListener("input", (e) => {
+    const dialog = e.target.matches?.(".command-palette__search input") && e.target.closest(".command-palette");
+    if (dialog) filterCommands(dialog);
+  });
+  document.addEventListener("keydown", (e) => {
+    const dialog = e.target.matches?.(".command-palette__search input") && e.target.closest(".command-palette");
+    if (!dialog) return;
+    const shown = paletteParts(dialog).items.filter((i) => !i.hidden);
+    const at = shown.findIndex((i) => i.getAttribute("aria-selected") === "true");
+    if ((e.key === "ArrowDown" || e.key === "ArrowUp") && shown.length) {
+      e.preventDefault();
+      activateCommand(dialog, shown[(at + (e.key === "ArrowDown" ? 1 : -1) + shown.length) % shown.length], true);
+    } else if (e.key === "Enter" && !e.isComposing && shown[at]) {
+      e.preventDefault();
+      runCommand(dialog, shown[at]);
+    }
+  });
+  // mousedown, not click: the field keeps the focus, like the combobox.
+  document.addEventListener("mousedown", (e) => {
+    const item = e.target.closest?.(".command-palette__item");
+    if (!item) return;
+    e.preventDefault();
+    runCommand(item.closest(".command-palette"), item);
+  });
+  document.addEventListener("mousemove", (e) => {
+    const item = e.target.closest?.(".command-palette__item");
+    if (item && item.getAttribute("aria-selected") !== "true") activateCommand(item.closest(".command-palette"), item);
+  });
+  // close does not bubble: caught on the way down.
+  document.addEventListener("close", (e) => {
+    if (!e.target.matches?.(".command-palette")) return;
+    paletteParts(e.target).field.value = "";
+    filterCommands(e.target);
+  }, true);
+
   // Markup present at load and markup rendered later get the same behaviours.
   const each = (node, selector, fn) => {
     if (node.nodeType !== 1) return;
@@ -1458,6 +1546,7 @@
     each(node, ".divider", buildDivider);
     each(node, ".rich-editor:not(:has(.rich-editor__box))", buildRichEditor);
     each(node, ".date-picker:not(:has(.date-picker__field))", buildDatePicker);
+    each(node, ".command-palette", buildCommandPalette);
   };
   enhance(document.body);
   new MutationObserver((records) => {

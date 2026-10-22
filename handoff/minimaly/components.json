@@ -671,5 +671,20 @@
       "disabled",
       "invalid"
     ]
+  },
+  {
+    "id": "command-palette",
+    "class": "command-palette",
+    "name": "Command palette",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "closed",
+      "open",
+      "active",
+      "filtered",
+      "empty"
+    ]
   }
 ]

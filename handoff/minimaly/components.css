@@ -3,8 +3,8 @@
    data-force="hover" pins the hover state for specimen pages. Tokens only, no raw values. */
 
 /* Borders and padding stay inside the declared size (32 px controls), whatever the page reset. */
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker),
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker) * { box-sizing: border-box; }
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette),
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette) * { box-sizing: border-box; }
 
 /* Motion: keyframes shared by the components and the pages built on them.
    enter = fade up (page sections, cards), pop-in = fade and grow (tooltips, popovers), fade-in, fade-out.
@@ -388,7 +388,7 @@
 /* The scroll box clips at its padding: the top padding, taken back by the margin, leaves room for focus rings. */
 .dialog__body { flex: 1; overflow: auto; overscroll-behavior: contain; margin-top: calc(-1 * var(--spacing-xs)); padding: var(--spacing-xs) var(--spacing-lg) var(--spacing-lg); color: var(--color-text-secondary); font-size: var(--font-size-md); line-height: var(--line-height-normal); }
 .dialog__foot { display: flex; justify-content: flex-end; gap: var(--spacing-sm); padding: var(--spacing-md) var(--spacing-lg); border-top: var(--stroke-width-subtle) solid var(--color-border); }
-html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
+html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 
 /* Toast: short news about something that just happened, bottom right. Built by toast() in ds.js. */
 .toasts { position: fixed; right: var(--spacing-lg); bottom: var(--spacing-lg); z-index: 1100; display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-sm); pointer-events: none; }
@@ -830,3 +830,22 @@ html:has(:is(.modal, .drawer)[open]) { overflow: hidden; }
 .date-picker__day[aria-disabled="true"] { opacity: 0.4; background: none; text-decoration: line-through; cursor: not-allowed; }
 /* A new month swaps in through the blur, the title with it. */
 .date-picker__calendar[data-swap] :is(.date-picker__title, tbody) { animation: swap-in var(--duration-slow) var(--ease-out); }
+
+/* Command palette: ⌘K or Ctrl+K opens it from anywhere on the page. A .modal with a search field on top and grouped
+   results under it: typing filters, ↑ ↓ move, Enter runs. It hangs from the upper part of the screen instead of the
+   centre, so the field stays put while the results shrink and grow. */
+.command-palette { width: min(560px, calc(100vw - 32px)); margin-top: 12vh; }
+.command-palette__search { width: 100%; height: var(--size-bar); flex: none; padding: 0 var(--spacing-lg); border-width: 0 0 var(--stroke-width-subtle); border-radius: 0; background: none; }
+.command-palette__search:hover, .command-palette__search:focus-within { border-color: var(--color-border); box-shadow: none; }
+.command-palette__search input { font-size: var(--font-size-lg); }
+.command-palette__list { flex: 1; overflow: auto; overscroll-behavior: contain; padding: var(--spacing-xs); }
+.command-palette__group { display: flex; flex-direction: column; }
+.command-palette__group + .command-palette__group { margin-top: var(--spacing-xs); }
+.command-palette__label { margin: 0; padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-xs); color: var(--color-text-tertiary); font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); text-transform: uppercase; }
+.command-palette__item { display: flex; align-items: center; gap: var(--spacing-sm); min-height: var(--size-row); padding: 0 var(--spacing-sm); border-radius: var(--radius-md); color: var(--color-text-primary); font-size: var(--font-size-sm); cursor: pointer; transition: background var(--duration-fast) var(--ease-out); }
+.command-palette__item > .icon { color: var(--color-text-secondary); }
+.command-palette__title { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.command-palette__keys { display: flex; flex: none; gap: calc(var(--spacing-xs) / 2); }
+.command-palette__item[aria-selected="true"], .command-palette__item[data-force="hover"] { background: var(--color-surface-hover); }
+.command-palette__item[aria-selected="true"] > .icon { color: var(--color-text-primary); }
+:is(.command-palette__group, .command-palette__item, .command-palette__empty)[hidden] { display: none; }
