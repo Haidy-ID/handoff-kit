@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fieldnote case study · Noa Lindqvist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="screens.css">
+</head>
+<body>
+  <header class="sticky-header">
+    <div class="site-bar">
+      <a class="site-brand" href="home.html"><span class="avatar" data-variant="lg">NL</span><span class="site-brand__name">Noa Lindqvist</span><span class="site-brand__role">Design engineer</span></a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="site-nav__link" href="work.html" aria-current="page">Work</a>
+        <a class="site-nav__link" href="lab.html">Lab</a>
+        <a class="site-nav__link" href="skills.html">Skills</a>
+        <a class="site-nav__link" href="blog.html">Writing</a>
+        <a class="site-nav__link" href="about.html">About</a>
+      </nav>
+      <a class="btn site-header__cta" href="about.html#contact">Get in touch</a>
+      <button class="btn site-header__menu" data-variant="icon" data-open="menu" aria-label="Open menu" aria-haspopup="dialog"><i class="icon" data-icon="list"></i></button>
+    </div>
+  </header>
+  <dialog class="drawer" id="menu" aria-labelledby="menu-title">
+    <div class="dialog__head"><h2 class="dialog__title" id="menu-title">Menu</h2><button class="btn" data-variant="icon" data-close aria-label="Close menu"><i class="icon" data-icon="x"></i></button></div>
+    <div class="dialog__body">
+      <nav class="list" aria-label="Menu">
+        <a class="list__item" href="home.html"><span class="list__lead"><i class="icon" data-icon="house"></i></span><span class="list__body"><span class="list__title">Home</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="work.html" aria-current="page"><span class="list__lead"><i class="icon" data-icon="briefcase"></i></span><span class="list__body"><span class="list__title">Work</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="lab.html"><span class="list__lead"><i class="icon" data-icon="flask"></i></span><span class="list__body"><span class="list__title">Lab</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="skills.html"><span class="list__lead"><i class="icon" data-icon="stack"></i></span><span class="list__body"><span class="list__title">Skills</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="blog.html"><span class="list__lead"><i class="icon" data-icon="pen-nib"></i></span><span class="list__body"><span class="list__title">Writing</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="about.html"><span class="list__lead"><i class="icon" data-icon="user"></i></span><span class="list__body"><span class="list__title">About</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+      </nav>
+    </div>
+    <div class="dialog__foot"><a class="btn" data-variant="primary" href="about.html#contact">Get in touch</a></div>
+  </dialog>
+  <main class="page">
+    <header class="study-head">
+      <div class="page-head">
+        <a class="btn back" data-variant="ghost" href="work.html"><i class="icon" data-icon="arrow-left"></i>All work</a>
+        <p class="eyebrow">Case study · 2025 · Product</p>
+        <h1 class="title">Fieldnote: inspections that survive the basement</h1>
+        <p class="lead">Building surveyors filled 60-question forms on paper, then retyped them at night. I designed and built the app that replaced both, offline first.</p>
+      </div>
+      <dl class="facts">
+        <div><dt class="eyebrow">Role</dt><dd>Design engineer, lead</dd></div>
+        <div><dt class="eyebrow">Team</dt><dd>2 engineers, 1 product manager</dd></div>
+        <div><dt class="eyebrow">Timeline</dt><dd>January to September 2025</dd></div>
+        <div><dt class="eyebrow">Stack</dt><dd>TypeScript, IndexedDB, Web Components</dd></div>
+      </dl>
+      <figure class="figure">
+        <div class="ph ph--hero" aria-hidden="true"><div class="ph__ui"><span class="ph__bar"></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 70%"></span></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 55%"></span></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 65%"></span></span><span class="ph__row"><span class="ph__box"></span><span class="ph__line" style="--w: 80%"></span></span><span class="ph__row"><span class="ph__box"></span><span class="ph__line" style="--w: 40%"></span></span></div></div>
+        <figcaption>The room checklist on a surveyor's tablet. Every answer is saved on the device the moment it is tapped.</figcaption>
+      </figure>
+    </header>
+
+    <div class="study">
+      <nav class="toc study__toc" data-spy data-spy-offset="120" aria-label="On this page">
+        <a href="#context">Context</a>
+        <a href="#constraints">Constraints</a>
+        <a href="#process">Process</a>
+        <a href="#decisions">Decisions</a>
+        <a href="#details">Design and code</a>
+        <a href="#results">Results</a>
+      </nav>
+      <article class="prose">
+        <section id="context" aria-labelledby="context-title">
+          <h2 id="context-title">Context</h2>
+          <p>Halden Surveys inspects 1,200 buildings a year. Each visit produced a paper form, a camera roll and an evening of retyping. Reports reached clients three days later, and one in twenty had a missing answer.</p>
+          <p>The brief was a tablet app. The real job was to make the paper unnecessary without asking 40 surveyors to change how they walk a building.</p>
+        </section>
+        <section id="constraints" aria-labelledby="constraints-title">
+          <h2 id="constraints-title">Constraints</h2>
+          <ul class="constraints">
+            <li class="constraint"><b><i class="icon" data-icon="wifi-slash"></i>No signal</b>Basements, stairwells and plant rooms. The app can never wait for a server.</li>
+            <li class="constraint"><b><i class="icon" data-icon="hand"></i>Gloves on</b>Large targets, no hover, no long press, one free hand at best.</li>
+            <li class="constraint"><b><i class="icon" data-icon="scales"></i>Fixed report</b>The insurer sets the report layout. The app has to produce it to the line.</li>
+            <li class="constraint"><b><i class="icon" data-icon="device-tablet"></i>Old tablets</b>Four-year-old Android devices with 3 GB of memory.</li>
+          </ul>
+        </section>
+        <section id="process" aria-labelledby="process-title">
+          <h2 id="process-title">Process</h2>
+          <p>I spent the first two weeks on site with six surveyors, then tested a paper version of the room checklist before writing any code. The form engine came third: questions as data, so the insurer's format could change without a release.</p>
+          <figure class="figure">
+            <div class="ph ph--figure" aria-hidden="true"><div class="ph__ui"><span class="ph__bar"></span><span class="ph__line" style="--w: 90%"></span><span class="ph__line" style="--w: 70%"></span><span class="ph__line" style="--w: 85%"></span><span class="ph__line" style="--w: 50%"></span></div></div>
+            <figcaption>Shadowing notes, week two: where each surveyor stood when they wrote.</figcaption>
+          </figure>
+          <figure class="figure">
+            <div class="ph ph--figure" aria-hidden="true"><div class="ph__ui"><span class="ph__bar"></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 60%"></span></span><span class="ph__row"><span class="ph__box"></span><span class="ph__line" style="--w: 75%"></span></span><span class="ph__block"></span></div></div>
+            <figcaption>Paper checklist, round three. Questions grouped by room, not by report section.</figcaption>
+          </figure>
+        </section>
+        <section id="decisions" aria-labelledby="decisions-title">
+          <h2 id="decisions-title">Decisions</h2>
+          <ol class="decisions">
+            <li class="decision"><span class="decision__num">01</span><div><h3>Every tap saves</h3><p>No Save button and no draft state. An answer exists the moment it is given, on the device first.</p></div></li>
+            <li class="decision"><span class="decision__num">02</span><div><h3>Sync state is always on screen</h3><p>A small status in the header, never a modal. It names the data, not the network: saved on this tablet, syncing, synced.</p></div></li>
+            <li class="decision"><span class="decision__num">03</span><div><h3>Questions are data</h3><p>The 60 questions live in a JSON schema the product manager edits. The app renders it, so a new insurer rule ships the same day.</p></div></li>
+          </ol>
+        </section>
+        <section id="details" aria-labelledby="details-title">
+          <h2 id="details-title">Design and code</h2>
+          <p>The status and the sync queue were designed together. Each visual state maps to exactly one queue state, so the interface never claims more than the data knows.</p>
+          <figure class="figure">
+            <div class="specimen">
+              <span class="badge"><i class="icon" data-icon="device-tablet"></i>SAVED</span><i class="icon" data-icon="arrow-right"></i>
+              <span class="badge" data-variant="accent"><i class="icon" data-icon="arrows-clockwise"></i>SYNCING</span><i class="icon" data-icon="arrow-right"></i>
+              <span class="badge" data-variant="success"><i class="icon" data-icon="check-circle"></i>SYNCED</span>
+              <span class="muted">or</span>
+              <span class="badge" data-variant="warning"><i class="icon" data-icon="warning"></i>CONFLICT</span>
+            </div>
+            <figcaption>Saved, syncing, synced: the usual path. Conflict when two tablets answered the same question.</figcaption>
+          </figure>
+<pre class="code"><code><span class="code__keyword">type</span> SyncState = "saved" | "syncing" | "synced" | "conflict";
+
+<span class="code__comment">// One label per queue state: the header says exactly what the data knows.</span>
+<span class="code__keyword">const</span> label: Record&lt;SyncState, string&gt; = {
+  saved: "Saved on this tablet",
+  syncing: "Syncing",
+  synced: "Synced",
+  conflict: "Two answers: choose one",
+};</code></pre>
+        </section>
+        <section id="results" aria-labelledby="results-title">
+          <h2 id="results-title">Results</h2>
+          <div class="stats">
+            <div class="stat"><span class="stat__value">Same day</span><span class="stat__label">Reports sent after the visit, down from three days.</span></div>
+            <div class="stat"><span class="stat__value">0</span><span class="stat__label">Inspections lost in nine months of use.</span></div>
+            <div class="stat"><span class="stat__value">−35%</span><span class="stat__label">Time per inspection, retyping included.</span></div>
+            <div class="stat"><span class="stat__value">40 / 40</span><span class="stat__label">Surveyors using it every working day.</span></div>
+          </div>
+          <blockquote class="quote"><p>We stopped retyping. That alone paid for the project.</p><footer>Head of surveying, Halden Surveys</footer></blockquote>
+        </section>
+      </article>
+    </div>
+
+    <div class="end">
+      <a class="card" href="case-study.html">
+        <p class="eyebrow">Next project</p>
+        <p class="end__title">Grain: one token source for Figma and code</p>
+        <span class="muted">Read the case study</span>
+      </a>
+      <div class="card">
+        <p class="eyebrow">Hiring</p>
+        <p class="end__title">Need this on your team?</p>
+        <a class="btn" data-variant="primary" href="about.html#contact">Get in touch</a>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="site-bar">
+      <p class="site-footer__note">© 2026 Noa Lindqvist · Design engineer in Lisbon</p>
+      <nav class="site-nav" aria-label="Footer"><a class="site-nav__link" href="work.html">Work</a><a class="site-nav__link" href="blog.html">Writing</a><a class="site-nav__link" href="about.html#contact">Contact</a></nav>
+      <button class="btn" data-variant="ghost" data-copy="hello@noa.example"><i class="icon" data-icon="copy"></i>hello@noa.example</button>
+    </div>
+  </footer>
+  <script src="screens.js"></script>
+  <script src="../../../handoff/minimaly/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Writing · Noa Lindqvist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="screens.css">
+</head>
+<body>
+  <header class="sticky-header">
+    <div class="site-bar">
+      <a class="site-brand" href="home.html"><span class="avatar" data-variant="lg">NL</span><span class="site-brand__name">Noa Lindqvist</span><span class="site-brand__role">Design engineer</span></a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="site-nav__link" href="work.html">Work</a>
+        <a class="site-nav__link" href="lab.html">Lab</a>
+        <a class="site-nav__link" href="skills.html">Skills</a>
+        <a class="site-nav__link" href="blog.html" aria-current="page">Writing</a>
+        <a class="site-nav__link" href="about.html">About</a>
+      </nav>
+      <a class="btn site-header__cta" href="about.html#contact">Get in touch</a>
+      <button class="btn site-header__menu" data-variant="icon" data-open="menu" aria-label="Open menu" aria-haspopup="dialog"><i class="icon" data-icon="list"></i></button>
+    </div>
+  </header>
+  <dialog class="drawer" id="menu" aria-labelledby="menu-title">
+    <div class="dialog__head"><h2 class="dialog__title" id="menu-title">Menu</h2><button class="btn" data-variant="icon" data-close aria-label="Close menu"><i class="icon" data-icon="x"></i></button></div>
+    <div class="dialog__body">
+      <nav class="list" aria-label="Menu">
+        <a class="list__item" href="home.html"><span class="list__lead"><i class="icon" data-icon="house"></i></span><span class="list__body"><span class="list__title">Home</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="work.html"><span class="list__lead"><i class="icon" data-icon="briefcase"></i></span><span class="list__body"><span class="list__title">Work</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="lab.html"><span class="list__lead"><i class="icon" data-icon="flask"></i></span><span class="list__body"><span class="list__title">Lab</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="skills.html"><span class="list__lead"><i class="icon" data-icon="stack"></i></span><span class="list__body"><span class="list__title">Skills</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="blog.html" aria-current="page"><span class="list__lead"><i class="icon" data-icon="pen-nib"></i></span><span class="list__body"><span class="list__title">Writing</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="about.html"><span class="list__lead"><i class="icon" data-icon="user"></i></span><span class="list__body"><span class="list__title">About</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+      </nav>
+    </div>
+    <div class="dialog__foot"><a class="btn" data-variant="primary" href="about.html#contact">Get in touch</a></div>
+  </dialog>
+  <main class="page">
+    <header class="page-head">
+      <p class="eyebrow">Writing · 6 articles</p>
+      <h1 class="title">Notes from between design and code.</h1>
+      <p class="lead">States, tokens, motion and shipping. About one article a month, each one from a real project.</p>
+    </header>
+
+    <a class="card feature" href="article.html">
+      <div class="ph" aria-hidden="true"><div class="ph__ui"><span class="ph__bar"></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 70%"></span></span><span class="ph__row"><span class="ph__box"></span><span class="ph__line" style="--w: 50%"></span></span><span class="ph__block"></span></div></div>
+      <div class="feature__body">
+        <p class="eyebrow">Latest · Sep 2026 · 11 min read</p>
+        <h2 class="heading">Offline-first forms without a framework</h2>
+        <p class="muted">The small sync layer that made every Fieldnote answer safe the moment it was tapped, in plain TypeScript and IndexedDB.</p>
+        <div class="tags"><span class="chip">Engineering</span><span class="chip">Forms</span></div>
+      </div>
+    </a>
+
+    <section class="block" aria-labelledby="earlier-title">
+      <h2 class="heading" id="earlier-title">Earlier articles</h2>
+      <div class="posts">
+        <a class="post" href="article.html"><span class="post__time">Jul 2026</span><span class="post__body"><span class="post__title">Design the error state first</span><span class="post__text">Errors show what the data really is. Start there and the happy path designs itself.</span><span class="tags"><span class="chip">Process</span><span class="chip">States</span></span></span><span class="post__time">6 min<i class="icon" data-icon="arrow-right"></i></span></a>
+        <a class="post" href="article.html"><span class="post__time">May 2026</span><span class="post__body"><span class="post__title">Tokens are an API: version them like one</span><span class="post__text">Renaming a token breaks products. Treat names as a contract, with releases and deprecations.</span><span class="tags"><span class="chip">Design systems</span></span></span><span class="post__time">8 min<i class="icon" data-icon="arrow-right"></i></span></a>
+        <a class="post" href="article.html"><span class="post__time">Mar 2026</span><span class="post__body"><span class="post__title">A spring is two numbers</span><span class="post__text">Stiffness and damping are enough to talk about motion without saying "snappier".</span><span class="tags"><span class="chip">Motion</span></span></span><span class="post__time">5 min<i class="icon" data-icon="arrow-right"></i></span></a>
+        <a class="post" href="article.html"><span class="post__time">Jan 2026</span><span class="post__body"><span class="post__title">Why I prototype in the browser</span><span class="post__text">A static frame hides focus order, text wrapping and latency. The browser shows all three.</span><span class="tags"><span class="chip">Process</span></span></span><span class="post__time">4 min<i class="icon" data-icon="arrow-right"></i></span></a>
+        <a class="post" href="article.html"><span class="post__time">Nov 2025</span><span class="post__body"><span class="post__title">Contrast checks belong before handoff</span><span class="post__text">Lintel started as a script I ran on my own files. Here is what it caught in a year.</span><span class="tags"><span class="chip">Accessibility</span><span class="chip">Tools</span></span></span><span class="post__time">5 min<i class="icon" data-icon="arrow-right"></i></span></a>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="site-bar">
+      <p class="site-footer__note">© 2026 Noa Lindqvist · Design engineer in Lisbon</p>
+      <nav class="site-nav" aria-label="Footer"><a class="site-nav__link" href="work.html">Work</a><a class="site-nav__link" href="blog.html">Writing</a><a class="site-nav__link" href="about.html#contact">Contact</a></nav>
+      <button class="btn" data-variant="ghost" data-copy="hello@noa.example"><i class="icon" data-icon="copy"></i>hello@noa.example</button>
+    </div>
+  </footer>
+  <script src="screens.js"></script>
+  <script src="../../../handoff/minimaly/ds.js"></script>
+</body>
+</html>

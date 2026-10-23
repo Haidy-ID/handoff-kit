@@ -1,0 +1,20 @@
+## 2026-10-23
+- Brainstorm, 16 pages: Home, Work, Case study, Lab, Skills and stack, Writing, Article, About, Contact, Now, Uses, Resume, Speaking, Testimonials, Newsletter, 404.
+- Kept 8: [Home](screen:home), [Work](screen:work), [Case study](screen:case-study), [Lab](screen:lab), [Skills and stack](screen:skills), [Writing](screen:blog), [Article](screen:article), [About and contact](screen:about). They cover the three stories: a recruiter judging fast, a peer reading, a visitor writing.
+- Contact merged into About: the recruiter's last step lands on the bio and the form at once.
+- Now is a Home section: three lines do not need a page.
+- Uses folded into Skills and stack (Tools, Default stack): same question, one page.
+- Resume cut: Path on About and Skills cover it, and a PDF link would be dead in a template.
+- Speaking, Testimonials cut: nothing a template can fake credibly. One client quote lives in the case study.
+- Newsletter cut: it needs a backend. 404 cut: one line, no design question.
+- Fictional design engineer, Noa Lindqvist, with seven projects and six articles. Every card opens the one model case study or article: the template ships one filled example of each.
+- Editorial layout is local in screens.css, from tokens. The few values Minimaly lacks (display sizes, reading measure and leading, tracking, page width) are named --pf-* at the top and listed in the open questions.
+- Images are token-drawn placeholders (.ph), real elements only, so Copy to Figma keeps them.
+- Work filters with a segmented. The Lab density demo uses pressed buttons: a segmented inside a card shrinks to 26 px (L401).
+- The page reset skips .segmented: Minimaly draws it content-box, and border-box shrank the Work filter to 26 px too.
+- A theme change turns transitions off for one frame (screens.js): component colors otherwise fade at their own speeds, and the render lint read the start colors (85 to 157 false contrast errors, varying per run).
+- The Work filtered state sets its filter before ds.js loads, so the segmented indicator lands in place instead of sliding.
+- Menu open shows the drawer at rest, and Sent keeps its toast until dismissed: both states are there to be looked at.
+- The contact form refuses each faulty field with the shared shake and a message saying what to fix, keeps typed values, and clears after sending. Sending is simulated.
+- Validator: 0 errors. 3 M204 warnings kept: async-button and hold-button share .btn with button, and toast is created by script, so the validator cannot see them. They are used.
+- Render lint: 4 errors left, all inside Minimaly components the brief asks for. The toast close button is 28 px (L401, Sent state); the drawer body sits 4 px under its head (L301, Menu open state). Warnings: the dark SAVED badge reads as a button (L402, also on the lend-an-item example), and the ds.js screen reader region is clipped on purpose (L203).

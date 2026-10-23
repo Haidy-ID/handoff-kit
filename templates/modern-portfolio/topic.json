@@ -1,0 +1,201 @@
+{
+  "title": "Modern Portfolio",
+  "status": "review",
+  "teams": [
+    "Core"
+  ],
+  "updated": "2026-10-23",
+  "intent": "A portfolio site for a design engineer that a recruiter can judge in two minutes and a peer can read for an evening, built on Minimaly to find what a tool-UI system lacks for an editorial site.",
+  "note": "Fictional person and content: replace Noa Lindqvist, the projects and the articles with your own.",
+  "ds": "Minimaly",
+  "components": [
+    "button",
+    "async-button",
+    "hold-button",
+    "badge",
+    "chip",
+    "avatar",
+    "kbd",
+    "card",
+    "icon",
+    "list",
+    "segmented",
+    "sticky-header",
+    "toc",
+    "dialog",
+    "command-palette",
+    "empty",
+    "field",
+    "input",
+    "select",
+    "textarea",
+    "toast",
+    "slider",
+    "switch",
+    "value"
+  ],
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "devices": [
+    "mobile",
+    "desktop"
+  ],
+  "screens": [
+    {
+      "id": "home",
+      "label": "Home",
+      "file": "screens/home.html",
+      "states": [
+        {
+          "name": "Default",
+          "note": "Positioning, three projects, now, latest articles, contact call"
+        },
+        {
+          "name": "Menu open",
+          "note": "Phone menu drawer open, current page marked"
+        }
+      ]
+    },
+    {
+      "id": "work",
+      "label": "Work",
+      "file": "screens/work.html",
+      "states": [
+        {
+          "name": "All",
+          "note": "Seven projects, no filter"
+        },
+        {
+          "name": "Filtered",
+          "note": "Systems filter on: two projects, count updated"
+        }
+      ]
+    },
+    {
+      "id": "case-study",
+      "label": "Case study",
+      "file": "screens/case-study.html"
+    },
+    {
+      "id": "lab",
+      "label": "Lab",
+      "file": "screens/lab.html"
+    },
+    {
+      "id": "skills",
+      "label": "Skills and stack",
+      "file": "screens/skills.html"
+    },
+    {
+      "id": "blog",
+      "label": "Writing",
+      "file": "screens/blog.html"
+    },
+    {
+      "id": "article",
+      "label": "Article",
+      "file": "screens/article.html",
+      "states": [
+        {
+          "name": "Default",
+          "note": "Headings, code, quote, related work and articles"
+        },
+        {
+          "name": "Long title",
+          "note": "Four-line title, wraps without breaking the head"
+        }
+      ]
+    },
+    {
+      "id": "about",
+      "label": "About and contact",
+      "file": "screens/about.html",
+      "states": [
+        {
+          "name": "Default",
+          "note": "Bio, path, empty contact form"
+        },
+        {
+          "name": "Error",
+          "note": "Email and message refused: they shake once, values kept"
+        },
+        {
+          "name": "Sent",
+          "note": "Form cleared, success toast"
+        }
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "name": "Evaluate in two minutes",
+      "statement": "As a recruiter, I should be able to judge one project in depth and reach the person right after.",
+      "steps": [
+        "home",
+        "case-study",
+        "about"
+      ]
+    },
+    {
+      "name": "Read and find the work",
+      "statement": "As a peer, I should be able to read an article and open the project behind it.",
+      "steps": [
+        "blog",
+        "article",
+        "case-study"
+      ]
+    },
+    {
+      "name": "Send a message",
+      "statement": "As a visitor, I should be able to send a message and know it arrived.",
+      "steps": [
+        "about",
+        "about:error",
+        "about:sent"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "Why does every project card open the Fieldnote case study?",
+      "a": "The template ships one complete case study as the model. Copy case-study.html once per project and point its card to the copy."
+    },
+    {
+      "q": "Why does every article open the same page?",
+      "a": "Same reason: article.html is the model article. One copy per article."
+    },
+    {
+      "q": "What does the contact form check?",
+      "a": "Name, a valid email and a message. Each refused field shakes once and says what to fix; typed values stay."
+    },
+    {
+      "q": "Where does the message go?",
+      "a": "Nowhere yet: sending is simulated. Wire the form to a form service or an API route when you start from the template."
+    },
+    {
+      "q": "Where is the theme switch?",
+      "a": "The site follows the theme set on its html element, here the handoff toggle. A real site adds a switch or reads the system setting."
+    }
+  ],
+  "questions": [
+    "Display type: the largest Minimaly size is 24 px. Add a display scale (36, 48, 60 px) with its own line height and tracking? Done here with calc() on --font-size-4xl.",
+    "Long-form reading: should Minimaly own a prose style (18 px body, 1.7 leading, 680 px measure, headings, lists, inline code)? Done here in .prose.",
+    "Code block: ship a code component (mono, scrolls sideways, syntax tones)? No token exists for syntax colors.",
+    "Pull quote: ship a quote with its attribution? A local .quote here.",
+    "Media: ship a media frame (aspect ratios, placeholder, caption) for screenshots and photos? Local .ph blocks here.",
+    "Site navigation: ship a horizontal nav link with a current-page mark? The shell nav is a side rail only.",
+    "Link card: give .card a link look (hover lift, focus ring)? Local a.card rules here.",
+    "Article rows: list titles are 12 px, too small for an article list. Add a large list variant, or keep a local row for sites?",
+    "Hero buttons: buttons are always 32 px. Add a larger size for a hero call to action?",
+    "Page frame: define a container width and a section spacing for websites?",
+    "Contrast: --color-text-tertiary measures 3.48:1 on the dark surface, 3.04:1 on dark raised and 4.24:1 on light sunken. Button and tab counts, list trails, palette group labels, slider scales and textarea counters fail 4.5:1. This topic avoids them.",
+    "Segmented: it is missing from the border-box list of components.css. Inside a card (whose descendants Minimaly sets to border-box) or under a page reset, its options shrink from 32 to 26 px (L401). Kept here outside cards, with the reset skipping it.",
+    "Table of contents: links are 26 px high under a 1.5 body line height (L401). Raised to 32 px here by the toc container's line height.",
+    "Toast: its close and action buttons are 28 px high (L401). The Sent state shows a toast, so the render lint reports it.",
+    "Dialog: .dialog__body pulls 4 px under .dialog__head on purpose (room for focus rings); the render lint reads it as an overlap (L301). The Menu open state reports it.",
+    "Theme switch: component color transitions run when data-theme changes, so a switch is ragged and the render lint, 50 ms after it, reads start colors. Should ds.js switch themes without transitions? Done here in screens.js.",
+    "Validator: async-button and hold-button share the .btn class and toast is created by script, so M204 calls them unused. Detect them by data-busy, data-hold and toast() calls?"
+  ]
+}
