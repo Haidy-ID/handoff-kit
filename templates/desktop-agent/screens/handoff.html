@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hand off</title>
+  <link rel="stylesheet" href="screens.css">
+</head>
+<body>
+  <div class="shell">
+    <nav class="shell__nav" aria-label="Main">
+      <div class="shell__brand"><span class="avatar">P</span><span class="shell__brand-name">Protopass</span></div>
+      <a class="nav__item" href="start.html"><i class="icon" data-icon="plus"></i><span class="nav__label">New prototype</span></a>
+      <a class="nav__item" href="session.html?state=command-palette"><i class="icon" data-icon="magnifying-glass"></i><span class="nav__label">Search</span><span class="nav__count">⌘K</span></a>
+      <p class="nav__section">Pebble Wall booking</p>
+      <a class="nav__item" href="session.html?state=done"><i class="icon" data-icon="chat-circle-dots"></i><span class="nav__label">Booking flow</span></a>
+      <a class="nav__item" href="prototype.html"><i class="icon" data-icon="play"></i><span class="nav__label">Prototype</span></a>
+      <a class="nav__item" href="handoff.html" aria-current="page"><i class="icon" data-icon="package"></i><span class="nav__label">Hand off</span></a>
+      <p class="nav__section">Projects</p>
+      <a class="nav__item"><i class="icon" data-icon="folder-simple"></i><span class="nav__label">Café loyalty card</span></a>
+      <a class="nav__item"><i class="icon" data-icon="folder-simple"></i><span class="nav__label">Studio landing page</span></a>
+      <a class="nav__item"><i class="icon" data-icon="folder-simple"></i><span class="nav__label">Team retro board</span></a>
+      <a class="nav__item shell__foot"><span class="avatar">ML</span><span class="nav__label">Maya Lin</span><span class="nav__count">PRO</span></a>
+    </nav>
+    <header class="shell__top">
+      <button class="btn" data-variant="icon" data-shell-toggle aria-expanded="true" aria-label="Toggle navigation"><i class="icon" data-icon="sidebar-simple"></i></button>
+      <h1 class="shell__title">Hand off</h1>
+      <button class="btn" id="figma" data-tip="Copy every screen and state as frames, ready to paste"><i class="icon" data-icon="copy"></i>Copy to Figma</button>
+      <button class="btn" data-menu="export"><i class="icon" data-icon="download-simple"></i>Export<i class="icon" data-icon="caret-down"></i></button>
+      <button class="btn" data-variant="primary" data-open="share"><i class="icon" data-icon="link"></i>Share</button>
+    </header>
+    <main class="shell__main">
+      <div class="doc-wrap">
+        <article class="doc">
+          <ol class="stepper" aria-label="Project">
+            <li data-state="done"><span class="stepper__status">Completed</span><span class="stepper__label">Brief</span></li>
+            <li data-state="done"><span class="stepper__status">Completed</span><span class="stepper__label">Prototype</span></li>
+            <li data-state="done"><span class="stepper__status">Completed</span><span class="stepper__label">Review</span></li>
+            <li data-state="current" aria-current="step"><span class="stepper__status">In progress</span><span class="stepper__label">Hand off</span></li>
+          </ol>
+
+          <header class="doc__head">
+            <div class="row"><h1>Pebble Wall booking</h1><span class="badge" data-variant="success"><i class="icon" data-icon="check-circle"></i>READY</span></div>
+            <p class="doc__intent">Members book a climbing session in under a minute, from the slot to the QR pass, without calling the front desk.</p>
+            <p class="muted">4 screens · 7 states · 2 flows · updated today at 14:40 by Maya Lin and Protopass</p>
+          </header>
+
+          <section class="block">
+            <h2 class="label">Screens and states</h2>
+            <div class="screens-grid">
+              <div class="card screen-card">
+                <span class="thumb"><span style="width: 55%"></span><span class="thumb__box"></span><span class="thumb__box"></span><span class="thumb__box"></span></span>
+                <div class="card__body"><b>Sessions</b><span class="row"><span class="chip">Default</span><span class="chip">Full session</span></span></div>
+              </div>
+              <div class="card screen-card">
+                <span class="thumb"><span style="width: 40%"></span><span class="thumb__row"><span></span><span></span><span></span></span><span class="thumb__row"><span></span><span></span><span></span></span><span class="thumb__btn"></span></span>
+                <div class="card__body"><b>Slot</b><span class="row"><span class="chip">Default</span><span class="chip">Taken</span></span></div>
+              </div>
+              <div class="card screen-card">
+                <span class="thumb"><span style="width: 45%"></span><span class="thumb__box"></span><span style="width: 70%"></span><span class="thumb__btn"></span></span>
+                <div class="card__body"><b>Payment</b><span class="row"><span class="chip">Default</span><span class="chip">Card declined</span></span></div>
+              </div>
+              <div class="card screen-card">
+                <span class="thumb"><span style="width: 35%"></span><span class="thumb__box"></span><span style="width: 60%"></span></span>
+                <div class="card__body"><b>Pass</b><span class="row"><span class="chip">Default</span></span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="block">
+            <h2 class="label">Flows</h2>
+            <div class="list" data-variant="inset">
+              <div class="list__item"><span class="list__lead"><i class="icon" data-icon="flow-arrow"></i></span><span class="list__body"><span class="list__title">Book a session</span><span class="list__meta">As a member, I should be able to book a session in under a minute.</span></span><span class="list__trail"><span class="badge">4 STEPS</span></span></div>
+              <div class="list__item"><span class="list__lead"><i class="icon" data-icon="flow-arrow"></i></span><span class="list__body"><span class="list__title">Retry a declined card</span><span class="list__meta">As a member, I should be able to retry a payment without losing my slot.</span></span><span class="list__trail"><span class="badge">3 STEPS</span></span></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <h2 class="label">Q&amp;A</h2>
+            <div class="accordion">
+              <details class="accordion__item" open><summary>How long is a slot held during payment?<i class="icon" data-icon="caret-down"></i></summary><div class="accordion__body">Ten minutes, then it goes back to the other members.</div></details>
+              <details class="accordion__item"><summary>Can a member cancel?<i class="icon" data-icon="caret-down"></i></summary><div class="accordion__body">Up to 2 hours before the session, refunded as credit.</div></details>
+              <details class="accordion__item"><summary>What does the QR pass hold?<i class="icon" data-icon="caret-down"></i></summary><div class="accordion__body">A signed booking id. The front desk scans it; no personal data is in the code.</div></details>
+            </div>
+          </section>
+
+          <section class="block">
+            <h2 class="label">Open questions</h2>
+            <div class="banner" data-variant="warning" role="status">
+              <i class="icon" data-icon="warning"></i>
+              <div class="banner__body"><span class="banner__title">Can a member book for a friend?</span><span class="banner__text">The brief does not say. A yes adds a guest field to Slot and a second pass.</span>
+                <div class="banner__actions"><a class="btn" href="session.html?state=done"><i class="icon" data-icon="chat-circle-dots"></i>Ask in the session</a></div></div>
+            </div>
+          </section>
+        </article>
+
+        <aside class="aside">
+          <div class="card">
+            <div class="card__head"><h3 class="card__title">Checks</h3><span class="card__tag">Run at 14:38</span></div>
+            <ul class="kv">
+              <li><i class="icon" data-icon="check-circle"></i><span>Design system</span><span class="mono">0 errors</span></li>
+              <li><i class="icon" data-icon="check-circle"></i><span>Render lint</span><span class="mono">0 errors</span></li>
+              <li><i class="icon" data-icon="check-circle"></i><span>Light and dark</span><span class="mono">14 renders</span></li>
+              <li><i class="icon" data-icon="check-circle"></i><span>Contrast</span><span class="mono">AA</span></li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="card__head"><h3 class="card__title">Hand to</h3></div>
+            <div class="list" data-variant="inset">
+              <button class="list__item" data-open="share"><span class="list__lead"><i class="icon" data-icon="code"></i></span><span class="list__body"><span class="list__title">A developer</span><span class="list__meta">Link to screens, flows and Q&amp;A</span></span><i class="icon list__chevron" data-icon="caret-right"></i></button>
+              <button class="list__item" id="for-agent"><span class="list__lead"><i class="icon" data-icon="robot"></i></span><span class="list__body"><span class="list__title">An AI agent</span><span class="list__meta">Markdown brief it can build from</span></span><i class="icon list__chevron" data-icon="caret-right"></i></button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <div class="popover menu" id="export" aria-label="Export Pebble Wall booking">
+    <button class="menu__item" data-export="ZIP"><i class="icon" data-icon="file-zip"></i>ZIP for developers</button>
+    <button class="menu__item" data-export="Markdown"><i class="icon" data-icon="file-text"></i>Markdown for an AI agent</button>
+    <button class="menu__item" data-export="PDF"><i class="icon" data-icon="file-pdf"></i>PDF summary</button>
+  </div>
+
+  <dialog class="modal" id="share" aria-labelledby="share-title">
+    <div class="dialog__head"><h2 class="dialog__title" id="share-title">Share Pebble Wall booking</h2>
+      <button class="btn" data-variant="icon" data-close aria-label="Close"><i class="icon" data-icon="x"></i></button></div>
+    <div class="dialog__body share">
+      <div class="field">
+        <label class="field__label">Link</label>
+        <label class="input"><i class="icon" data-icon="link"></i><input value="protopass.app/s/pebble-wall" readonly></label>
+        <p class="field__hint">Opens the handoff: screens, states, flows and Q&amp;A. Viewers can play the prototype.</p>
+      </div>
+      <label class="switch"><input type="checkbox" role="switch" checked><span class="switch__track"><span class="switch__thumb"></span></span>Anyone with the link can view</label>
+      <label class="switch"><input type="checkbox" role="switch" checked><span class="switch__track"><span class="switch__thumb"></span></span>Viewers can comment</label>
+      <div class="list">
+        <div class="list__item"><span class="list__lead avatar">ML</span><span class="list__body"><span class="list__title">Maya Lin</span><span class="list__meta">maya@pebblewall.example</span></span><span class="list__trail">Owner</span></div>
+        <div class="list__item"><span class="list__lead avatar">JD</span><span class="list__body"><span class="list__title">Jonas Dahl</span><span class="list__meta">Developer</span></span><span class="list__trail">Can comment</span></div>
+      </div>
+    </div>
+    <div class="dialog__foot"><button class="btn" data-close>Done</button><a class="btn" data-variant="primary" href="handoff.html?state=link-copied"><i class="icon" data-icon="copy"></i>Copy link</a></div>
+  </dialog>
+
+  <script src="screens.js"></script>
+  <script>
+    document.getElementById("figma").addEventListener("click", () => toast("4 screens and 7 states copied as frames"));
+    document.getElementById("for-agent").addEventListener("click", () => toast("Markdown brief copied", { variant: "success" }));
+    document.getElementById("export").addEventListener("click", (e) => {
+      const item = e.target.closest("[data-export]");
+      if (item) toast(`${item.dataset.export} export ready`, { variant: "success" });
+    });
+    addEventListener("load", () => {
+      if (state === "share-dialog") document.getElementById("share").showModal();
+      // Kept on screen in this state; in the app it leaves after 4 s like any toast.
+      if (state === "link-copied") toast("Link copied", { variant: "success", duration: 0 });
+    });
+  </script>
+  <script src="../../../handoff/minimaly/ds.js"></script>
+</body>
+</html>

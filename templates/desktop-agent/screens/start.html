@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Start</title>
+  <link rel="stylesheet" href="screens.css">
+</head>
+<body>
+  <div class="shell">
+    <nav class="shell__nav" aria-label="Main">
+      <div class="shell__brand"><span class="avatar">P</span><span class="shell__brand-name">Protopass</span></div>
+      <a class="nav__item" href="start.html" aria-current="page"><i class="icon" data-icon="plus"></i><span class="nav__label">New prototype</span></a>
+      <a class="nav__item" href="session.html?state=command-palette"><i class="icon" data-icon="magnifying-glass"></i><span class="nav__label">Search</span><span class="nav__count">⌘K</span></a>
+      <a class="nav__item"><i class="icon" data-icon="squares-four"></i><span class="nav__label">Templates</span></a>
+      <p class="nav__section">Projects</p>
+      <a class="nav__item"><i class="icon" data-icon="folder-simple"></i><span class="nav__label">Café loyalty card</span></a>
+      <a class="nav__item"><i class="icon" data-icon="folder-simple"></i><span class="nav__label">Studio landing page</span></a>
+      <a class="nav__item"><i class="icon" data-icon="folder-simple"></i><span class="nav__label">Team retro board</span></a>
+      <a class="nav__item shell__foot"><span class="avatar">ML</span><span class="nav__label">Maya Lin</span><span class="nav__count">PRO</span></a>
+    </nav>
+    <header class="shell__top"><button class="btn" data-variant="icon" data-shell-toggle aria-expanded="true" aria-label="Toggle navigation"><i class="icon" data-icon="sidebar-simple"></i></button><h1 class="shell__title">New prototype</h1></header>
+    <main class="shell__main">
+      <div class="start">
+        <section class="hero">
+          <h1>What do you want to prototype?</h1>
+          <form class="composer" id="idea" aria-label="Describe your prototype">
+            <ul class="attachments" aria-label="Attachments"><li class="attachment" data-variant="compact" data-name="pebble-wall-brand.pdf" data-size="2457600"></li></ul>
+            <textarea class="composer__input" id="idea-text" placeholder="Describe a site or an app in a sentence or two…" aria-label="Idea"></textarea>
+            <div class="composer__bar">
+              <button class="btn" data-variant="icon" type="button" aria-label="Attach" data-tip="Attach a brief, a brand guide or screenshots"><i class="icon" data-icon="paperclip"></i></button>
+              <span class="segmented" role="group" aria-label="Kind"><button class="btn" type="button" aria-pressed="true"><i class="icon" data-icon="device-mobile"></i>App</button><button class="btn" type="button" aria-pressed="false"><i class="icon" data-icon="browser"></i>Website</button></span>
+              <button class="btn composer__send" data-variant="primary" type="submit">Prototype it</button>
+              <button class="btn composer__stop" type="button"><i class="icon" data-icon="stop"></i>Stop</button>
+            </div>
+          </form>
+          <p class="muted">Built with Minimaly, checked in light and dark, handed off with states, flows and Q&amp;A.</p>
+        </section>
+
+        <section class="block">
+          <h2 class="label">Start from a template</h2>
+          <div class="templates">
+            <a class="card template" href="session.html">
+              <span class="thumb"><span style="width: 50%"></span><span class="thumb__box"></span><span class="thumb__box"></span><span class="thumb__btn"></span></span>
+              <span class="card__body"><b>Booking app</b><span class="muted">4 screens · 7 states</span></span>
+            </a>
+            <a class="card template" href="session.html">
+              <span class="thumb"><span style="width: 35%"></span><span class="thumb__row"><span></span><span></span><span></span></span><span class="thumb__box"></span></span>
+              <span class="card__body"><b>SaaS dashboard</b><span class="muted">6 screens · 15 states</span></span>
+            </a>
+            <a class="card template" href="session.html">
+              <span class="thumb"><span style="width: 70%"></span><span style="width: 45%"></span><span class="thumb__btn"></span><span class="thumb__row"><span></span><span></span></span></span>
+              <span class="card__body"><b>Landing page</b><span class="muted">1 page · 5 sections</span></span>
+            </a>
+            <a class="card template" href="session.html">
+              <span class="thumb"><span class="thumb__box"></span><span style="width: 60%"></span><span style="width: 80%"></span><span class="thumb__btn"></span></span>
+              <span class="card__body"><b>Mobile onboarding</b><span class="muted">5 screens · 9 states</span></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="block">
+          <h2 class="label">Recent</h2>
+          <div class="list" data-variant="inset">
+            <a class="list__item"><span class="list__lead"><i class="icon" data-icon="coffee"></i></span><span class="list__body"><span class="list__title">Café loyalty card</span><span class="list__meta">6 screens · 14 states · edited yesterday</span></span><span class="list__trail"><span class="badge" data-variant="success">READY</span></span></a>
+            <a class="list__item"><span class="list__lead"><i class="icon" data-icon="browser"></i></span><span class="list__body"><span class="list__title">Studio landing page</span><span class="list__meta">1 page · 5 sections · edited Monday</span></span><span class="list__trail"><span class="badge" data-variant="accent">REVIEW</span></span></a>
+            <a class="list__item"><span class="list__lead"><i class="icon" data-icon="kanban"></i></span><span class="list__body"><span class="list__title">Team retro board</span><span class="list__meta">8 screens · 19 states · edited Oct 12</span></span><span class="list__trail"><span class="badge">DRAFT</span></span></a>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="screens.js"></script>
+  <script>
+    // Typing state: the idea is written and the brand guide attached. Sending starts the session.
+    if (state === "typing") document.getElementById("idea-text").value = "A booking app for Pebble Wall, our climbing gym: members pick a session, choose a slot, pay and get a QR pass.";
+    else document.querySelector(".attachment").remove();
+    document.getElementById("idea").addEventListener("send", () => go("session.html"));
+  </script>
+  <script src="../../../handoff/minimaly/ds.js"></script>
+</body>
+</html>

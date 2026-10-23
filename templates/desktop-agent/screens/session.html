@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en" data-state="working">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Session</title>
+  <link rel="stylesheet" href="screens.css">
+</head>
+<body>
+  <div class="shell">
+    <nav class="shell__nav" aria-label="Main">
+      <div class="shell__brand"><span class="avatar">P</span><span class="shell__brand-name">Protopass</span></div>
+      <a class="nav__item" href="start.html"><i class="icon" data-icon="plus"></i><span class="nav__label">New prototype</span></a>
+      <a class="nav__item" href="session.html?state=command-palette"><i class="icon" data-icon="magnifying-glass"></i><span class="nav__label">Search</span><span class="nav__count">⌘K</span></a>
+      <p class="nav__section">Pebble Wall booking</p>
+      <a class="nav__item" href="session.html?state=done" aria-current="page"><i class="icon" data-icon="chat-circle-dots"></i><span class="nav__label">Booking flow</span></a>
+      <a class="nav__item" href="prototype.html"><i class="icon" data-icon="play"></i><span class="nav__label">Prototype</span></a>
+      <a class="nav__item" href="handoff.html"><i class="icon" data-icon="package"></i><span class="nav__label">Hand off</span></a>
+      <p class="nav__section">Projects</p>
+      <a class="nav__item"><i class="icon" data-icon="folder-simple"></i><span class="nav__label">Café loyalty card</span></a>
+      <a class="nav__item"><i class="icon" data-icon="folder-simple"></i><span class="nav__label">Studio landing page</span></a>
+      <a class="nav__item"><i class="icon" data-icon="folder-simple"></i><span class="nav__label">Team retro board</span></a>
+      <a class="nav__item shell__foot"><span class="avatar">ML</span><span class="nav__label">Maya Lin</span><span class="nav__count">PRO</span></a>
+    </nav>
+    <header class="shell__top">
+      <button class="btn" data-variant="icon" data-shell-toggle aria-expanded="true" aria-label="Toggle navigation"><i class="icon" data-icon="sidebar-simple"></i></button>
+      <h1 class="shell__title">Booking flow</h1>
+      <a class="btn" href="prototype.html"><i class="icon" data-icon="play"></i>Prototype</a>
+      <a class="btn" href="handoff.html"><i class="icon" data-icon="package"></i>Hand off</a>
+    </header>
+    <main class="shell__main workspace">
+      <section class="chat" aria-label="Conversation">
+        <div class="chat__scroll" id="scroll">
+          <div class="thread" id="thread">
+            <div class="ask"><p class="ask__text">A booking app for Pebble Wall, our climbing gym: members pick a session, choose a slot, pay and get a QR pass.</p><span class="chip"><i class="icon" data-icon="paperclip"></i>pebble-wall-brand.pdf</span></div>
+            <div class="turn">
+              <span class="who"><i class="icon" data-icon="sparkle"></i>Protopass</span>
+              <details class="reasoning" data-state="done"><summary><i class="icon" data-icon="sparkle"></i><span class="typing__dots" aria-hidden="true"><i></i><i></i><i></i></span>Thought for 6s<i class="icon" data-icon="caret-right"></i></summary><p class="reasoning__body">A member books in four steps: session, slot, payment, pass. The brand guide sets a coral for actions, so I will check its contrast on buttons. A full session and a declined card need their own states.</p></details>
+              <details class="tool-call" data-state="done"><summary><i class="icon tool-call__icon" data-icon="file-pdf"></i><span class="tool-call__name">Read the brief</span><span class="tool-call__target">pebble-wall-brand.pdf</span></summary><pre class="tool-call__result">2 pages · logo, coral and ink, Inter type, friendly tone</pre></details>
+              <details class="tool-call" data-state="running" data-when="working"><summary><i class="icon tool-call__icon" data-icon="pencil-simple"></i><span class="tool-call__name">Writing screens</span><span class="tool-call__target">screens/payment.html</span></summary><pre class="tool-call__result">sessions.html, slot.html written. payment.html in progress.</pre></details>
+              <details class="tool-call" data-state="done" data-when="done error command-palette"><summary><i class="icon tool-call__icon" data-icon="pencil-simple"></i><span class="tool-call__name">Wrote 4 screens</span><span class="tool-call__target">sessions.html · slot.html · payment.html · pass.html</span></summary><pre class="tool-call__result">4 screens, 7 states, 2 flows, 3 Q&amp;A</pre></details>
+              <details class="tool-call" data-state="done" data-when="done command-palette"><summary><i class="icon tool-call__icon" data-icon="seal-check"></i><span class="tool-call__name">Checked the screens</span><span class="tool-call__target">validate · lint · light and dark</span></summary><pre class="tool-call__result">0 errors · 14 renders</pre></details>
+              <details class="tool-call" data-state="failed" data-when="error" open><summary><i class="icon tool-call__icon" data-icon="seal-check"></i><span class="tool-call__name">Checked the screens</span><span class="tool-call__target">lint · payment.html</span></summary><pre class="tool-call__result">L101 · Pay button: white on coral reads 3.2:1, needs 4.5:1.
+The 6 other states pass.</pre></details>
+
+              <p class="stream" data-when="done command-palette">Four screens are ready: Sessions, Slot, Payment and Pass, with 7 states. Colors and type come from your brand guide <a class="cite" href="#brief" data-tip="Brand guide · pebble-wall-brand.pdf" aria-label="Source 1: Brand guide">1</a>.</p>
+              <p class="stream" data-when="done command-palette">Sessions shows a full session, Payment a declined card. One question stays open: can a member book for a friend? Your brief does not say <a class="cite" href="#ask" data-tip="Your brief · this session" aria-label="Source 2: Your brief">2</a>.</p>
+              <div class="row" data-when="done command-palette"><a class="btn" href="prototype.html"><i class="icon" data-icon="play"></i>Open the prototype</a><a class="btn" href="handoff.html"><i class="icon" data-icon="package"></i>Hand off</a></div>
+
+              <p class="stream" data-when="error">The Pay button fails the contrast check: white text on your coral reads 3.2:1, and buttons need 4.5:1 <a class="cite" href="#brief" data-tip="Brand guide · pebble-wall-brand.pdf" aria-label="Source 1: Brand guide">1</a>. I can switch buttons to ink and keep coral for the logo, or darken the coral.</p>
+              <div class="row" data-when="error"><a class="btn" href="review.html"><i class="icon" data-icon="circle-half"></i>Use ink buttons</a><a class="btn" href="review.html"><i class="icon" data-icon="drop"></i>Darken the coral</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="chat__foot">
+          <form class="composer" id="composer" aria-label="Ask Protopass">
+            <ul class="attachments" aria-label="Attachments"></ul>
+            <textarea class="composer__input" placeholder="Ask for a change…" aria-label="Message"></textarea>
+            <div class="composer__bar">
+              <button class="btn" data-variant="icon" type="button" aria-label="Attach" data-tip="Attach a file or a screenshot"><i class="icon" data-icon="paperclip"></i></button>
+              <button class="btn" data-variant="icon" type="button" aria-label="Mention a screen" data-tip="Mention a screen or a state"><i class="icon" data-icon="at"></i></button>
+              <button class="btn composer__send" data-variant="primary" type="submit">Send</button>
+              <button class="btn composer__stop" type="button"><i class="icon" data-icon="stop"></i>Stop</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="pane" aria-label="Preview">
+        <div class="pane__head">
+          <span class="pane__title">Preview</span>
+          <span class="chip">sessions.html</span>
+          <span class="typing" role="status" data-when="working"><span class="typing__dots"><i></i><i></i><i></i></span>Updating</span>
+          <span class="grow"></span>
+          <a class="btn" data-variant="icon" href="prototype.html" aria-label="Open the prototype" data-tip="Open the prototype full width"><i class="icon" data-icon="arrows-out-simple"></i></a>
+        </div>
+        <div class="pane__body">
+          <div class="stage">
+            <div class="device">
+              <div class="gym">
+                <header class="gym__bar">
+                  <span class="gym__logo"><span class="gym__mark"><i class="icon" data-icon="mountains"></i></span>Pebble Wall</span>
+                  <span class="avatar">ML</span>
+                </header>
+                <div class="gym__body">
+                  <div class="gym__main">
+                    <div><h2 class="gym__title">Book a session</h2><p class="muted">Thursday 24 October · 4 sessions</p></div>
+                    <span class="segmented gym__days" role="group" aria-label="Day"><button class="btn" aria-pressed="true">Thu 24</button><button class="btn" aria-pressed="false">Fri 25</button><button class="btn" aria-pressed="false">Sat 26</button><button class="btn" aria-pressed="false">Sun 27</button></span>
+                    <div class="gym__slots">
+                      <article class="card slot"><div class="card__body"><span class="mono muted">07:00 – 08:30</span><h3 class="slot__name">Morning boulder</h3><span class="muted">With Inès · all levels</span><div class="slot__foot"><span class="badge">8 SPOTS</span><button class="btn">Book</button></div></div></article>
+                      <article class="card slot"><div class="card__body"><span class="mono muted">12:15 – 13:15</span><h3 class="slot__name">Lunch climb</h3><span class="muted">With Tom · intermediate</span><div class="slot__foot"><span class="badge" data-variant="warning">3 LEFT</span><button class="btn">Book</button></div></div></article>
+                      <article class="card slot"><div class="card__body"><span class="mono muted">18:00 – 19:30</span><h3 class="slot__name">Intro to bouldering</h3><span class="muted">With Sara · beginners</span><div class="slot__foot"><span class="badge" data-variant="critical">FULL</span><button class="btn" disabled>Book</button></div></div></article>
+                      <article class="card slot"><div class="card__body"><span class="mono muted">19:45 – 21:15</span><h3 class="slot__name">Lead technique</h3><span class="muted">With Jonas · advanced</span><div class="slot__foot"><span class="badge">6 SPOTS</span><button class="btn">Book</button></div></div></article>
+                    </div>
+                    <h3 class="label">Coaches this week</h3>
+                    <div class="gym__coaches">
+                      <div class="coach"><span class="avatar" data-variant="lg">IN</span><span><b>Inès</b><span class="muted">Bouldering</span></span></div>
+                      <div class="coach"><span class="avatar" data-variant="lg">TO</span><span><b>Tom</b><span class="muted">Technique</span></span></div>
+                      <div class="coach"><span class="avatar" data-variant="lg">SA</span><span><b>Sara</b><span class="muted">Beginners</span></span></div>
+                      <div class="coach"><span class="avatar" data-variant="lg">JO</span><span><b>Jonas</b><span class="muted">Lead</span></span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="modal command-palette" id="palette" aria-label="Commands">
+    <label class="input command-palette__search"><i class="icon" data-icon="magnifying-glass"></i><input placeholder="Search commands, sessions and projects" aria-label="Search commands"></label>
+    <div class="command-palette__list">
+      <div class="command-palette__group"><p class="command-palette__label">Actions</p>
+        <div class="command-palette__item" data-value="handoff.html"><i class="icon" data-icon="package"></i><span class="command-palette__title">Hand off this project</span><span class="command-palette__keys"><span class="kbd">⌘</span><span class="kbd">⇧</span><span class="kbd">H</span></span></div>
+        <div class="command-palette__item" data-value="prototype.html"><i class="icon" data-icon="play"></i><span class="command-palette__title">Open the prototype</span><span class="command-palette__keys"><span class="kbd">⌘</span><span class="kbd">P</span></span></div>
+        <div class="command-palette__item" data-value="review.html"><i class="icon" data-icon="git-diff"></i><span class="command-palette__title">Review changes</span><span class="command-palette__keys"><span class="kbd">⌘</span><span class="kbd">⇧</span><span class="kbd">R</span></span></div>
+        <div class="command-palette__item" data-value="start.html"><i class="icon" data-icon="plus"></i><span class="command-palette__title">New prototype</span><span class="command-palette__keys"><span class="kbd">⌘</span><span class="kbd">N</span></span></div>
+      </div>
+      <div class="command-palette__group"><p class="command-palette__label">Screens</p>
+        <div class="command-palette__item" data-value="prototype.html"><i class="icon" data-icon="file-html"></i><span class="command-palette__title">Sessions</span></div>
+        <div class="command-palette__item" data-value="prototype.html"><i class="icon" data-icon="file-html"></i><span class="command-palette__title">Payment</span></div>
+      </div>
+      <div class="command-palette__group"><p class="command-palette__label">Projects</p>
+        <div class="command-palette__item" data-value="start.html"><i class="icon" data-icon="folder-simple"></i><span class="command-palette__title">Café loyalty card</span></div>
+        <div class="command-palette__item" data-value="start.html"><i class="icon" data-icon="folder-simple"></i><span class="command-palette__title">Studio landing page</span></div>
+      </div>
+      <div class="empty command-palette__empty" data-variant="compact"><span class="empty__art"><i class="icon" data-icon="magnifying-glass"></i></span><p class="empty__title">Nothing found</p><p class="empty__text">Try a screen, a session or a project.</p></div>
+    </div>
+  </dialog>
+
+  <script src="screens.js"></script>
+  <script>
+    const composer = document.getElementById("composer"), thread = document.getElementById("thread"), scroll = document.getElementById("scroll");
+    if (state === "working") composer.setAttribute("aria-busy", "true");
+    // After ds.js has built the palette and the icons, so the list is ready and the thread has its final height.
+    addEventListener("load", () => {
+      if (state === "command-palette") document.getElementById("palette").showModal();
+      scroll.scrollTop = scroll.scrollHeight;
+    });
+    document.getElementById("palette").addEventListener("select", (e) => go(e.detail.value));
+    // Live: a follow-up gets the typing dots, then a streamed answer.
+    composer.addEventListener("send", (e) => {
+      const ask = Object.assign(document.createElement("div"), { className: "ask" });
+      ask.append(Object.assign(document.createElement("p"), { className: "ask__text", textContent: e.detail.text }));
+      const turn = Object.assign(document.createElement("div"), { className: "turn" });
+      turn.innerHTML = `<span class="who"><i class="icon" data-icon="sparkle"></i>Protopass</span><span class="typing" role="status"><span class="typing__dots"><i></i><i></i><i></i></span>Editing sessions.html</span>`;
+      thread.append(ask, turn);
+      renderIcons(turn);
+      composer.setAttribute("aria-busy", "true");
+      scroll.scrollTop = scroll.scrollHeight;
+      setTimeout(async () => {
+        const answer = Object.assign(document.createElement("p"), { className: "stream" });
+        turn.querySelector(".typing").replaceWith(answer);
+        await streamText(answer, "Done. Sessions now shows the coach photo on each card, and the checks still pass in light and dark.");
+        composer.removeAttribute("aria-busy");
+      }, 1400);
+    });
+  </script>
+  <script src="../../../handoff/minimaly/ds.js"></script>
+</body>
+</html>

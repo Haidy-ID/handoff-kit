@@ -1,0 +1,206 @@
+{
+  "app": "Protopass",
+  "title": "Desktop Agent",
+  "status": "review",
+  "teams": [
+    "Core"
+  ],
+  "updated": "2026-10-23",
+  "intent": "Show Protopass Pro: a desktop app whose built-in agent prototypes a site or an app with Minimaly, checks every state and hands it over ready to build.",
+  "note": "Mockup of the paid offer, also a template to start from. Screens are captured for the landing page.",
+  "ds": "Minimaly",
+  "components": [
+    "shell",
+    "composer",
+    "attachment",
+    "reasoning",
+    "tool-call",
+    "stream",
+    "cite",
+    "typing",
+    "steps",
+    "stepper",
+    "command-palette",
+    "dialog",
+    "toast",
+    "segmented",
+    "sticky-header",
+    "card",
+    "list",
+    "button",
+    "badge",
+    "chip",
+    "avatar",
+    "icon",
+    "kbd",
+    "input",
+    "field",
+    "switch",
+    "accordion",
+    "banner",
+    "menu",
+    "popover",
+    "tooltip",
+    "empty"
+  ],
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "devices": [
+    "desktop"
+  ],
+  "screens": [
+    {
+      "id": "start",
+      "label": "Start",
+      "file": "screens/start.html",
+      "states": [
+        {
+          "name": "Default",
+          "note": "Empty composer, starter templates, recent projects"
+        },
+        {
+          "name": "Typing",
+          "note": "Idea written, brand guide attached, Send enabled"
+        }
+      ]
+    },
+    {
+      "id": "session",
+      "label": "Session",
+      "file": "screens/session.html",
+      "states": [
+        {
+          "name": "Working",
+          "note": "Tool call running, preview updating, Stop replaces Send"
+        },
+        {
+          "name": "Done",
+          "note": "Checks passed, answer with sources, next steps"
+        },
+        {
+          "name": "Error",
+          "note": "Contrast check failed, two fixes offered"
+        },
+        {
+          "name": "Command palette",
+          "note": "⌘K over the session, every command listed"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "label": "Review changes",
+      "file": "screens/review.html",
+      "states": [
+        {
+          "name": "Waiting for approval",
+          "note": "Plan, changed files and diff, Apply or Reject"
+        },
+        {
+          "name": "Applied",
+          "note": "Plan done, checks pass, Undo in a toast"
+        }
+      ]
+    },
+    {
+      "id": "prototype",
+      "label": "Prototype",
+      "file": "screens/prototype.html",
+      "states": [
+        {
+          "name": "Desktop",
+          "note": "Generated app at full width"
+        },
+        {
+          "name": "Mobile",
+          "note": "Same screen in a 390 px frame"
+        }
+      ]
+    },
+    {
+      "id": "handoff",
+      "label": "Hand off",
+      "file": "screens/handoff.html",
+      "states": [
+        {
+          "name": "Default",
+          "note": "Intent, screens and states, flows, Q&A, open question, checks"
+        },
+        {
+          "name": "Share dialog",
+          "note": "Link, access, Copy link"
+        },
+        {
+          "name": "Link copied",
+          "note": "Dialog closed, toast confirms"
+        }
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "name": "Start a prototype",
+      "statement": "As a product designer, I should be able to turn a one-line idea into a clickable prototype.",
+      "steps": [
+        "start",
+        "start:typing",
+        "session:working",
+        "session:done",
+        "prototype",
+        "prototype:mobile"
+      ]
+    },
+    {
+      "name": "Review the agent's changes",
+      "statement": "As a product designer, I should be able to see and approve every change before the agent applies it.",
+      "steps": [
+        "session:error",
+        "review",
+        "review:applied",
+        "prototype"
+      ]
+    },
+    {
+      "name": "Hand off the prototype",
+      "statement": "As a product designer, I should be able to hand the prototype to a developer or an AI agent with everything needed to build it.",
+      "steps": [
+        "session:command-palette",
+        "handoff",
+        "handoff:share-dialog",
+        "handoff:link-copied"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "Does the agent change files without asking?",
+      "a": "No. It shows the plan and the diff; nothing is written until Apply. Undo restores the previous version."
+    },
+    {
+      "q": "What does the agent check after it writes screens?",
+      "a": "The design system validator and the render lint, every state in light and dark. A failed check stops the run and offers fixes."
+    },
+    {
+      "q": "What does the shared link open?",
+      "a": "The handoff page: intent, screens and states, flows, Q&A and open questions. Viewers can play the prototype but not edit it."
+    },
+    {
+      "q": "Where does ⌘K work?",
+      "a": "On every screen of the app. The mockup shows it over the session only."
+    }
+  ],
+  "questions": [
+    "Keep the \"Copy to Figma\" label? It is the only third-party name in the mockup.",
+    "Minimaly gap: dark --color-text-tertiary reads 3.04:1 on raised surfaces, so nav sections and counts, tool-call targets, card tags, pending steps, stepper status, list trails, palette labels and sticky-header subtitles fail the contrast lint in dark. Needs a lighter dark tertiary or an explicit acceptContrast decision.",
+    "Minimaly gap: a running tool-call name (agent violet) reads 4.29:1 on the dark raised surface.",
+    "Minimaly gap: segmented options are 26 px inside a 32 px group, cite is 16 px by design, toast buttons are 28 px, and dialog__body overlaps dialog__head by 4 px: the render lint flags all four. Needs lint exceptions or component changes.",
+    "Minimaly gap: streamText writes plain text, so an answer with cite links cannot stream. Needs an HTML-aware mode that streams words and inserts inline elements whole.",
+    "Minimaly gap: no diff component. Review builds it locally (.diff: file head, hunk line, numbered added and removed lines); any agent product needs one.",
+    "Minimaly gap: no chat message layout (the person's message, the agent's turn with its name) and no card footer for actions; both are local (.ask, .turn, .who, .permit__foot).",
+    "Minimaly gap: shell has no right pane; the conversation and preview split is local (.workspace, .pane).",
+    "Kit gap: validate.mjs cannot see components built at run time (toast(), data-tip tooltips), so listing them raises M204.",
+    "Kit gap: lint.html measures 50 ms after switching the theme; in a background page CSS transitions do not advance and colors read as light values. Finishing document animations before measuring fixes it."
+  ]
+}

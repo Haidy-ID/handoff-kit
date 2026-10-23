@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" data-state="desktop">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prototype</title>
+  <link rel="stylesheet" href="screens.css">
+</head>
+<body>
+  <div class="proto">
+    <header class="sticky-header">
+      <a class="btn" data-variant="icon" href="session.html?state=done" aria-label="Back to the session" data-tip="Back to the session"><i class="icon" data-icon="arrow-left"></i></a>
+      <div class="sticky-header__titles"><h1 class="sticky-header__title">Pebble Wall booking</h1><span class="sticky-header__subtitle">Sessions · version 4 · checks pass</span></div>
+      <span class="segmented" role="group" aria-label="Device" id="device"><button class="btn" aria-pressed="true" data-device="desktop"><i class="icon" data-icon="desktop"></i>Desktop</button><button class="btn" aria-pressed="false" data-device="mobile"><i class="icon" data-icon="device-mobile"></i>Mobile</button></span>
+      <button class="btn" data-variant="icon" id="theme" aria-label="Dark theme" data-tip="Switch the prototype between light and dark"><i class="icon" data-icon="moon"></i></button>
+      <a class="btn" href="handoff.html?state=share-dialog"><i class="icon" data-icon="link"></i>Share</a>
+      <a class="btn" data-variant="primary" href="handoff.html"><i class="icon" data-icon="package"></i>Hand off</a>
+    </header>
+    <main class="stage">
+      <div class="device">
+        <div class="gym">
+          <header class="gym__bar">
+            <span class="gym__logo"><span class="gym__mark"><i class="icon" data-icon="mountains"></i></span>Pebble Wall</span>
+            <nav class="gym__nav" aria-label="Pebble Wall"><a class="btn" data-variant="ghost" aria-current="page">Sessions</a><a class="btn" data-variant="ghost">My passes</a><a class="btn" data-variant="ghost">Coaches</a></nav>
+            <span class="avatar">ML</span>
+          </header>
+          <div class="gym__body">
+            <div class="gym__main">
+              <div><h2 class="gym__title">Book a session</h2><p class="muted">Thursday 24 October · 4 sessions</p></div>
+              <span class="segmented gym__days" role="group" aria-label="Day"><button class="btn" aria-pressed="true">Thu 24</button><button class="btn" aria-pressed="false">Fri 25</button><button class="btn" aria-pressed="false">Sat 26</button><button class="btn" aria-pressed="false">Sun 27</button></span>
+              <div class="gym__slots">
+                <article class="card slot"><div class="card__body"><span class="mono muted">07:00 – 08:30</span><h3 class="slot__name">Morning boulder</h3><span class="muted">With Inès · all levels</span><div class="slot__foot"><span class="badge">8 SPOTS</span><button class="btn">Book</button></div></div></article>
+                <article class="card slot"><div class="card__body"><span class="mono muted">12:15 – 13:15</span><h3 class="slot__name">Lunch climb</h3><span class="muted">With Tom · intermediate</span><div class="slot__foot"><span class="badge" data-variant="warning">3 LEFT</span><button class="btn">Book</button></div></div></article>
+                <article class="card slot"><div class="card__body"><span class="mono muted">18:00 – 19:30</span><h3 class="slot__name">Intro to bouldering</h3><span class="muted">With Sara · beginners</span><div class="slot__foot"><span class="badge" data-variant="critical">FULL</span><button class="btn" disabled>Book</button></div></div></article>
+                <article class="card slot"><div class="card__body"><span class="mono muted">19:45 – 21:15</span><h3 class="slot__name">Lead technique</h3><span class="muted">With Jonas · advanced</span><div class="slot__foot"><span class="badge">6 SPOTS</span><button class="btn">Book</button></div></div></article>
+              </div>
+              <h3 class="label">Coaches this week</h3>
+              <div class="gym__coaches">
+                <div class="coach"><span class="avatar" data-variant="lg">IN</span><span><b>Inès</b><span class="muted">Bouldering</span></span></div>
+                <div class="coach"><span class="avatar" data-variant="lg">TO</span><span><b>Tom</b><span class="muted">Technique</span></span></div>
+                <div class="coach"><span class="avatar" data-variant="lg">SA</span><span><b>Sara</b><span class="muted">Beginners</span></span></div>
+                <div class="coach"><span class="avatar" data-variant="lg">JO</span><span><b>Jonas</b><span class="muted">Lead</span></span></div>
+              </div>
+            </div>
+            <aside class="gym__aside">
+              <div class="card">
+                <div class="card__head"><h3 class="card__title">Your next session</h3></div>
+                <div class="card__body pass"><span class="pass__code"><i class="icon" data-icon="qr-code" style="--icon-size: 88px"></i></span><b>Morning boulder</b><span class="muted">Fri 25 · 07:00 · wall B</span><button class="btn"><i class="icon" data-icon="calendar-plus"></i>Add to calendar</button></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="screens.js"></script>
+  <script>
+    // Live: the device toggle switches the frame without leaving the screen, the moon flips the theme.
+    const device = document.getElementById("device");
+    const setDevice = (d) => {
+      document.documentElement.dataset.state = d;
+      device.querySelectorAll(".btn").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.device === d)));
+    };
+    setDevice(state === "mobile" ? "mobile" : "desktop");
+    device.addEventListener("click", (e) => { const b = e.target.closest(".btn"); if (b) setDevice(b.dataset.device); });
+    document.getElementById("theme").addEventListener("click", () => {
+      const html = document.documentElement;
+      html.dataset.theme = html.dataset.theme === "dark" ? "light" : "dark";
+    });
+  </script>
+  <script src="../../../handoff/minimaly/ds.js"></script>
+</body>
+</html>
