@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.3.0 · 2026-10-24
+
+- New Minimaly components: composer (prompt field with Send and Stop), reasoning, tool call and citation (an agent's thinking, actions and sources), combobox, dropzone, stepper, rich editor, date picker, command palette (⌘K), attachment, slider and tag input. 53 components in all.
+- Richer components: input add-ons (prefix, suffix, inline action, number stepper), soft button, badge icons, counts in tabs and segmented, filled textarea.
+- Look: the main action and chosen states are ink, black in light and white in dark (primary button, checked box, radio, switch). The blue accent keeps focus, links and what is active or current. Your screens change color with no edit; check them once.
+- Dark theme: tertiary text and agent violet are lighter, to reach 4.5:1 contrast.
+- Motion: failed steps, critical toasts and banners shake once; the hold button turns critical red and stays disabled once confirmed; the stepper line fills stage to stage; reasoning thinks with the typing dots.
+- Copy to Figma: steps, divider and table sort draw with real elements, so they paste into Figma.
+- Fixes: segmented options stay 32 px inside cards and shells; toast buttons and table-of-contents links are 32 px; the dialog body no longer overlaps its head; async button labels sit straight in every state.
+- Playground: Check all loads every specimen in light and dark and lists errors, missing icons and overflow; the component list scrolls on its own.
+- Render lint: finishes transitions before measuring, and treats links inside running text as text links.
+- New Templates group in the repository: Desktop Agent (an agent app, from idea to handoff) and Modern Portfolio (a design engineer's site). The update button only replaces `handoff/`: to get them, copy `templates/` from the release and add the group to `handoff.config.json` (see its `groups`).
+
 ## 2.2.0 · 2026-10-21
 
 - Handoff Kit is now Protopass: a prototype workshop to explore ideas, keep them organised and hand the ready ones to a developer or an AI. The repository moved to `Haidy-ID/protopass` (the old address redirects). Folders, files and config keys keep their names: nothing to migrate. Topic tabs read "<topic> · <site name>"; the default site is "My prototypes".
