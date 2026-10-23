@@ -1,3 +1,8 @@
+## 2026-10-24
+- The editorial layer moved into Minimaly: `text` (display, title, heading, lead, eyebrow), `prose`, `code`, `quote`, `media`, `site-nav`, link cards and large buttons, plus tokens for display sizes, reading rhythm, measure and page width. This topic now uses them; its own CSS keeps only the page layout and the placeholder drawings.
+- The hero and closing calls to action use the large button: on a website, the main action reads first.
+- The Minimaly fixes found here (dark contrast, segmented, TOC, toast, dialog) are in the library; the article list stays local, and two kit questions stay open.
+
 ## 2026-10-23
 - Brainstorm, 16 pages: Home, Work, Case study, Lab, Skills and stack, Writing, Article, About, Contact, Now, Uses, Resume, Speaking, Testimonials, Newsletter, 404.
 - Kept 8: [Home](screen:home), [Work](screen:work), [Case study](screen:case-study), [Lab](screen:lab), [Skills and stack](screen:skills), [Writing](screen:blog), [Article](screen:article), [About and contact](screen:about). They cover the three stories: a recruiter judging fast, a peer reading, a visitor writing.

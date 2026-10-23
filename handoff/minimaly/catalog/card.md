@@ -18,3 +18,4 @@ Raised panel with an optional head and a body. The head title is mono uppercase,
 - `data-variant="accent"`: blue border for the card in focus (snapshot, selection).
 - The first block after the head gets a top border automatically.
 - The card takes the full width of its parent: size it from the layout.
+- A whole card that opens something is an `<a class="card" href="…">`: it lifts on hover and takes the accent focus ring.

@@ -32,7 +32,13 @@
     "toast",
     "slider",
     "switch",
-    "value"
+    "value",
+    "text",
+    "prose",
+    "code",
+    "quote",
+    "media",
+    "site-nav"
   ],
   "viewport": {
     "width": 1440,
@@ -180,21 +186,7 @@
     }
   ],
   "questions": [
-    "Display type: the largest Minimaly size is 24 px. Add a display scale (36, 48, 60 px) with its own line height and tracking? Done here with calc() on --font-size-4xl.",
-    "Long-form reading: should Minimaly own a prose style (18 px body, 1.7 leading, 680 px measure, headings, lists, inline code)? Done here in .prose.",
-    "Code block: ship a code component (mono, scrolls sideways, syntax tones)? No token exists for syntax colors.",
-    "Pull quote: ship a quote with its attribution? A local .quote here.",
-    "Media: ship a media frame (aspect ratios, placeholder, caption) for screenshots and photos? Local .ph blocks here.",
-    "Site navigation: ship a horizontal nav link with a current-page mark? The shell nav is a side rail only.",
-    "Link card: give .card a link look (hover lift, focus ring)? Local a.card rules here.",
     "Article rows: list titles are 12 px, too small for an article list. Add a large list variant, or keep a local row for sites?",
-    "Hero buttons: buttons are always 32 px. Add a larger size for a hero call to action?",
-    "Page frame: define a container width and a section spacing for websites?",
-    "Contrast: --color-text-tertiary measures 3.48:1 on the dark surface, 3.04:1 on dark raised and 4.24:1 on light sunken. Button and tab counts, list trails, palette group labels, slider scales and textarea counters fail 4.5:1. This topic avoids them.",
-    "Segmented: it is missing from the border-box list of components.css. Inside a card (whose descendants Minimaly sets to border-box) or under a page reset, its options shrink from 32 to 26 px (L401). Kept here outside cards, with the reset skipping it.",
-    "Table of contents: links are 26 px high under a 1.5 body line height (L401). Raised to 32 px here by the toc container's line height.",
-    "Toast: its close and action buttons are 28 px high (L401). The Sent state shows a toast, so the render lint reports it.",
-    "Dialog: .dialog__body pulls 4 px under .dialog__head on purpose (room for focus rings); the render lint reads it as an overlap (L301). The Menu open state reports it.",
     "Theme switch: component color transitions run when data-theme changes, so a switch is ragged and the render lint, 50 ms after it, reads start colors. Should ds.js switch themes without transitions? Done here in screens.js.",
     "Validator: async-button and hold-button share the .btn class and toast is created by script, so M204 calls them unused. Detect them by data-busy, data-hold and toast() calls?"
   ]

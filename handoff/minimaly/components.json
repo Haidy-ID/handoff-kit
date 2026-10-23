@@ -8,7 +8,8 @@
       "primary",
       "soft",
       "ghost",
-      "icon"
+      "icon",
+      "large"
     ],
     "states": [
       "default",
@@ -78,7 +79,8 @@
     "variants": [
       "default",
       "accent",
-      "with foot"
+      "with foot",
+      "link"
     ],
     "states": [
       "default"
@@ -777,6 +779,84 @@
     "states": [
       "open",
       "closed"
+    ]
+  },
+  {
+    "id": "text",
+    "class": "text",
+    "name": "Text",
+    "variants": [
+      "display",
+      "title",
+      "heading",
+      "lead",
+      "eyebrow"
+    ],
+    "states": [
+      "default",
+      "narrow"
+    ]
+  },
+  {
+    "id": "prose",
+    "class": "prose",
+    "name": "Prose",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default",
+      "narrow"
+    ]
+  },
+  {
+    "id": "code",
+    "class": "code",
+    "name": "Code",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default",
+      "overflow"
+    ]
+  },
+  {
+    "id": "quote",
+    "class": "quote",
+    "name": "Quote",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default"
+    ]
+  },
+  {
+    "id": "media",
+    "class": "media",
+    "name": "Media",
+    "variants": [
+      "16/10",
+      "4/5",
+      "with caption"
+    ],
+    "states": [
+      "image",
+      "placeholder"
+    ]
+  },
+  {
+    "id": "site-nav",
+    "class": "site-nav",
+    "name": "Site nav",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "current"
     ]
   }
 ]

@@ -3,8 +3,8 @@
    data-force="hover" pins the hover state for specimen pages. Tokens only, no raw values. */
 
 /* Borders and padding stay inside the declared size (32 px controls), whatever the page reset. */
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input, .thread, .message, .diff, .pane),
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input, .thread, .message, .diff, .pane) * { box-sizing: border-box; }
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input, .thread, .message, .diff, .pane, .text, .prose, .code, .quote, .media, .site-nav),
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input, .thread, .message, .diff, .pane, .text, .prose, .code, .quote, .media, .site-nav) * { box-sizing: border-box; }
 
 /* Motion: keyframes shared by the components and the pages built on them.
    enter = fade up (page sections, cards), pop-in = fade and grow (tooltips, popovers), fade-in, fade-out.
@@ -45,6 +45,8 @@
 .btn[data-variant="primary"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-on-ink); }
 .btn[data-variant="primary"] .icon { color: var(--color-on-ink); }
 .btn[data-variant="primary"]:hover, .btn[data-variant="primary"][data-force="hover"] { background: var(--color-ink); opacity: 0.85; }
+/* Large: a website's call to action (a hero, a closing block). Tool screens keep 32 px. */
+.btn[data-size="lg"] { height: var(--size-row); padding: 0 var(--spacing-lg); font-size: var(--font-size-md); }
 /* Soft: a quiet filled button, for secondary actions that sit on raised surfaces next to a primary. */
 .btn[data-variant="soft"] { border-color: transparent; background: var(--color-surface-sunken); }
 .btn[data-variant="soft"]:hover, .btn[data-variant="soft"][data-force="hover"] { border-color: transparent; background: var(--color-surface-hover); }
@@ -137,6 +139,10 @@
 .card__foot { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-md) var(--spacing-lg); border-top: var(--stroke-width-subtle) solid var(--color-border); }
 .card__note { flex: 1; min-width: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); }
 .card[data-variant="accent"] { border-color: var(--color-accent); }
+/* A card that is a link: lifts on hover, accent ring on keyboard focus. */
+a.card { display: block; color: inherit; text-decoration: none; transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out), transform var(--duration-spring) var(--ease-spring); }
+a.card:hover, a.card[data-force="hover"] { border-color: var(--color-border-strong); box-shadow: var(--shadow-md); transform: translateY(calc(var(--spacing-xs) * -1)); }
+a.card:focus-visible { outline: 0; box-shadow: 0 0 0 var(--stroke-width-mid) var(--color-accent); }
 
 /* Divider: horizontal rule with a centered label. Accent by default, quiet for low emphasis. */
 .divider { display: flex; align-items: center; gap: var(--spacing-md); }
@@ -993,3 +999,58 @@ html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 .tag-input:has(> input:disabled) .tag-input__remove { visibility: hidden; }
 .field[data-invalid] > .tag-input, .field[data-invalid] > .combobox > .tag-input { border-color: var(--color-status-critical); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
 .field[data-invalid] > .tag-input:focus-within, .field[data-invalid] > .combobox > .tag-input:focus-within { box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-status-critical); }
+
+/* Editorial layer, for websites: type, long-form reading, code, quotes, media, site navigation. Tool screens rarely need it. */
+
+/* Text: editorial type roles on any element. display (60 px hero), title (48 px page title), heading (30 px section),
+   lead (18 px intro under a title), eyebrow (mono label above a title). Large sizes step down on narrow screens. */
+.text { margin: 0; }
+.text:is([data-variant="display"], [data-variant="title"], [data-variant="heading"]) { font-weight: var(--font-weight-semibold); letter-spacing: var(--letter-spacing-display); text-wrap: balance; }
+.text[data-variant="display"] { font-size: var(--font-size-7xl); line-height: var(--line-height-display); }
+.text[data-variant="title"] { font-size: var(--font-size-6xl); line-height: var(--line-height-display); overflow-wrap: break-word; }
+.text[data-variant="heading"] { font-size: var(--font-size-5xl); line-height: var(--line-height-tight); }
+.text[data-variant="lead"] { max-width: var(--measure); color: var(--color-text-secondary); font-size: var(--font-size-2xl); line-height: var(--line-height-normal); text-wrap: pretty; }
+.text[data-variant="eyebrow"] { color: var(--color-text-secondary); font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-tight) var(--font-family-mono); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; }
+@media (max-width: 640px) {
+  .text[data-variant="display"] { font-size: var(--font-size-5xl); }
+  .text[data-variant="title"] { font-size: var(--font-size-5xl); }
+  .text[data-variant="heading"] { font-size: var(--font-size-4xl); }
+}
+
+/* Prose: long-form reading. 18 px text on a 1.7 line, one measure wide; headings, lists, inline code and links inside. */
+.prose { display: flex; flex-direction: column; gap: var(--spacing-3xl); min-width: 0; max-width: var(--measure); color: var(--color-text-primary); font-size: var(--font-size-2xl); line-height: var(--line-height-reading); }
+.prose > section { display: flex; flex-direction: column; gap: var(--spacing-lg); }
+.prose :is(h2, h3, p, ul, ol) { margin: 0; }
+.prose h2 { font-size: var(--font-size-4xl); line-height: var(--line-height-tight); letter-spacing: var(--letter-spacing-display); font-weight: var(--font-weight-semibold); }
+.prose h3 { font-size: var(--font-size-2xl); font-weight: var(--font-weight-semibold); }
+.prose :is(ul, ol):not([class]) { display: flex; flex-direction: column; gap: var(--spacing-sm); padding-left: var(--spacing-xl); }
+.prose a:not([class]) { color: inherit; text-decoration: underline var(--stroke-width-subtle) var(--color-accent); text-underline-offset: 3px; }
+.prose a:not([class]):hover { color: var(--color-accent); }
+.prose :not(pre) > code { padding: 0 var(--spacing-xs); border-radius: var(--radius-xs); background: var(--color-surface-sunken); font-family: var(--font-family-mono); font-size: 0.85em; }
+@media (max-width: 640px) { .prose { font-size: var(--font-size-xl); } }
+
+/* Code: a block of code. Mono, scrolls sideways rather than wrapping. Two tones only: comments quiet, keywords strong. */
+.code { margin: 0; padding: var(--spacing-lg) var(--spacing-xl); overflow-x: auto; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface-raised); color: var(--color-text-primary); font: var(--font-size-md)/var(--line-height-normal) var(--font-family-mono); tab-size: 2; }
+.code code { padding: 0; background: none; font: inherit; }
+.code__comment { color: var(--color-text-secondary); }
+.code__keyword { font-weight: var(--font-weight-semibold); }
+
+/* Quote: a pull quote with its source, set off by an ink rule. */
+.quote { display: flex; flex-direction: column; gap: var(--spacing-md); margin: 0; padding-left: var(--spacing-xl); border-left: calc(var(--stroke-width-subtle) * 2) solid var(--color-ink); }
+.quote p { margin: 0; font-size: var(--font-size-4xl); line-height: var(--line-height-tight); letter-spacing: var(--letter-spacing-display); font-weight: var(--font-weight-medium); text-wrap: balance; }
+.quote footer { color: var(--color-text-secondary); font-size: var(--font-size-md); }
+
+/* Media: an image or a screenshot in a frame, at a fixed ratio (--ratio, 16 / 10 by default), with an optional caption.
+   The frame holds an <img> or a placeholder drawn with real elements, so Copy to Figma keeps it. */
+.media { display: flex; flex-direction: column; gap: var(--spacing-sm); margin: 0; }
+.media__frame { display: flex; align-items: center; justify-content: center; aspect-ratio: var(--ratio, 16 / 10); overflow: hidden; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface-sunken); color: var(--color-text-secondary); }
+.media__frame > img { width: 100%; height: 100%; object-fit: cover; }
+.media__caption { color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--line-height-normal); }
+
+/* Site nav: a website's horizontal navigation. The current page carries aria-current="page" and an accent underline. */
+.site-nav { display: flex; align-items: center; gap: var(--spacing-xs); }
+.site-nav__link { display: inline-flex; align-items: center; height: var(--control-height); padding: 0 var(--spacing-md); border-radius: var(--radius-sm); color: var(--color-text-secondary); font: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-tight) var(--font-family); text-decoration: none; transition: color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out); }
+.site-nav__link:hover, .site-nav__link[data-force="hover"] { background: var(--color-surface-hover); color: var(--color-text-primary); }
+.site-nav__link:focus-visible { outline: 0; box-shadow: 0 0 0 var(--stroke-width-mid) var(--color-accent); }
+.site-nav__link[aria-current="page"] { color: var(--color-text-primary); text-decoration: underline var(--stroke-width-mid) var(--color-accent); text-underline-offset: var(--spacing-sm); }
+

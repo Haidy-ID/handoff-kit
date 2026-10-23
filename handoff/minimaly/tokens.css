@@ -62,11 +62,22 @@
   --font-size-2xl: 18px;
   --font-size-3xl: 20px;
   --font-size-4xl: 24px;
+  /* Editorial sizes, for websites: headings, titles, display. */
+  --font-size-5xl: 30px;
+  --font-size-6xl: 48px;
+  --font-size-7xl: 60px;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --line-height-tight: 1.25;
   --line-height-normal: 1.5;
+  --line-height-display: 1.05;
+  --line-height-reading: 1.7;
+  --letter-spacing-display: -0.03em;
+  --letter-spacing-label: 0.06em;
+  /* Websites: a readable line (measure) and the width of a page. */
+  --measure: 680px;
+  --page-width: 1120px;
 
   /* Spacing */
   --spacing-none: 0;

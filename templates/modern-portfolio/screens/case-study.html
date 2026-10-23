@@ -41,19 +41,19 @@
     <header class="study-head">
       <div class="page-head">
         <a class="btn back" data-variant="ghost" href="work.html"><i class="icon" data-icon="arrow-left"></i>All work</a>
-        <p class="eyebrow">Case study · 2025 · Product</p>
-        <h1 class="title">Fieldnote: inspections that survive the basement</h1>
-        <p class="lead">Building surveyors filled 60-question forms on paper, then retyped them at night. I designed and built the app that replaced both, offline first.</p>
+        <p class="text" data-variant="eyebrow">Case study · 2025 · Product</p>
+        <h1 class="text" data-variant="title">Fieldnote: inspections that survive the basement</h1>
+        <p class="text" data-variant="lead">Building surveyors filled 60-question forms on paper, then retyped them at night. I designed and built the app that replaced both, offline first.</p>
       </div>
       <dl class="facts">
-        <div><dt class="eyebrow">Role</dt><dd>Design engineer, lead</dd></div>
-        <div><dt class="eyebrow">Team</dt><dd>2 engineers, 1 product manager</dd></div>
-        <div><dt class="eyebrow">Timeline</dt><dd>January to September 2025</dd></div>
-        <div><dt class="eyebrow">Stack</dt><dd>TypeScript, IndexedDB, Web Components</dd></div>
+        <div><dt class="text" data-variant="eyebrow">Role</dt><dd>Design engineer, lead</dd></div>
+        <div><dt class="text" data-variant="eyebrow">Team</dt><dd>2 engineers, 1 product manager</dd></div>
+        <div><dt class="text" data-variant="eyebrow">Timeline</dt><dd>January to September 2025</dd></div>
+        <div><dt class="text" data-variant="eyebrow">Stack</dt><dd>TypeScript, IndexedDB, Web Components</dd></div>
       </dl>
-      <figure class="figure">
-        <div class="ph ph--hero" aria-hidden="true"><div class="ph__ui"><span class="ph__bar"></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 70%"></span></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 55%"></span></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 65%"></span></span><span class="ph__row"><span class="ph__box"></span><span class="ph__line" style="--w: 80%"></span></span><span class="ph__row"><span class="ph__box"></span><span class="ph__line" style="--w: 40%"></span></span></div></div>
-        <figcaption>The room checklist on a surveyor's tablet. Every answer is saved on the device the moment it is tapped.</figcaption>
+      <figure class="media">
+        <div class="media__frame ph--hero" aria-hidden="true" style="--ratio: 21 / 9"><div class="ph__ui"><span class="ph__bar"></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 70%"></span></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 55%"></span></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 65%"></span></span><span class="ph__row"><span class="ph__box"></span><span class="ph__line" style="--w: 80%"></span></span><span class="ph__row"><span class="ph__box"></span><span class="ph__line" style="--w: 40%"></span></span></div></div>
+        <figcaption class="media__caption">The room checklist on a surveyor's tablet. Every answer is saved on the device the moment it is tapped.</figcaption>
       </figure>
     </header>
 
@@ -84,13 +84,13 @@
         <section id="process" aria-labelledby="process-title">
           <h2 id="process-title">Process</h2>
           <p>I spent the first two weeks on site with six surveyors, then tested a paper version of the room checklist before writing any code. The form engine came third: questions as data, so the insurer's format could change without a release.</p>
-          <figure class="figure">
-            <div class="ph ph--figure" aria-hidden="true"><div class="ph__ui"><span class="ph__bar"></span><span class="ph__line" style="--w: 90%"></span><span class="ph__line" style="--w: 70%"></span><span class="ph__line" style="--w: 85%"></span><span class="ph__line" style="--w: 50%"></span></div></div>
-            <figcaption>Shadowing notes, week two: where each surveyor stood when they wrote.</figcaption>
+          <figure class="media">
+            <div class="media__frame" aria-hidden="true"><div class="ph__ui"><span class="ph__bar"></span><span class="ph__line" style="--w: 90%"></span><span class="ph__line" style="--w: 70%"></span><span class="ph__line" style="--w: 85%"></span><span class="ph__line" style="--w: 50%"></span></div></div>
+            <figcaption class="media__caption">Shadowing notes, week two: where each surveyor stood when they wrote.</figcaption>
           </figure>
-          <figure class="figure">
-            <div class="ph ph--figure" aria-hidden="true"><div class="ph__ui"><span class="ph__bar"></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 60%"></span></span><span class="ph__row"><span class="ph__box"></span><span class="ph__line" style="--w: 75%"></span></span><span class="ph__block"></span></div></div>
-            <figcaption>Paper checklist, round three. Questions grouped by room, not by report section.</figcaption>
+          <figure class="media">
+            <div class="media__frame" aria-hidden="true"><div class="ph__ui"><span class="ph__bar"></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 60%"></span></span><span class="ph__row"><span class="ph__box"></span><span class="ph__line" style="--w: 75%"></span></span><span class="ph__block"></span></div></div>
+            <figcaption class="media__caption">Paper checklist, round three. Questions grouped by room, not by report section.</figcaption>
           </figure>
         </section>
         <section id="decisions" aria-labelledby="decisions-title">
@@ -104,7 +104,7 @@
         <section id="details" aria-labelledby="details-title">
           <h2 id="details-title">Design and code</h2>
           <p>The status and the sync queue were designed together. Each visual state maps to exactly one queue state, so the interface never claims more than the data knows.</p>
-          <figure class="figure">
+          <figure class="media">
             <div class="specimen">
               <span class="badge"><i class="icon" data-icon="device-tablet"></i>SAVED</span><i class="icon" data-icon="arrow-right"></i>
               <span class="badge" data-variant="accent"><i class="icon" data-icon="arrows-clockwise"></i>SYNCING</span><i class="icon" data-icon="arrow-right"></i>
@@ -112,7 +112,7 @@
               <span class="muted">or</span>
               <span class="badge" data-variant="warning"><i class="icon" data-icon="warning"></i>CONFLICT</span>
             </div>
-            <figcaption>Saved, syncing, synced: the usual path. Conflict when two tablets answered the same question.</figcaption>
+            <figcaption class="media__caption">Saved, syncing, synced: the usual path. Conflict when two tablets answered the same question.</figcaption>
           </figure>
 <pre class="code"><code><span class="code__keyword">type</span> SyncState = "saved" | "syncing" | "synced" | "conflict";
 
@@ -139,12 +139,12 @@
 
     <div class="end">
       <a class="card" href="case-study.html">
-        <p class="eyebrow">Next project</p>
+        <p class="text" data-variant="eyebrow">Next project</p>
         <p class="end__title">Grain: one token source for Figma and code</p>
         <span class="muted">Read the case study</span>
       </a>
       <div class="card">
-        <p class="eyebrow">Hiring</p>
+        <p class="text" data-variant="eyebrow">Hiring</p>
         <p class="end__title">Need this on your team?</p>
         <a class="btn" data-variant="primary" href="about.html#contact">Get in touch</a>
       </div>
