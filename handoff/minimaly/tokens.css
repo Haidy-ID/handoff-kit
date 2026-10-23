@@ -8,6 +8,7 @@
   --neutral-200: #E0E0E2;
   --neutral-300: #C5C5C9;
   --neutral-400: #A0A0A6;
+  --neutral-450: #93939A;
   --neutral-500: #71717A;
   --neutral-600: #55555D;
   --neutral-700: #43434A;
@@ -28,6 +29,7 @@
 
   /* Primitives — agent (violet seed #7C3AED): AI agent identity only */
   --agent-50: #F5F4FA;
+  --agent-300: #A086F1;
   --agent-400: #9676EF;
   --agent-600: #5F23BD;
   --agent-950: #200F43;
@@ -178,7 +180,8 @@
 
   --color-text-primary: var(--neutral-50);
   --color-text-secondary: var(--neutral-400);
-  --color-text-tertiary: var(--neutral-500);
+  /* 450, not 500: tertiary text keeps 4.5:1 on the raised surface. */
+  --color-text-tertiary: var(--neutral-450);
 
   --color-ink: var(--neutral-50);
   --color-on-ink: var(--neutral-950);
@@ -189,7 +192,7 @@
   --color-on-accent: var(--base-white);
   --color-flash: var(--primary-900);
 
-  --color-agent: var(--agent-400);
+  --color-agent: var(--agent-300);
   --color-agent-subtle: var(--agent-950);
   --color-agent-border: color-mix(in srgb, var(--agent-400) 40%, transparent);
 

@@ -277,7 +277,8 @@
 
 /* Segmented: one toggle made of joined .btn, one of them pressed (aria-pressed="true"). */
 /* The whole group is one control high, like a button next to it. */
-.segmented { position: relative; display: inline-flex; height: var(--control-height); padding: 2px; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-sunken); }
+/* content-box on purpose: inside a border-box parent (card, shell) the options would shrink below 32 px. */
+.segmented { position: relative; box-sizing: content-box; display: inline-flex; height: var(--control-height); padding: 2px; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-sunken); }
 .segmented .btn { position: relative; height: 100%; border-color: transparent; background: none; color: var(--color-text-secondary); }
 .segmented .btn[data-variant="icon"] { width: calc(var(--control-height) - 4px); }
 .segmented .btn:hover, .segmented .btn[data-force="hover"] { border-color: transparent; background: var(--color-surface-hover); }
@@ -383,10 +384,11 @@
 .drawer { position: fixed; inset: 0 0 0 auto; width: min(320px, calc(100% - 40px)); max-width: none; height: 100%; max-height: none; margin: 0; border-width: 0 0 0 var(--stroke-width-subtle); transform: translateX(100%); }
 .drawer[data-side="left"] { inset: 0 auto 0 0; border-width: 0 var(--stroke-width-subtle) 0 0; transform: translateX(-100%); }
 @starting-style { .drawer[open] { transform: translateX(100%); } .drawer[data-side="left"][open] { transform: translateX(-100%); } }
-.dialog__head { display: flex; align-items: center; gap: var(--spacing-sm); min-height: 52px; padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-lg); }
+/* 48 + the body's 4 px top padding: the content starts 52 px down, with room above it for focus rings. */
+.dialog__head { display: flex; align-items: center; gap: var(--spacing-sm); min-height: 48px; padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-lg); }
 .dialog__title { flex: 1; min-width: 0; margin: 0; overflow: hidden; font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); white-space: nowrap; text-overflow: ellipsis; }
-/* The scroll box clips at its padding: the top padding, taken back by the margin, leaves room for focus rings. */
-.dialog__body { flex: 1; overflow: auto; overscroll-behavior: contain; margin-top: calc(-1 * var(--spacing-xs)); padding: var(--spacing-xs) var(--spacing-lg) var(--spacing-lg); color: var(--color-text-secondary); font-size: var(--font-size-md); line-height: var(--line-height-normal); }
+/* The scroll box clips at its padding: the top padding leaves room for focus rings. */
+.dialog__body { flex: 1; overflow: auto; overscroll-behavior: contain; padding: var(--spacing-xs) var(--spacing-lg) var(--spacing-lg); color: var(--color-text-secondary); font-size: var(--font-size-md); line-height: var(--line-height-normal); }
 .dialog__foot { display: flex; justify-content: flex-end; gap: var(--spacing-sm); padding: var(--spacing-md) var(--spacing-lg); border-top: var(--stroke-width-subtle) solid var(--color-border); }
 html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 
@@ -408,7 +410,7 @@ html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 .toast[data-variant="critical"] > .icon { color: var(--color-status-critical); }
 /* Critical: once settled, it shakes no. */
 .toast[data-variant="critical"]:not([data-leaving]) { animation: toast-in var(--duration-spring) var(--ease-spring), shake calc(var(--duration-slow) * 1.4) var(--ease-out) var(--duration-spring); }
-.toast .btn { height: 28px; border-color: transparent; background: none; color: inherit; }
+.toast .btn { height: var(--control-height); border-color: transparent; background: none; color: inherit; }
 .toast .btn:hover { background: color-mix(in srgb, var(--color-surface-raised) 14%, transparent); border-color: transparent; }
 .toast .btn .icon { color: inherit; }
 
@@ -574,7 +576,7 @@ html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 
 /* Table of contents with scroll spy: the link of the section being read carries aria-current, set by ds.js. */
 .toc { display: flex; flex-direction: column; gap: 2px; border-left: var(--stroke-width-subtle) solid var(--color-border); font-size: var(--font-size-sm); }
-.toc a { margin-left: -1px; padding: var(--spacing-xs) var(--spacing-md); border-left: 2px solid transparent; color: var(--color-text-secondary); text-decoration: none; transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-base) var(--ease-out); }
+.toc a { display: flex; align-items: center; min-height: var(--control-height); margin-left: -1px; padding: 0 var(--spacing-md); border-left: 2px solid transparent; color: var(--color-text-secondary); text-decoration: none; transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-base) var(--ease-out); }
 .toc a:hover { color: var(--color-text-primary); }
 .toc a[aria-current] { border-left-color: var(--color-accent); color: var(--color-text-primary); font-weight: var(--font-weight-medium); }
 

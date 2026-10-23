@@ -83,6 +83,8 @@
         await frame.contentWindow.iconsReady;
         // A timer, not requestAnimationFrame: a hidden tab never fires animation frames and the run would stall.
         await new Promise((r) => setTimeout(r, 50));
+        // A background tab does not advance transitions: finish them, or colors are read halfway through the theme switch.
+        doc.getAnimations().forEach((a) => { if (a.effect?.getTiming().iterations !== Infinity) a.finish(); });
 
         const findings = window.lintDocument(doc, rules);
         const box = card.querySelector(".frame");

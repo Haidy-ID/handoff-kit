@@ -119,7 +119,9 @@
 
       // L401 target size. A field inside a <label> is clicked through the label: the label is the target.
       const target = el.matches(INTERACTIVE) ? el.closest("label")?.getBoundingClientRect() || r : null;
-      if (target && target.height < MIN_TARGET - 0.5) {
+      // A link inside running text (a word, a citation number) is sized by the text, like any link in a paragraph.
+      const inText = el.matches("a[href]") && s.display.startsWith("inline") && [...(el.parentElement?.childNodes || [])].some((n) => n.nodeType === 3 && n.textContent.trim());
+      if (target && !inText && target.height < MIN_TARGET - 0.5) {
         add("L401", "error", el, `Clickable element is ${Math.round(target.height)} px high, minimum ${MIN_TARGET} px.`, "Use a design system control (32 px) or raise its height to var(--control-height).");
       }
 
