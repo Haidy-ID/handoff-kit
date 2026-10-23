@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="screens.css">
 </head>
 <body>
-  <div class="shell">
+  <div class="shell shell--review">
     <nav class="shell__nav" aria-label="Main">
       <div class="shell__brand"><span class="avatar">P</span><span class="shell__brand-name">Protopass</span></div>
       <a class="nav__item" href="start.html"><i class="icon" data-icon="plus"></i><span class="nav__label">New prototype</span></a>
@@ -28,18 +28,17 @@
       <a class="btn" href="prototype.html"><i class="icon" data-icon="play"></i>Prototype</a>
       <a class="btn" href="handoff.html"><i class="icon" data-icon="package"></i>Hand off</a>
     </header>
-    <main class="shell__main workspace workspace--wide">
-      <section class="chat" aria-label="Conversation">
+    <main class="shell__main chat" aria-label="Conversation">
         <div class="chat__scroll" id="scroll">
           <div class="thread">
-            <div class="turn">
-              <span class="who"><i class="icon" data-icon="sparkle"></i>Protopass</span>
+            <div class="message" data-from="agent">
+              <span class="message__who"><i class="icon" data-icon="sparkle"></i>Protopass</span>
               <details class="tool-call" data-state="failed"><summary><i class="icon tool-call__icon" data-icon="seal-check"></i><span class="tool-call__name">Checked the screens</span><span class="tool-call__target">lint · payment.html</span></summary><pre class="tool-call__result">L101 · Pay button: white on coral reads 3.2:1, needs 4.5:1.</pre></details>
               <p class="stream">The Pay button fails the contrast check. I can switch buttons to ink and keep coral for the logo, or darken the coral.</p>
             </div>
-            <div class="ask"><p class="ask__text">Use ink buttons and keep coral for the logo.</p></div>
-            <div class="turn">
-              <span class="who"><i class="icon" data-icon="sparkle"></i>Protopass</span>
+            <div class="message" data-from="user"><p class="message__text">Use ink buttons and keep coral for the logo.</p></div>
+            <div class="message" data-from="agent">
+              <span class="message__who"><i class="icon" data-icon="sparkle"></i>Protopass</span>
               <details class="reasoning" data-state="done"><summary><i class="icon" data-icon="sparkle"></i><span class="typing__dots" aria-hidden="true"><i></i><i></i><i></i></span>Thought for 4s<i class="icon" data-icon="caret-right"></i></summary><p class="reasoning__body">Book and Pay share one button rule. Ink keeps 15:1 in light and dark. The selected day can keep a coral mark: it is not text.</p></details>
               <details class="tool-call" data-state="done"><summary><i class="icon tool-call__icon" data-icon="files"></i><span class="tool-call__name">Read 3 files</span><span class="tool-call__target">screens.css · payment.html · sessions.html</span></summary><pre class="tool-call__result">1 button rule, 5 buttons use it</pre></details>
               <p class="stream" data-when="waiting-for-approval">Here is the plan. Nothing changes until you apply it.</p>
@@ -54,13 +53,13 @@
                     <li>Run the checks again<span class="steps__meta">3.1s</span></li>
                   </ol>
                 </div>
-                <div class="permit__foot" data-when="waiting-for-approval">
-                  <span class="muted">Apply these changes?</span>
+                <div class="card__foot" data-when="waiting-for-approval">
+                  <span class="card__note">Apply these changes?</span>
                   <a class="btn" href="session.html?state=error">Reject</a>
                   <a class="btn" data-variant="primary" href="review.html?state=applied"><i class="icon" data-icon="check"></i>Apply</a>
                 </div>
-                <div class="permit__foot" data-when="applied">
-                  <span class="muted">0 errors in 7 states, light and dark.</span>
+                <div class="card__foot" data-when="applied">
+                  <span class="card__note">0 errors in 7 states, light and dark.</span>
                   <a class="btn" data-variant="ghost" href="review.html"><i class="icon" data-icon="arrow-counter-clockwise"></i>Undo</a>
                   <a class="btn" data-variant="primary" href="prototype.html"><i class="icon" data-icon="play"></i>Open the prototype</a>
                 </div>
@@ -80,14 +79,14 @@
             </div>
           </form>
         </div>
-      </section>
 
-      <section class="pane" aria-label="Changes">
+    </main>
+
+      <section class="pane shell__aside" aria-label="Changes">
         <div class="pane__head">
-          <span class="pane__title">Changes</span>
+          <h2 class="pane__title">Changes</h2>
           <span class="chip">3 files</span>
           <span class="mono"><span class="add">+4</span> <span class="del">−3</span></span>
-          <span class="grow"></span>
           <span class="badge" data-when="waiting-for-approval">NOT APPLIED</span>
           <span class="badge" data-variant="success" data-when="applied"><i class="icon" data-icon="check-circle"></i>APPLIED</span>
         </div>
@@ -99,38 +98,37 @@
           </div>
 
           <div class="diff" data-file="css">
-            <div class="diff__head"><i class="icon" data-icon="file-css"></i><span class="grow">screens/screens.css</span><span><span class="add">+2</span> <span class="del">−1</span></span></div>
+            <div class="diff__head"><i class="icon" data-icon="file-css"></i><span class="diff__path">screens/screens.css</span><span class="diff__stat"><span data-kind="add">+2</span><span data-kind="del">−1</span></span></div>
             <div class="diff__hunk">@@ -18,6 +18,7 @@ Buttons</div>
-            <div class="diff__line"><span class="diff__num">18</span><span class="diff__sign"></span><code>.book {</code></div>
-            <div class="diff__line" data-kind="del"><span class="diff__num">19</span><span class="diff__sign">−</span><code>  background: var(--gym-coral);</code></div>
-            <div class="diff__line" data-kind="add"><span class="diff__num">19</span><span class="diff__sign">+</span><code>  background: var(--color-ink);</code></div>
-            <div class="diff__line" data-kind="add"><span class="diff__num">20</span><span class="diff__sign">+</span><code>  color: var(--color-on-ink);</code></div>
-            <div class="diff__line"><span class="diff__num">21</span><span class="diff__sign"></span><code>  border-radius: var(--radius-md);</code></div>
-            <div class="diff__line"><span class="diff__num">22</span><span class="diff__sign"></span><code>}</code></div>
+            <div class="diff__line"><span class="diff__num">18</span><span class="diff__sign" aria-hidden="true"></span><code>.book {</code></div>
+            <div class="diff__line" data-kind="del"><span class="diff__num">19</span><span class="diff__sign" aria-hidden="true">−</span><code>  background: var(--gym-coral);</code></div>
+            <div class="diff__line" data-kind="add"><span class="diff__num">19</span><span class="diff__sign" aria-hidden="true">+</span><code>  background: var(--color-ink);</code></div>
+            <div class="diff__line" data-kind="add"><span class="diff__num">20</span><span class="diff__sign" aria-hidden="true">+</span><code>  color: var(--color-on-ink);</code></div>
+            <div class="diff__line"><span class="diff__num">21</span><span class="diff__sign" aria-hidden="true"></span><code>  border-radius: var(--radius-md);</code></div>
+            <div class="diff__line"><span class="diff__num">22</span><span class="diff__sign" aria-hidden="true"></span><code>}</code></div>
             <div class="diff__hunk">@@ -34,3 +35,3 @@ Day picker</div>
-            <div class="diff__line"><span class="diff__num">35</span><span class="diff__sign"></span><code>.day[aria-pressed="true"] {</code></div>
-            <div class="diff__line"><span class="diff__num">36</span><span class="diff__sign"></span><code>  box-shadow: inset 0 -2px 0 var(--gym-coral);</code></div>
-            <div class="diff__line"><span class="diff__num">37</span><span class="diff__sign"></span><code>}</code></div>
+            <div class="diff__line"><span class="diff__num">35</span><span class="diff__sign" aria-hidden="true"></span><code>.day[aria-pressed="true"] {</code></div>
+            <div class="diff__line"><span class="diff__num">36</span><span class="diff__sign" aria-hidden="true"></span><code>  box-shadow: inset 0 -2px 0 var(--gym-coral);</code></div>
+            <div class="diff__line"><span class="diff__num">37</span><span class="diff__sign" aria-hidden="true"></span><code>}</code></div>
           </div>
           <div class="diff" data-file="payment" hidden>
-            <div class="diff__head"><i class="icon" data-icon="file-html"></i><span class="grow">screens/payment.html</span><span><span class="add">+1</span> <span class="del">−1</span></span></div>
+            <div class="diff__head"><i class="icon" data-icon="file-html"></i><span class="diff__path">screens/payment.html</span><span class="diff__stat"><span data-kind="add">+1</span><span data-kind="del">−1</span></span></div>
             <div class="diff__hunk">@@ -41,3 +41,3 @@ Pay</div>
-            <div class="diff__line"><span class="diff__num">41</span><span class="diff__sign"></span><code>&lt;p class="total"&gt;€14 · Lunch climb&lt;/p&gt;</code></div>
-            <div class="diff__line" data-kind="del"><span class="diff__num">42</span><span class="diff__sign">−</span><code>&lt;button class="btn book coral"&gt;Pay €14&lt;/button&gt;</code></div>
-            <div class="diff__line" data-kind="add"><span class="diff__num">42</span><span class="diff__sign">+</span><code>&lt;button class="btn book"&gt;Pay €14&lt;/button&gt;</code></div>
-            <div class="diff__line"><span class="diff__num">43</span><span class="diff__sign"></span><code>&lt;p class="hint"&gt;Slot held for 10 minutes&lt;/p&gt;</code></div>
+            <div class="diff__line"><span class="diff__num">41</span><span class="diff__sign" aria-hidden="true"></span><code>&lt;p class="total"&gt;€14 · Lunch climb&lt;/p&gt;</code></div>
+            <div class="diff__line" data-kind="del"><span class="diff__num">42</span><span class="diff__sign" aria-hidden="true">−</span><code>&lt;button class="btn book coral"&gt;Pay €14&lt;/button&gt;</code></div>
+            <div class="diff__line" data-kind="add"><span class="diff__num">42</span><span class="diff__sign" aria-hidden="true">+</span><code>&lt;button class="btn book"&gt;Pay €14&lt;/button&gt;</code></div>
+            <div class="diff__line"><span class="diff__num">43</span><span class="diff__sign" aria-hidden="true"></span><code>&lt;p class="hint"&gt;Slot held for 10 minutes&lt;/p&gt;</code></div>
           </div>
           <div class="diff" data-file="sessions" hidden>
-            <div class="diff__head"><i class="icon" data-icon="file-html"></i><span class="grow">screens/sessions.html</span><span><span class="add">+1</span> <span class="del">−1</span></span></div>
+            <div class="diff__head"><i class="icon" data-icon="file-html"></i><span class="diff__path">screens/sessions.html</span><span class="diff__stat"><span data-kind="add">+1</span><span data-kind="del">−1</span></span></div>
             <div class="diff__hunk">@@ -27,3 +27,3 @@ Session card</div>
-            <div class="diff__line"><span class="diff__num">27</span><span class="diff__sign"></span><code>&lt;span class="spots"&gt;8 spots&lt;/span&gt;</code></div>
-            <div class="diff__line" data-kind="del"><span class="diff__num">28</span><span class="diff__sign">−</span><code>&lt;button class="btn book coral"&gt;Book&lt;/button&gt;</code></div>
-            <div class="diff__line" data-kind="add"><span class="diff__num">28</span><span class="diff__sign">+</span><code>&lt;button class="btn book"&gt;Book&lt;/button&gt;</code></div>
-            <div class="diff__line"><span class="diff__num">29</span><span class="diff__sign"></span><code>&lt;/article&gt;</code></div>
+            <div class="diff__line"><span class="diff__num">27</span><span class="diff__sign" aria-hidden="true"></span><code>&lt;span class="spots"&gt;8 spots&lt;/span&gt;</code></div>
+            <div class="diff__line" data-kind="del"><span class="diff__num">28</span><span class="diff__sign" aria-hidden="true">−</span><code>&lt;button class="btn book coral"&gt;Book&lt;/button&gt;</code></div>
+            <div class="diff__line" data-kind="add"><span class="diff__num">28</span><span class="diff__sign" aria-hidden="true">+</span><code>&lt;button class="btn book"&gt;Book&lt;/button&gt;</code></div>
+            <div class="diff__line"><span class="diff__num">29</span><span class="diff__sign" aria-hidden="true"></span><code>&lt;/article&gt;</code></div>
           </div>
         </div>
       </section>
-    </main>
   </div>
   <script src="screens.js"></script>
   <script>

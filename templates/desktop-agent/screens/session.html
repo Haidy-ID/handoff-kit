@@ -28,13 +28,12 @@
       <a class="btn" href="prototype.html"><i class="icon" data-icon="play"></i>Prototype</a>
       <a class="btn" href="handoff.html"><i class="icon" data-icon="package"></i>Hand off</a>
     </header>
-    <main class="shell__main workspace">
-      <section class="chat" aria-label="Conversation">
+    <main class="shell__main chat" aria-label="Conversation">
         <div class="chat__scroll" id="scroll">
           <div class="thread" id="thread">
-            <div class="ask"><p class="ask__text">A booking app for Pebble Wall, our climbing gym: members pick a session, choose a slot, pay and get a QR pass.</p><span class="chip"><i class="icon" data-icon="paperclip"></i>pebble-wall-brand.pdf</span></div>
-            <div class="turn">
-              <span class="who"><i class="icon" data-icon="sparkle"></i>Protopass</span>
+            <div class="message" data-from="user"><p class="message__text">A booking app for Pebble Wall, our climbing gym: members pick a session, choose a slot, pay and get a QR pass.</p><span class="chip"><i class="icon" data-icon="paperclip"></i>pebble-wall-brand.pdf</span></div>
+            <div class="message" data-from="agent">
+              <span class="message__who"><i class="icon" data-icon="sparkle"></i>Protopass</span>
               <details class="reasoning" data-state="done"><summary><i class="icon" data-icon="sparkle"></i><span class="typing__dots" aria-hidden="true"><i></i><i></i><i></i></span>Thought for 6s<i class="icon" data-icon="caret-right"></i></summary><p class="reasoning__body">A member books in four steps: session, slot, payment, pass. The brand guide sets a coral for actions, so I will check its contrast on buttons. A full session and a declined card need their own states.</p></details>
               <details class="tool-call" data-state="done"><summary><i class="icon tool-call__icon" data-icon="file-pdf"></i><span class="tool-call__name">Read the brief</span><span class="tool-call__target">pebble-wall-brand.pdf</span></summary><pre class="tool-call__result">2 pages · logo, coral and ink, Inter type, friendly tone</pre></details>
               <details class="tool-call" data-state="running" data-when="working"><summary><i class="icon tool-call__icon" data-icon="pencil-simple"></i><span class="tool-call__name">Writing screens</span><span class="tool-call__target">screens/payment.html</span></summary><pre class="tool-call__result">sessions.html, slot.html written. payment.html in progress.</pre></details>
@@ -64,14 +63,14 @@ The 6 other states pass.</pre></details>
             </div>
           </form>
         </div>
-      </section>
 
-      <section class="pane" aria-label="Preview">
+    </main>
+
+      <section class="pane shell__aside" aria-label="Preview">
         <div class="pane__head">
-          <span class="pane__title">Preview</span>
+          <h2 class="pane__title">Preview</h2>
           <span class="chip">sessions.html</span>
           <span class="typing" role="status" data-when="working"><span class="typing__dots"><i></i><i></i><i></i></span>Updating</span>
-          <span class="grow"></span>
           <a class="btn" data-variant="icon" href="prototype.html" aria-label="Open the prototype" data-tip="Open the prototype full width"><i class="icon" data-icon="arrows-out-simple"></i></a>
         </div>
         <div class="pane__body">
@@ -106,7 +105,6 @@ The 6 other states pass.</pre></details>
           </div>
         </div>
       </section>
-    </main>
   </div>
 
   <dialog class="modal command-palette" id="palette" aria-label="Commands">
@@ -145,7 +143,7 @@ The 6 other states pass.</pre></details>
       const ask = Object.assign(document.createElement("div"), { className: "ask" });
       ask.append(Object.assign(document.createElement("p"), { className: "ask__text", textContent: e.detail.text }));
       const turn = Object.assign(document.createElement("div"), { className: "turn" });
-      turn.innerHTML = `<span class="who"><i class="icon" data-icon="sparkle"></i>Protopass</span><span class="typing" role="status"><span class="typing__dots"><i></i><i></i><i></i></span>Editing sessions.html</span>`;
+      turn.innerHTML = `<span class="message__who"><i class="icon" data-icon="sparkle"></i>Protopass</span><span class="typing" role="status"><span class="typing__dots"><i></i><i></i><i></i></span>Editing sessions.html</span>`;
       thread.append(ask, turn);
       renderIcons(turn);
       composer.setAttribute("aria-busy", "true");
@@ -153,7 +151,7 @@ The 6 other states pass.</pre></details>
       setTimeout(async () => {
         const answer = Object.assign(document.createElement("p"), { className: "stream" });
         turn.querySelector(".typing").replaceWith(answer);
-        await streamText(answer, "Done. Sessions now shows the coach photo on each card, and the checks still pass in light and dark.");
+        await streamText(answer, 'Done. Sessions now shows the coach photo on each card <a class="cite" href="#brief" data-tip="Brand guide · pebble-wall-brand.pdf" aria-label="Source 1: Brand guide">1</a>, and the checks still pass in light and dark.');
         composer.removeAttribute("aria-busy");
       }, 1400);
     });

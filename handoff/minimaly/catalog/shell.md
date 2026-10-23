@@ -18,3 +18,4 @@ The frame of an app screen: navigation rail on the left, top bar, scrolling cont
 
 - `data-collapsed` on `.shell` folds the rail to icons; `[data-shell-toggle]` toggles it. Labels, counts and sections fade, the rail springs to its width.
 - Fills the viewport (100dvh). For desktop and tablet screens; a phone screen has no rail.
+- A right pane: `<section class="pane shell__aside" aria-label="Preview">` after `.shell__main`. It sits under the top bar, `--shell-aside` sets its width (480 px), `hidden` closes its column.

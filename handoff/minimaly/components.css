@@ -3,8 +3,8 @@
    data-force="hover" pins the hover state for specimen pages. Tokens only, no raw values. */
 
 /* Borders and padding stay inside the declared size (32 px controls), whatever the page reset. */
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input),
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input) * { box-sizing: border-box; }
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input, .thread, .message, .diff, .pane),
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input, .thread, .message, .diff, .pane) * { box-sizing: border-box; }
 
 /* Motion: keyframes shared by the components and the pages built on them.
    enter = fade up (page sections, cards), pop-in = fade and grow (tooltips, popovers), fade-in, fade-out.
@@ -133,6 +133,9 @@
 .card__title { margin: 0; font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-family-mono); text-transform: uppercase; }
 .card__tag { flex: 1; color: var(--color-text-tertiary); font-size: var(--font-size-xs); }
 .card__body { padding: var(--spacing-lg); }
+/* Foot: the actions on what the card shows (apply, reject), after a short note. */
+.card__foot { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-md) var(--spacing-lg); border-top: var(--stroke-width-subtle) solid var(--color-border); }
+.card__note { flex: 1; min-width: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); }
 .card[data-variant="accent"] { border-color: var(--color-accent); }
 
 /* Divider: horizontal rule with a centered label. Accent by default, quiet for low emphasis. */
@@ -414,6 +417,20 @@ html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 .toast .btn:hover { background: color-mix(in srgb, var(--color-surface-raised) 14%, transparent); border-color: transparent; }
 .toast .btn .icon { color: inherit; }
 
+/* Message: one turn of a conversation. data-from="user": the person's words in a bubble on the right. data-from="agent":
+   the agent's turn, its name first, then its blocks (reasoning, tool calls, a stream). .thread stacks the turns. */
+.thread { display: flex; flex-direction: column; gap: var(--spacing-xl); width: 100%; max-width: 680px; margin: 0 auto; }
+.message { display: flex; flex-direction: column; gap: var(--spacing-sm); min-width: 0; }
+.message[data-from="user"] { align-self: flex-end; align-items: flex-end; gap: var(--spacing-xs); max-width: 80%; }
+.message__text { margin: 0; color: var(--color-text-primary); font-size: var(--font-size-md); line-height: var(--line-height-normal); }
+.message[data-from="user"] .message__text { padding: var(--spacing-sm) var(--spacing-md); border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface-raised); }
+.message__who { display: flex; align-items: center; gap: var(--spacing-xs); color: var(--color-agent); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); }
+.message > .tool-call + .tool-call { margin-top: calc(var(--spacing-xs) * -1); }
+/* Actions (copy, retry) wait under the turn and show on hover or keyboard focus. */
+.message__actions { display: flex; gap: 2px; opacity: 0; transition: opacity var(--duration-fast) var(--ease-out); }
+.message[data-from="agent"] .message__actions { margin-left: calc(var(--spacing-sm) * -1); }
+.message:is(:hover, :focus-within) .message__actions, .message__actions[data-force="hover"] { opacity: 1; }
+
 /* Composer: where a person writes to an agent. A form: the field grows with the text, actions sit under it, Send waits
    for text. Enter sends, Shift+Enter breaks the line. aria-busy="true" while the agent answers: Send gives way to Stop. */
 .composer { display: flex; flex-direction: column; gap: var(--spacing-xs); padding: var(--spacing-sm); border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface-raised); cursor: text;
@@ -573,6 +590,22 @@ html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 .table th button:hover, .table th[aria-sort]:not([aria-sort="none"]) button { color: var(--color-text-primary); }
 .table__sort { opacity: 0.4; transition: opacity var(--duration-fast) var(--ease-out); }
 .table th:is([aria-sort="ascending"], [aria-sort="descending"]) .table__sort { opacity: 1; }
+
+/* Diff: what a change does to a file. A head (icon, path, + and − counts), hunks, then numbered lines: data-kind="add"
+   or "del" tint them; unchanged lines stay plain. Static: the page writes the lines. */
+.diff { overflow: hidden; border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-raised); }
+.diff__head { display: flex; align-items: center; gap: var(--spacing-sm); height: var(--control-height); padding: 0 var(--spacing-md); border-bottom: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-sunken); font: var(--font-size-xs)/1 var(--font-family-mono); }
+.diff__path { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.diff__stat { display: flex; gap: var(--spacing-xs); font-variant-numeric: tabular-nums; }
+.diff__stat [data-kind="add"], .diff__line[data-kind="add"] .diff__sign { color: var(--color-status-success); }
+.diff__stat [data-kind="del"], .diff__line[data-kind="del"] .diff__sign { color: var(--color-status-critical); }
+.diff__hunk { padding: var(--spacing-xs) var(--spacing-md); color: var(--color-text-secondary); background: var(--color-surface-sunken); font: var(--font-size-xs)/var(--line-height-normal) var(--font-family-mono); }
+.diff__line { display: flex; overflow: hidden; font: var(--font-size-xs)/var(--line-height-normal) var(--font-family-mono); white-space: pre; }
+.diff__line code { font: inherit; }
+.diff__num { flex: none; width: 40px; padding-right: var(--spacing-sm); color: var(--color-text-secondary); text-align: right; font-variant-numeric: tabular-nums; }
+.diff__sign { flex: none; width: var(--spacing-lg); text-align: center; }
+.diff__line[data-kind="add"] { background: var(--color-status-success-subtle); }
+.diff__line[data-kind="del"] { background: var(--color-status-critical-subtle); }
 
 /* Table of contents with scroll spy: the link of the section being read carries aria-current, set by ds.js. */
 .toc { display: flex; flex-direction: column; gap: 2px; border-left: var(--stroke-width-subtle) solid var(--color-border); font-size: var(--font-size-sm); }
@@ -748,10 +781,10 @@ html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 
 /* App shell: navigation rail, top bar and content. data-collapsed on .shell folds the rail to icons (ds.js toggles it
    from [data-shell-toggle]); labels fade and the rail springs to its new width. The current page carries aria-current. */
-.shell { display: grid; grid-template-columns: 232px 1fr; grid-template-rows: auto 1fr; grid-template-areas: "nav top" "nav main"; height: 100vh; height: 100dvh; background: var(--color-surface); color: var(--color-text-primary);
+.shell { --shell-nav: 232px; display: grid; grid-template-columns: var(--shell-nav) minmax(0, 1fr); grid-template-rows: auto 1fr; grid-template-areas: "nav top" "nav main"; height: 100vh; height: 100dvh; background: var(--color-surface); color: var(--color-text-primary);
   transition: grid-template-columns var(--duration-spring) var(--ease-spring); }
 /* Folded, the rail is exactly one square item wide: the items become 32 px squares, their icons centred and unmoved. */
-.shell[data-collapsed] { grid-template-columns: calc(var(--control-height) + 2 * var(--spacing-sm) + var(--stroke-width-subtle)) 1fr; }
+.shell[data-collapsed] { --shell-nav: calc(var(--control-height) + 2 * var(--spacing-sm) + var(--stroke-width-subtle)); }
 .shell__nav { grid-area: nav; display: flex; flex-direction: column; gap: var(--spacing-xs); min-width: 0; overflow: hidden; padding: var(--spacing-md) var(--spacing-sm); border-right: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised); }
 .shell__brand { display: flex; align-items: center; gap: var(--spacing-sm); height: var(--control-height); margin-bottom: var(--spacing-md); padding: 0 var(--spacing-xs); font-weight: var(--font-weight-semibold); white-space: nowrap; }
 .shell__brand .avatar { border-radius: var(--radius-sm); }
@@ -770,6 +803,15 @@ html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 .nav__label, .nav__count, .nav__section, .shell__brand-name { transition: opacity var(--duration-base) var(--ease-out); }
 .shell[data-collapsed] :is(.nav__label, .nav__count, .nav__section, .shell__brand-name) { opacity: 0; pointer-events: none; }
 .shell__foot { margin-top: auto; }
+/* Aside: a .pane on the right, under the top bar (a preview, a diff, details). hidden closes its column. */
+.shell:has(> .shell__aside:not([hidden])) { grid-template-columns: var(--shell-nav) minmax(0, 1fr) var(--shell-aside, 480px); grid-template-areas: "nav top top" "nav main aside"; }
+.shell__aside { grid-area: aside; }
+
+/* Pane: a side panel with a head (title, actions) and a body that scrolls on its own. */
+.pane { display: flex; flex-direction: column; min-width: 0; min-height: 0; border-left: var(--stroke-width-subtle) solid var(--color-border); background: var(--color-surface-raised); }
+.pane__head { display: flex; flex: none; align-items: center; gap: var(--spacing-sm); height: var(--size-bar); padding: 0 var(--spacing-md) 0 var(--spacing-lg); border-bottom: var(--stroke-width-subtle) solid var(--color-border); }
+.pane__title { flex: 1; min-width: 0; margin: 0; overflow: hidden; font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); white-space: nowrap; text-overflow: ellipsis; }
+.pane__body { flex: 1; min-height: 0; overflow: auto; }
 
 /* Rich editor: a writing field with a formatting toolbar, built by ds.js from data-placeholder, data-hint and data-max.
    The placeholder is a real element stacked on the area (grid), not a ::before, so Copy to Figma keeps it. */

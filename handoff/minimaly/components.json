@@ -77,7 +77,8 @@
     "name": "Card",
     "variants": [
       "default",
-      "accent"
+      "accent",
+      "with foot"
     ],
     "states": [
       "default"
@@ -531,7 +532,8 @@
     "class": "shell",
     "name": "App shell",
     "variants": [
-      "default"
+      "default",
+      "with aside"
     ],
     "states": [
       "expanded",
@@ -735,6 +737,46 @@
       "duplicate",
       "invalid",
       "disabled"
+    ]
+  },
+  {
+    "id": "message",
+    "class": "message",
+    "name": "Message",
+    "variants": [
+      "user",
+      "agent"
+    ],
+    "states": [
+      "default",
+      "actions shown",
+      "streaming"
+    ]
+  },
+  {
+    "id": "diff",
+    "class": "diff",
+    "name": "Diff",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "unchanged",
+      "added",
+      "removed"
+    ]
+  },
+  {
+    "id": "pane",
+    "class": "pane",
+    "name": "Pane",
+    "variants": [
+      "default",
+      "shell aside"
+    ],
+    "states": [
+      "open",
+      "closed"
     ]
   }
 ]

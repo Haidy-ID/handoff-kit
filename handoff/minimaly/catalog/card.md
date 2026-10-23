@@ -13,6 +13,8 @@ Raised panel with an optional head and a body. The head title is mono uppercase,
 </div>
 ```
 
+- `.card__foot` after the body holds the actions on what the card shows, after a `.card__note`: `<div class="card__foot"><span class="card__note">3 files change</span><button class="btn">Reject</button><button class="btn" data-variant="primary">Apply</button></div>`.
+
 - `data-variant="accent"`: blue border for the card in focus (snapshot, selection).
 - The first block after the head gets a top border automatically.
 - The card takes the full width of its parent: size it from the layout.

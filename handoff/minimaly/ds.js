@@ -509,25 +509,48 @@
   // Words due are computed from elapsed time, so the rate holds when frames drop. aria-busy holds the screen reader
   // until the end. A click on the text shows it all at once. Reduced motion shows it at once. Resolves when complete.
   const streams = new WeakMap();
-  window.streamText = (el, text, { rate = 18 } = {}) => new Promise((resolve) => {
+  // HTML streams too: words appear one by one inside their elements, and whole pieces (a citation, an icon) appear at
+  // once when the stream reaches them.
+  const STREAM_WHOLE = ".cite, .icon, img, [data-stream-whole]";
+  window.streamText = (el, content, { rate = 18 } = {}) => new Promise((resolve) => {
     streams.get(el)?.finish(false);
-    const words = text.split(/(\s+)/);
+    const source = document.createElement("template");
+    /<[a-z][^>]*>/i.test(content) ? (source.innerHTML = content) : (source.content.textContent = content);
+    const live = source.content.cloneNode(true);
+    const steps = [];
+    const walk = (node) => {
+      for (const child of [...node.childNodes]) {
+        if (child.nodeType === Node.TEXT_NODE) {
+          const parts = child.textContent.split(/(\s+)/).filter(Boolean);
+          child.textContent = "";
+          for (const part of parts) steps.push(() => { child.textContent += part; });
+        } else if (child.nodeType === Node.ELEMENT_NODE && child.matches(STREAM_WHOLE)) {
+          child.style.display = "none";
+          steps.push(() => child.style.removeProperty("display"));
+        } else if (child.nodeType === Node.ELEMENT_NODE) walk(child);
+      }
+    };
+    walk(live);
+    el.replaceChildren(live);
+    window.renderIcons(el);
     const start = performance.now();
+    let done = 0;
     let timer = 0;
     const finish = (complete = true) => {
       clearTimeout(timer);
       streams.delete(el);
-      if (complete) el.textContent = text;
+      if (complete) { el.replaceChildren(source.content.cloneNode(true)); window.renderIcons(el); }
       el.removeAttribute("aria-busy");
       resolve();
     };
     streams.set(el, { finish });
     el.setAttribute("aria-busy", "true");
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return finish();
+    // A word and the space after it are two steps, so the rate stays in words per second.
     const tick = () => {
-      const due = Math.floor(((performance.now() - start) / 1000) * rate);
-      if (due * 2 >= words.length) return finish();
-      el.textContent = words.slice(0, due * 2).join("");
+      const due = Math.min(steps.length, Math.floor(((performance.now() - start) / 1000) * rate * 2));
+      while (done < due) steps[done++]();
+      if (done >= steps.length) return finish();
       timer = setTimeout(tick, 1000 / rate / 2);
     };
     tick();

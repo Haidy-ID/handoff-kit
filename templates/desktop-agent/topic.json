@@ -41,7 +41,10 @@
     "menu",
     "popover",
     "tooltip",
-    "empty"
+    "empty",
+    "message",
+    "diff",
+    "pane"
   ],
   "viewport": {
     "width": 1440,
@@ -193,14 +196,6 @@
   ],
   "questions": [
     "Keep the \"Copy to Figma\" label? It is the only third-party name in the mockup.",
-    "Minimaly gap: dark --color-text-tertiary reads 3.04:1 on raised surfaces, so nav sections and counts, tool-call targets, card tags, pending steps, stepper status, list trails, palette labels and sticky-header subtitles fail the contrast lint in dark. Needs a lighter dark tertiary or an explicit acceptContrast decision.",
-    "Minimaly gap: a running tool-call name (agent violet) reads 4.29:1 on the dark raised surface.",
-    "Minimaly gap: segmented options are 26 px inside a 32 px group, cite is 16 px by design, toast buttons are 28 px, and dialog__body overlaps dialog__head by 4 px: the render lint flags all four. Needs lint exceptions or component changes.",
-    "Minimaly gap: streamText writes plain text, so an answer with cite links cannot stream. Needs an HTML-aware mode that streams words and inserts inline elements whole.",
-    "Minimaly gap: no diff component. Review builds it locally (.diff: file head, hunk line, numbered added and removed lines); any agent product needs one.",
-    "Minimaly gap: no chat message layout (the person's message, the agent's turn with its name) and no card footer for actions; both are local (.ask, .turn, .who, .permit__foot).",
-    "Minimaly gap: shell has no right pane; the conversation and preview split is local (.workspace, .pane).",
-    "Kit gap: validate.mjs cannot see components built at run time (toast(), data-tip tooltips), so listing them raises M204.",
-    "Kit gap: lint.html measures 50 ms after switching the theme; in a background page CSS transitions do not advance and colors read as light values. Finishing document animations before measuring fixes it."
+    "Kit gap: validate.mjs cannot see components built at run time (toast(), data-tip tooltips), so listing them raises M204."
   ]
 }
