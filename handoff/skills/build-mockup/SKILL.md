@@ -23,9 +23,9 @@ Spend effort on design decisions, not on CSS. The design system is the language:
 
    Apply the fix of each error before the next screen. Handle warnings unless a reason is written. The same error twice in a row: read the component card again instead of retrying. **Done when** `0 error(s)`.
 
-5. **Check the render.** Run `python serve.py` and open `http://localhost:8000/handoff/skills/build-mockup/lint.html?topic=<group>/<topic>`. It renders every screen × state in light and dark at the topic viewport, frames each problem and exposes `window.lintResult` (`errors`, `warnings`, `findings[]` with code, screen, state, theme, target, fix). Read `window.lintResult`, then a screenshot to judge what rules cannot see. **Done when** `errors: 0` and every remaining warning has a written reason.
+5. **Check the render.** Run `python serve.py` and open `http://localhost:8000/handoff/skills/build-mockup/lint.html?topic=<group>/<topic>`. It renders every screen × state in light and dark at each device of `topic.json` → `devices` (the viewport for its own device), frames each problem and exposes `window.lintResult` (`errors`, `warnings`, `perDevice`, `findings[]` with code, device, screen, state, theme, target, fix). Read `window.lintResult`, then a screenshot to judge what rules cannot see. **Done when** `errors: 0` and every remaining warning has a written reason.
 
-6. **Declare the components.** Put the ids the screens really use in `topic.json` → `components` (the validator reports gaps as M204). The handoff page then links each one to its playground page. **Done when** 0 error and 0 M204.
+6. **Declare the components.** Put the ids the screens really use in `topic.json` → `components` (the validator reports gaps as M204; it also counts components triggered rather than classed: `toast()` calls, `data-tip`, `data-busy`/`data-done`/`data-error`/`data-copy`, `data-hold`). The handoff page then links each one to its playground page. **Done when** 0 error and 0 M204.
 
 ## Missing component
 
@@ -88,3 +88,7 @@ Render linter codes (`lint.html`):
 ## Limits
 
 The validator reads the code, the linter reads the render. Neither judges hierarchy, alignment or the flow itself: the screenshot of step 5 stays necessary. Add a color to `lint.json` → `acceptContrast` only on an explicit decision, never to make a screen pass.
+
+## Whole site
+
+`node handoff/skills/build-mockup/check-all.mjs` checks without a browser that every script of the kit parses, every JSON file parses and every topic of every group passes the validator. GitHub runs it on each push (`.github/workflows/check.yml`).

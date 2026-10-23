@@ -1,6 +1,7 @@
 <!doctype html>
 <!-- Render linter: /handoff/skills/build-mockup/lint.html?topic=<group>/<topic>
-     Renders every screen × state × theme at the topic viewport and checks the real geometry.
+     Renders every screen × state × theme at each device the topic offers (topic.json → devices, its viewport for its own
+     device) and checks the real geometry.
      Result for agents: window.lintResult, and the JSON in #result. -->
 <html lang="en">
 <head>
@@ -53,24 +54,29 @@
       const dsUrl = topic.ds === "Minimaly" ? new URL("minimaly/", KIT) : new URL(`${(site.designSystems?.[topic.ds] || "").replace(/\/?$/, "/")}`, ROOT);
       const rules = topic.ds ? await fetch(new URL("lint.json", dsUrl), { cache: "no-store" }).then((r) => (r.ok ? r.json() : {})) : {};
       const vp = topic.viewport || { width: 390, height: 780 };
+      // Every device the handoff page offers (same sizes as handoff.js): the designed size replaces its own device.
+      const DEVICES = { mobile: { width: 390, height: 844 }, tablet: { width: 1024, height: 768 }, desktop: { width: 1440, height: 900 } };
+      DEVICES[vp.width < 600 ? "mobile" : vp.width < 1100 ? "tablet" : "desktop"] = vp;
+      const devices = Object.keys(DEVICES).filter((d) => !topic.devices?.length || topic.devices.includes(d));
       const WIDTH = 260;
-      const scale = WIDTH / vp.width;
       const stateId = (label) => label.toLowerCase().replace(/[^a-z0-9]+/g, "-");
       const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
       document.getElementById("title").textContent = `Render lint · ${topic.title}`;
       document.title = `${topic.title} · Render lint`;
 
-      const runs = topic.screens.flatMap((s) => (s.states?.length ? s.states.map((st) => st.name) : [null]).flatMap((state) => ["light", "dark"].map((theme) => ({ s, state, theme }))));
+      const runs = devices.flatMap((device) => topic.screens.flatMap((s) => (s.states?.length ? s.states.map((st) => st.name) : [null]).flatMap((state) => ["light", "dark"].map((theme) => ({ s, state, theme, device })))));
       const grid = document.getElementById("grid");
       const all = [];
 
       // One run at a time: same rendering conditions for every frame, and a stable order in the output.
-      for (const { s, state, theme } of runs) {
+      for (const { s, state, theme, device } of runs) {
+        const size = DEVICES[device];
+        const scale = WIDTH / size.width;
         const card = document.createElement("section");
         card.className = "card";
         card.style.setProperty("--w", `${WIDTH}px`);
-        card.innerHTML = `<h2>${esc(s.label)} <span>· ${esc(state || "Default")} · ${theme}</span></h2>
-          <div class="frame" style="width:${WIDTH}px;height:${Math.round(vp.height * scale)}px"><iframe width="${vp.width}" height="${vp.height}" style="transform:scale(${scale})"></iframe></div><ul></ul>`;
+        card.innerHTML = `<h2>${esc(s.label)} <span>· ${esc(state || "Default")} · ${theme}${devices.length > 1 ? ` · ${device}` : ""}</span></h2>
+          <div class="frame" style="width:${WIDTH}px;height:${Math.round(size.height * scale)}px"><iframe width="${size.width}" height="${size.height}" style="transform:scale(${scale})"></iframe></div><ul></ul>`;
         grid.append(card);
         const frame = card.querySelector("iframe");
         await new Promise((resolve) => {
@@ -94,15 +100,16 @@
           b.className = `box ${f.level}`;
           Object.assign(b.style, { left: `${f.rect.x * scale}px`, top: `${f.rect.y * scale}px`, width: `${Math.max(f.rect.w * scale, 4)}px`, height: `${Math.max(f.rect.h * scale, 4)}px` });
           box.append(b);
-          all.push({ code: f.code, level: f.level, screen: s.id, state: state ? stateId(state) : "default", theme, target: f.target, message: f.message, fix: f.fix });
+          all.push({ code: f.code, level: f.level, device, screen: s.id, state: state ? stateId(state) : "default", theme, target: f.target, message: f.message, fix: f.fix });
         }
       }
 
       const count = (level) => all.filter((f) => f.level === level).length;
       const [errors, warnings, accepted] = ["error", "warning", "accepted"].map(count);
       const summary = document.getElementById("summary");
-      summary.innerHTML = `${runs.length} renders · <b class="${errors ? "bad" : "ok"}">${errors} error(s)</b> · ${warnings} warning(s) · ${accepted} accepted`;
-      window.lintResult = { topic: topicPath, renders: runs.length, errors, warnings, accepted, findings: all };
+      const perDevice = Object.fromEntries(devices.map((d) => [d, all.filter((f) => f.device === d && f.level === "error").length]));
+      summary.innerHTML = `${runs.length} renders · <b class="${errors ? "bad" : "ok"}">${errors} error(s)</b> · ${warnings} warning(s) · ${accepted} accepted${devices.length > 1 ? ` · errors by device: ${devices.map((d) => `${d} ${perDevice[d]}`).join(", ")}` : ""}`;
+      window.lintResult = { topic: topicPath, devices, renders: runs.length, errors, warnings, accepted, perDevice, findings: all };
       document.getElementById("result").textContent = JSON.stringify(window.lintResult);
     })().catch((e) => {
       document.getElementById("summary").textContent = `Lint failed: ${e.message}`;

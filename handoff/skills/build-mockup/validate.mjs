@@ -141,6 +141,12 @@ for (const { file, text } of localCss) {
 
 const stateId = (label) => label.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 const usedComponents = new Set();
+const SIGNATURES = [
+  ["toast", /\btoast\(/],
+  ["tooltip", /\sdata-tip="/],
+  ["async-button", /\sdata-(?:busy|done|error|copy)="/],
+  ["hold-button", /\sdata-hold\b/],
+];
 for (const { screen, file, text } of htmlFiles) {
   for (const m of text.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) {
     for (const r of rules(m[1])) checkDeclarations(file, text, r.body, m.index + m[0].indexOf(m[1]) + r.index + 1);
@@ -148,6 +154,8 @@ for (const { screen, file, text } of htmlFiles) {
   for (const m of text.matchAll(/\sstyle="([^"]*)"/g)) checkDeclarations(file, text, m[1], m.index);
   // Chart cards are built by chart.js at run time: the mount call is the use.
   if (text.includes("VChart.mount(")) usedComponents.add("chart");
+  // Components recognized by their trigger, not by a class: built by ds.js at run time, or sharing .btn with button.
+  for (const [id, trigger] of SIGNATURES) if (trigger.test(text) && components.some((c) => c.id === id)) usedComponents.add(id);
   for (const tag of text.matchAll(/<[a-z][\w-]*\b[^>]*>/g)) {
     const cls = (tag[0].match(/\sclass="([^"]*)"/) || [, ""])[1].split(/\s+/).filter(Boolean);
     const line = lineOf(text, tag.index);
