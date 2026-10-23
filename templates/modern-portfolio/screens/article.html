@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Offline-first forms without a framework · Noa Lindqvist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="screens.css">
+</head>
+<body>
+  <header class="sticky-header">
+    <div class="site-bar">
+      <a class="site-brand" href="home.html"><span class="avatar" data-variant="lg">NL</span><span class="site-brand__name">Noa Lindqvist</span><span class="site-brand__role">Design engineer</span></a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="site-nav__link" href="work.html">Work</a>
+        <a class="site-nav__link" href="lab.html">Lab</a>
+        <a class="site-nav__link" href="skills.html">Skills</a>
+        <a class="site-nav__link" href="blog.html" aria-current="page">Writing</a>
+        <a class="site-nav__link" href="about.html">About</a>
+      </nav>
+      <a class="btn site-header__cta" href="about.html#contact">Get in touch</a>
+      <button class="btn site-header__menu" data-variant="icon" data-open="menu" aria-label="Open menu" aria-haspopup="dialog"><i class="icon" data-icon="list"></i></button>
+    </div>
+  </header>
+  <dialog class="drawer" id="menu" aria-labelledby="menu-title">
+    <div class="dialog__head"><h2 class="dialog__title" id="menu-title">Menu</h2><button class="btn" data-variant="icon" data-close aria-label="Close menu"><i class="icon" data-icon="x"></i></button></div>
+    <div class="dialog__body">
+      <nav class="list" aria-label="Menu">
+        <a class="list__item" href="home.html"><span class="list__lead"><i class="icon" data-icon="house"></i></span><span class="list__body"><span class="list__title">Home</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="work.html"><span class="list__lead"><i class="icon" data-icon="briefcase"></i></span><span class="list__body"><span class="list__title">Work</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="lab.html"><span class="list__lead"><i class="icon" data-icon="flask"></i></span><span class="list__body"><span class="list__title">Lab</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="skills.html"><span class="list__lead"><i class="icon" data-icon="stack"></i></span><span class="list__body"><span class="list__title">Skills</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="blog.html" aria-current="page"><span class="list__lead"><i class="icon" data-icon="pen-nib"></i></span><span class="list__body"><span class="list__title">Writing</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="about.html"><span class="list__lead"><i class="icon" data-icon="user"></i></span><span class="list__body"><span class="list__title">About</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+      </nav>
+    </div>
+    <div class="dialog__foot"><a class="btn" data-variant="primary" href="about.html#contact">Get in touch</a></div>
+  </dialog>
+  <main class="page">
+    <article class="article">
+      <header class="article-head">
+        <a class="btn back" data-variant="ghost" href="blog.html"><i class="icon" data-icon="arrow-left"></i>All writing</a>
+        <p class="eyebrow">Engineering · 11 min read · September 18, 2026</p>
+        <h1 class="title"><span data-when="default">Offline-first forms without a framework</span><span data-when="long-title">What nine months of offline-first forms taught me about saving, syncing, and telling people the truth about both</span></h1>
+        <p class="lead">Fieldnote's surveyors work in basements with no signal. This is the small sync layer that made every answer safe the moment it was tapped, in plain TypeScript and IndexedDB.</p>
+        <div class="tags"><span class="chip">Engineering</span><span class="chip">Forms</span><span class="chip">Offline</span></div>
+      </header>
+
+      <div class="prose">
+        <section aria-labelledby="s1">
+          <h2 id="s1">Save on tap, sync later</h2>
+          <p>The first version saved a form when the surveyor pressed Save. In a basement, Save meant a spinner, then an error, then a lost hour. The fix was to stop treating the server as the place where answers live.</p>
+          <p>Now an answer is written to IndexedDB the moment it is tapped. A queue sends it later, when the tablet finds a network. The surveyor never waits, and never wonders.</p>
+        </section>
+        <section aria-labelledby="s2">
+          <h2 id="s2">One queue, four states</h2>
+          <p>The whole layer is a queue and a status. Each answer is in exactly one state, and the header shows the state of the oldest answer still waiting.</p>
+<pre class="code"><code><span class="code__keyword">export async function</span> answer(id: string, value: unknown) {
+  <span class="code__keyword">await</span> db.put("answers", { id, value, at: Date.now() });
+  queue.push(id);       <span class="code__comment">// sent when the network comes back</span>
+  setStatus("saved");   <span class="code__comment">// shown at once, never waits for a server</span>
+}</code></pre>
+          <p>That is most of it. The queue retries with a backoff, and <code>setStatus</code> only ever moves forward unless a conflict comes back.</p>
+        </section>
+        <blockquote class="quote"><p>I stopped checking whether it saved. It always says.</p><footer>Ana, building surveyor</footer></blockquote>
+        <section aria-labelledby="s3">
+          <h2 id="s3">Tell the truth about sync</h2>
+          <p>Three rules came out of the site visits, and the code enforces all three.</p>
+          <ul>
+            <li>Show the state of the data, not of the network. "Offline" says nothing about whether my answer is safe.</li>
+            <li>A conflict names both values and who wrote them. "Sync failed" is not a decision anyone can make.</li>
+            <li>Nothing is lost silently. An answer still unsent after a day is reported to the surveyor, by name.</li>
+          </ul>
+        </section>
+        <section aria-labelledby="s4">
+          <h2 id="s4">What I would change</h2>
+          <p>I wrote the queue by hand to keep it small: 140 lines with tests. With hindsight I would call <code>navigator.storage.persist()</code> from day one. Two tablets came close to losing data to storage pressure before we added it.</p>
+        </section>
+      </div>
+    </article>
+
+    <section class="block" aria-labelledby="related-title">
+      <h2 class="heading" id="related-title">Related</h2>
+      <div class="related">
+        <a class="card" href="case-study.html"><p class="eyebrow">Case study · Fieldnote</p><p class="related__title">Inspections that survive the basement</p><p class="muted">The project this article comes from: constraints, decisions, results.</p></a>
+        <a class="card" href="article.html"><p class="eyebrow">Article · 6 min</p><p class="related__title">Design the error state first</p><p class="muted">Errors show what the data really is.</p></a>
+        <a class="card" href="article.html"><p class="eyebrow">Article · 8 min</p><p class="related__title">Tokens are an API: version them like one</p><p class="muted">Names as a contract, with releases.</p></a>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="site-bar">
+      <p class="site-footer__note">© 2026 Noa Lindqvist · Design engineer in Lisbon</p>
+      <nav class="site-nav" aria-label="Footer"><a class="site-nav__link" href="work.html">Work</a><a class="site-nav__link" href="blog.html">Writing</a><a class="site-nav__link" href="about.html#contact">Contact</a></nav>
+      <button class="btn" data-variant="ghost" data-copy="hello@noa.example"><i class="icon" data-icon="copy"></i>hello@noa.example</button>
+    </div>
+  </footer>
+  <script src="screens.js"></script>
+  <script src="../../../handoff/minimaly/ds.js"></script>
+</body>
+</html>

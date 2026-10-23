@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home · Noa Lindqvist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="screens.css">
+</head>
+<body>
+  <header class="sticky-header">
+    <div class="site-bar">
+      <a class="site-brand" href="home.html"><span class="avatar" data-variant="lg">NL</span><span class="site-brand__name">Noa Lindqvist</span><span class="site-brand__role">Design engineer</span></a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="site-nav__link" href="work.html">Work</a>
+        <a class="site-nav__link" href="lab.html">Lab</a>
+        <a class="site-nav__link" href="skills.html">Skills</a>
+        <a class="site-nav__link" href="blog.html">Writing</a>
+        <a class="site-nav__link" href="about.html">About</a>
+      </nav>
+      <a class="btn site-header__cta" href="about.html#contact">Get in touch</a>
+      <button class="btn site-header__menu" data-variant="icon" data-open="menu" aria-label="Open menu" aria-haspopup="dialog"><i class="icon" data-icon="list"></i></button>
+    </div>
+  </header>
+  <dialog class="drawer" id="menu" aria-labelledby="menu-title">
+    <div class="dialog__head"><h2 class="dialog__title" id="menu-title">Menu</h2><button class="btn" data-variant="icon" data-close aria-label="Close menu"><i class="icon" data-icon="x"></i></button></div>
+    <div class="dialog__body">
+      <nav class="list" aria-label="Menu">
+        <a class="list__item" href="home.html" aria-current="page"><span class="list__lead"><i class="icon" data-icon="house"></i></span><span class="list__body"><span class="list__title">Home</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="work.html"><span class="list__lead"><i class="icon" data-icon="briefcase"></i></span><span class="list__body"><span class="list__title">Work</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="lab.html"><span class="list__lead"><i class="icon" data-icon="flask"></i></span><span class="list__body"><span class="list__title">Lab</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="skills.html"><span class="list__lead"><i class="icon" data-icon="stack"></i></span><span class="list__body"><span class="list__title">Skills</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="blog.html"><span class="list__lead"><i class="icon" data-icon="pen-nib"></i></span><span class="list__body"><span class="list__title">Writing</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="about.html"><span class="list__lead"><i class="icon" data-icon="user"></i></span><span class="list__body"><span class="list__title">About</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+      </nav>
+    </div>
+    <div class="dialog__foot"><a class="btn" data-variant="primary" href="about.html#contact">Get in touch</a></div>
+  </dialog>
+  <main class="page">
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="eyebrow">Design engineer · Lisbon</p>
+      <h1 class="display" id="hero-title">I design interfaces and build them, down to the last state.</h1>
+      <p class="lead">Seven years between Figma and the codebase. I take a product from a rough flow to accessible, tested components, and I write about how.</p>
+      <div class="actions">
+        <a class="btn" data-variant="primary" href="work.html">See the work<i class="icon" data-icon="arrow-right"></i></a>
+        <a class="btn" href="about.html#contact">Get in touch</a>
+      </div>
+      <p class="status"><span class="badge" data-variant="success"><i class="icon" data-icon="check-circle"></i>AVAILABLE</span>From January 2027, full-time or one project at a time.</p>
+    </section>
+
+    <section class="block" aria-labelledby="work-title">
+      <div class="block__head"><h2 class="heading" id="work-title">Selected work</h2><a class="btn" data-variant="ghost" href="work.html">All seven projects<i class="icon" data-icon="arrow-right"></i></a></div>
+      <div class="projects">
+        <a class="card project" href="case-study.html">
+          <div class="ph" aria-hidden="true"><div class="ph__ui"><span class="ph__bar"></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 70%"></span></span><span class="ph__row"><span class="ph__box is-on"></span><span class="ph__line" style="--w: 55%"></span></span><span class="ph__row"><span class="ph__box"></span><span class="ph__line" style="--w: 80%"></span></span><span class="ph__row"><span class="ph__box"></span><span class="ph__line" style="--w: 40%"></span></span></div></div>
+          <div class="project__body">
+            <p class="eyebrow">2025 · Product</p>
+            <h3 class="project__title">Fieldnote</h3>
+            <p class="project__text">Offline-first inspection app for 40 building surveyors. Reports now leave the site the same day.</p>
+            <div class="tags"><span class="chip">Offline</span><span class="chip">Forms</span><span class="chip">TypeScript</span></div>
+          </div>
+        </a>
+        <a class="card project" href="case-study.html">
+          <div class="ph" aria-hidden="true"><div class="ph__ui"><span class="ph__bar"></span><div class="ph__swatches"><span class="ph__swatch" style="--c: var(--color-ink)"></span><span class="ph__swatch" style="--c: var(--color-text-secondary)"></span><span class="ph__swatch" style="--c: var(--color-border-strong)"></span><span class="ph__swatch" style="--c: var(--color-surface-sunken)"></span><span class="ph__swatch" style="--c: var(--color-accent)"></span><span class="ph__swatch" style="--c: var(--color-accent-subtle)"></span><span class="ph__swatch" style="--c: var(--color-status-success)"></span><span class="ph__swatch" style="--c: var(--color-status-warning)"></span></div></div></div>
+          <div class="project__body">
+            <p class="eyebrow">2024 · Systems</p>
+            <h3 class="project__title">Grain</h3>
+            <p class="project__text">One token source for Figma and code at a fintech: 41 components, three brands, one release train.</p>
+            <div class="tags"><span class="chip">Tokens</span><span class="chip">Figma</span><span class="chip">Web Components</span></div>
+          </div>
+        </a>
+        <a class="card project" href="case-study.html">
+          <div class="ph" aria-hidden="true"><div class="ph__ui"><span class="ph__bar"></span><div class="ph__cols"><span class="ph__col"><span class="ph__card"></span><span class="ph__card"></span><span class="ph__card"></span></span><span class="ph__col"><span class="ph__card"></span><span class="ph__card"></span></span><span class="ph__col"><span class="ph__card"></span></span></div></div></div>
+          <div class="project__body">
+            <p class="eyebrow">2024 · Product</p>
+            <h3 class="project__title">Relay</h3>
+            <p class="project__text">Keyboard-first dispatch board for a courier co-op. A job is assigned in three keystrokes.</p>
+            <div class="tags"><span class="chip">Keyboard</span><span class="chip">Real time</span><span class="chip">React</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="now-title">
+      <div class="block__head"><h2 class="heading" id="now-title">Now</h2><p class="eyebrow">Updated October 2026</p></div>
+      <div class="now">
+        <div class="now__item"><p class="eyebrow">Building</p><p>Fieldnote v2: photo notes that attach to the question they answer.</p></div>
+        <div class="now__item"><p class="eyebrow">Writing</p><p>Part two of a series on design tokens as a public API.</p></div>
+        <div class="now__item"><p class="eyebrow">Learning</p><p>WebGPU, to draw ten thousand map points without dropping a frame.</p></div>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="posts-title">
+      <div class="block__head"><h2 class="heading" id="posts-title">Latest writing</h2><a class="btn" data-variant="ghost" href="blog.html">All articles<i class="icon" data-icon="arrow-right"></i></a></div>
+      <div class="posts">
+        <a class="post" href="article.html"><span class="post__time">Sep 2026</span><span class="post__body"><span class="post__title">Offline-first forms without a framework</span><span class="post__text">The small sync layer that made every answer safe the moment it was tapped.</span></span><span class="post__time">11 min<i class="icon" data-icon="arrow-right"></i></span></a>
+        <a class="post" href="article.html"><span class="post__time">Jul 2026</span><span class="post__body"><span class="post__title">Design the error state first</span><span class="post__text">Errors show what the data really is. Start there and the happy path designs itself.</span></span><span class="post__time">6 min<i class="icon" data-icon="arrow-right"></i></span></a>
+        <a class="post" href="article.html"><span class="post__time">May 2026</span><span class="post__body"><span class="post__title">Tokens are an API: version them like one</span><span class="post__text">Renaming a token breaks products. Treat names as a contract, with releases and deprecations.</span></span><span class="post__time">8 min<i class="icon" data-icon="arrow-right"></i></span></a>
+      </div>
+    </section>
+
+    <section class="cta" aria-labelledby="cta-title">
+      <p class="eyebrow">Contact</p>
+      <h2 class="title" id="cta-title">Building something that needs both sides?</h2>
+      <p class="lead">I join product teams as a design engineer, or take one project at a time. Tell me what you are making.</p>
+      <div class="actions"><a class="btn" data-variant="primary" href="about.html#contact">Write to me</a><button class="btn" data-copy="hello@noa.example"><i class="icon" data-icon="copy"></i>Copy email</button></div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="site-bar">
+      <p class="site-footer__note">© 2026 Noa Lindqvist · Design engineer in Lisbon</p>
+      <nav class="site-nav" aria-label="Footer"><a class="site-nav__link" href="work.html">Work</a><a class="site-nav__link" href="blog.html">Writing</a><a class="site-nav__link" href="about.html#contact">Contact</a></nav>
+      <button class="btn" data-variant="ghost" data-copy="hello@noa.example"><i class="icon" data-icon="copy"></i>hello@noa.example</button>
+    </div>
+  </footer>
+  <script src="screens.js"></script>
+  <script src="../../../handoff/minimaly/ds.js"></script>
+  <script>
+    // Phone menu shown open, at rest (screens.css drops its entrance for this state).
+    if (state === "menu-open") document.getElementById("menu").showModal();
+  </script>
+</body>
+</html>

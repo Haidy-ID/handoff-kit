@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skills and stack · Noa Lindqvist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="screens.css">
+</head>
+<body>
+  <header class="sticky-header">
+    <div class="site-bar">
+      <a class="site-brand" href="home.html"><span class="avatar" data-variant="lg">NL</span><span class="site-brand__name">Noa Lindqvist</span><span class="site-brand__role">Design engineer</span></a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="site-nav__link" href="work.html">Work</a>
+        <a class="site-nav__link" href="lab.html">Lab</a>
+        <a class="site-nav__link" href="skills.html" aria-current="page">Skills</a>
+        <a class="site-nav__link" href="blog.html">Writing</a>
+        <a class="site-nav__link" href="about.html">About</a>
+      </nav>
+      <a class="btn site-header__cta" href="about.html#contact">Get in touch</a>
+      <button class="btn site-header__menu" data-variant="icon" data-open="menu" aria-label="Open menu" aria-haspopup="dialog"><i class="icon" data-icon="list"></i></button>
+    </div>
+  </header>
+  <dialog class="drawer" id="menu" aria-labelledby="menu-title">
+    <div class="dialog__head"><h2 class="dialog__title" id="menu-title">Menu</h2><button class="btn" data-variant="icon" data-close aria-label="Close menu"><i class="icon" data-icon="x"></i></button></div>
+    <div class="dialog__body">
+      <nav class="list" aria-label="Menu">
+        <a class="list__item" href="home.html"><span class="list__lead"><i class="icon" data-icon="house"></i></span><span class="list__body"><span class="list__title">Home</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="work.html"><span class="list__lead"><i class="icon" data-icon="briefcase"></i></span><span class="list__body"><span class="list__title">Work</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="lab.html"><span class="list__lead"><i class="icon" data-icon="flask"></i></span><span class="list__body"><span class="list__title">Lab</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="skills.html" aria-current="page"><span class="list__lead"><i class="icon" data-icon="stack"></i></span><span class="list__body"><span class="list__title">Skills</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="blog.html"><span class="list__lead"><i class="icon" data-icon="pen-nib"></i></span><span class="list__body"><span class="list__title">Writing</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="about.html"><span class="list__lead"><i class="icon" data-icon="user"></i></span><span class="list__body"><span class="list__title">About</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+      </nav>
+    </div>
+    <div class="dialog__foot"><a class="btn" data-variant="primary" href="about.html#contact">Get in touch</a></div>
+  </dialog>
+  <main class="page">
+    <header class="page-head">
+      <p class="eyebrow">Skills and stack</p>
+      <h1 class="title">What I use, and how often.</h1>
+      <p class="lead">Three levels, no percentages. A level says how recently I shipped with it, not how much I like it.</p>
+      <div class="legend">
+        <span class="legend__item"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar is-on"></span></span><span><b>Daily:</b> most weeks</span></span>
+        <span class="legend__item"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar"></span></span><span><b>Often:</b> most projects</span></span>
+        <span class="legend__item"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar"></span><span class="level__bar"></span></span><span><b>Learning:</b> not shipped yet</span></span>
+      </div>
+    </header>
+
+    <div class="skill-groups">
+      <section class="block" aria-labelledby="design-title">
+        <h2 class="heading" id="design-title">Design</h2>
+        <div class="list" data-variant="inset">
+          <div class="list__item"><span class="list__body"><span class="list__title">Interaction design</span><span class="list__meta">9 years · Fieldnote, Relay</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar is-on"></span></span><span class="level__label">Daily</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">Prototyping in code</span><span class="list__meta">7 years · every project</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar is-on"></span></span><span class="level__label">Daily</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">Design systems</span><span class="list__meta">6 years · Grain, Quarry</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar is-on"></span></span><span class="level__label">Daily</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">Visual design</span><span class="list__meta">9 years · Harbor, Lintel</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar"></span></span><span class="level__label">Often</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">User research</span><span class="list__meta">5 years · Fieldnote site visits</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar"></span></span><span class="level__label">Often</span></span></span></div>
+        </div>
+      </section>
+      <section class="block" aria-labelledby="engineering-title">
+        <h2 class="heading" id="engineering-title">Engineering</h2>
+        <div class="list" data-variant="inset">
+          <div class="list__item"><span class="list__body"><span class="list__title">HTML and CSS</span><span class="list__meta">8 years · every project</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar is-on"></span></span><span class="level__label">Daily</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">TypeScript</span><span class="list__meta">6 years · Fieldnote, Grain</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar is-on"></span></span><span class="level__label">Daily</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">Accessibility</span><span class="list__meta">WCAG 2.2 audits · Harbor, Lintel</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar is-on"></span></span><span class="level__label">Daily</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">React</span><span class="list__meta">5 years · Relay, Quarry</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar"></span></span><span class="level__label">Often</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">Svelte</span><span class="list__meta">2 years · Tuner</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar"></span></span><span class="level__label">Often</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">WebGPU</span><span class="list__meta">6 months · side project</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar"></span><span class="level__bar"></span></span><span class="level__label">Learning</span></span></span></div>
+        </div>
+      </section>
+      <section class="block" aria-labelledby="tools-title">
+        <h2 class="heading" id="tools-title">Tools</h2>
+        <div class="list" data-variant="inset">
+          <div class="list__item"><span class="list__body"><span class="list__title">Figma</span><span class="list__meta">Variables, plugins · Lintel</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar is-on"></span></span><span class="level__label">Daily</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">VS Code</span><span class="list__meta">Daily driver</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar is-on"></span></span><span class="level__label">Daily</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">Playwright</span><span class="list__meta">Visual and accessibility tests</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar"></span></span><span class="level__label">Often</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">Storybook</span><span class="list__meta">Grain docs</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar is-on"></span><span class="level__bar"></span></span><span class="level__label">Often</span></span></span></div>
+          <div class="list__item"><span class="list__body"><span class="list__title">Blender</span><span class="list__meta">Product renders</span></span><span class="list__trail"><span class="level"><span class="level__bars" aria-hidden="true"><span class="level__bar is-on"></span><span class="level__bar"></span><span class="level__bar"></span></span><span class="level__label">Learning</span></span></span></div>
+        </div>
+      </section>
+    </div>
+
+    <section class="block" aria-labelledby="stack-title">
+      <div class="block__head"><h2 class="heading" id="stack-title">Default stack</h2><p class="muted">What I reach for first when a project has no stack yet.</p></div>
+      <div class="tags"><span class="chip">TypeScript</span><span class="chip">Web Components</span><span class="chip">CSS custom properties</span><span class="chip">IndexedDB</span><span class="chip">Playwright</span><span class="chip">Figma variables</span></div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="site-bar">
+      <p class="site-footer__note">© 2026 Noa Lindqvist · Design engineer in Lisbon</p>
+      <nav class="site-nav" aria-label="Footer"><a class="site-nav__link" href="work.html">Work</a><a class="site-nav__link" href="blog.html">Writing</a><a class="site-nav__link" href="about.html#contact">Contact</a></nav>
+      <button class="btn" data-variant="ghost" data-copy="hello@noa.example"><i class="icon" data-icon="copy"></i>hello@noa.example</button>
+    </div>
+  </footer>
+  <script src="screens.js"></script>
+  <script src="../../../handoff/minimaly/ds.js"></script>
+</body>
+</html>

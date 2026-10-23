@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About and contact · Noa Lindqvist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="screens.css">
+</head>
+<body>
+  <header class="sticky-header">
+    <div class="site-bar">
+      <a class="site-brand" href="home.html"><span class="avatar" data-variant="lg">NL</span><span class="site-brand__name">Noa Lindqvist</span><span class="site-brand__role">Design engineer</span></a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="site-nav__link" href="work.html">Work</a>
+        <a class="site-nav__link" href="lab.html">Lab</a>
+        <a class="site-nav__link" href="skills.html">Skills</a>
+        <a class="site-nav__link" href="blog.html">Writing</a>
+        <a class="site-nav__link" href="about.html" aria-current="page">About</a>
+      </nav>
+      <a class="btn site-header__cta" href="about.html#contact">Get in touch</a>
+      <button class="btn site-header__menu" data-variant="icon" data-open="menu" aria-label="Open menu" aria-haspopup="dialog"><i class="icon" data-icon="list"></i></button>
+    </div>
+  </header>
+  <dialog class="drawer" id="menu" aria-labelledby="menu-title">
+    <div class="dialog__head"><h2 class="dialog__title" id="menu-title">Menu</h2><button class="btn" data-variant="icon" data-close aria-label="Close menu"><i class="icon" data-icon="x"></i></button></div>
+    <div class="dialog__body">
+      <nav class="list" aria-label="Menu">
+        <a class="list__item" href="home.html"><span class="list__lead"><i class="icon" data-icon="house"></i></span><span class="list__body"><span class="list__title">Home</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="work.html"><span class="list__lead"><i class="icon" data-icon="briefcase"></i></span><span class="list__body"><span class="list__title">Work</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="lab.html"><span class="list__lead"><i class="icon" data-icon="flask"></i></span><span class="list__body"><span class="list__title">Lab</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="skills.html"><span class="list__lead"><i class="icon" data-icon="stack"></i></span><span class="list__body"><span class="list__title">Skills</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="blog.html"><span class="list__lead"><i class="icon" data-icon="pen-nib"></i></span><span class="list__body"><span class="list__title">Writing</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+        <a class="list__item" href="about.html" aria-current="page"><span class="list__lead"><i class="icon" data-icon="user"></i></span><span class="list__body"><span class="list__title">About</span></span><i class="icon list__chevron" data-icon="caret-right"></i></a>
+      </nav>
+    </div>
+    <div class="dialog__foot"><a class="btn" data-variant="primary" href="about.html#contact">Get in touch</a></div>
+  </dialog>
+  <main class="page">
+    <section class="about" aria-labelledby="about-title">
+      <div class="ph ph--portrait" aria-hidden="true"><i class="icon" data-icon="user"></i></div>
+      <div class="about__text">
+        <p class="eyebrow">About</p>
+        <h1 class="title" id="about-title">I'm Noa. I design interfaces and write the code that ships them.</h1>
+        <p>I trained as a graphic designer, learned front-end to stop losing details in handoff, and have worked on both sides of it since 2019.</p>
+        <p>I like the parts most people skip: empty states, errors, keyboard paths, the old tablet on a slow network. That is where a product earns trust.</p>
+        <p>Away from the screen: bouldering, film photography, and a sourdough starter older than most of my projects.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="path-title">
+      <h2 class="heading" id="path-title">Path</h2>
+      <ol class="timeline">
+        <li class="timeline__item"><span class="timeline__when">2025 – now</span><div><p class="timeline__role">Independent design engineer</p><p class="timeline__text">Fieldnote for Halden Surveys, Tuner v2, and this site's articles.</p></div></li>
+        <li class="timeline__item"><span class="timeline__when">2022 – 2025</span><div><p class="timeline__role">Design engineer, Copperleaf</p><p class="timeline__text">Built and ran the Grain design system for three product teams. Relay as a side contract.</p></div></li>
+        <li class="timeline__item"><span class="timeline__when">2019 – 2022</span><div><p class="timeline__role">Front-end developer, Studio Forma</p><p class="timeline__text">Product sites and prototypes for 20 clients. Started Quarry and Lintel.</p></div></li>
+        <li class="timeline__item"><span class="timeline__when">2016 – 2019</span><div><p class="timeline__role">Graphic designer, freelance</p><p class="timeline__text">Identity and editorial work. Learned CSS on the side.</p></div></li>
+      </ol>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="contact__intro">
+        <p class="eyebrow">Contact</p>
+        <h2 class="title" id="contact-title">Get in touch</h2>
+        <p class="lead">A role, a project, or a question about an article. I reply within two working days.</p>
+        <dl class="details">
+          <div><dt class="eyebrow">Email</dt><dd>hello@noa.example</dd><button class="btn" data-variant="ghost" data-copy="hello@noa.example"><i class="icon" data-icon="copy"></i>Copy</button></div>
+          <div><dt class="eyebrow">Based in</dt><dd>Lisbon, CET</dd></div>
+          <div><dt class="eyebrow">Available</dt><dd>From January 2027</dd></div>
+        </dl>
+      </div>
+      <form class="card" id="contact-form" novalidate aria-labelledby="contact-title">
+        <div class="card__body form">
+          <div class="form__row">
+            <div class="field" id="f-name">
+              <label class="field__label">Name <span class="field__required" aria-hidden="true">*</span></label>
+              <label class="input"><input id="name" name="name" autocomplete="name" required></label>
+              <p class="field__error"><i class="icon" data-icon="warning-circle"></i>Your name, so I know who to answer.</p>
+            </div>
+            <div class="field" id="f-email">
+              <label class="field__label">Email <span class="field__required" aria-hidden="true">*</span></label>
+              <label class="input"><input id="email" name="email" type="email" autocomplete="email" required></label>
+              <p class="field__error"><i class="icon" data-icon="warning-circle"></i><span id="email-error">An email, so I can reply.</span></p>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label">About <span class="field__optional">Optional</span></label>
+            <label class="select"><select id="topic" name="topic"><option>A full-time role</option><option>A freelance project</option><option>A talk or a podcast</option><option>Something else</option></select><i class="icon select__icon" data-icon="caret-down"></i></label>
+          </div>
+          <div class="field" id="f-message">
+            <label class="field__label">Message <span class="field__required" aria-hidden="true">*</span></label>
+            <label class="textarea"><textarea id="message" name="message" required placeholder="What are you building, and where could I help?"></textarea></label>
+            <p class="field__hint">A few lines is plenty.</p>
+            <p class="field__error"><i class="icon" data-icon="warning-circle"></i>A few words about what you need.</p>
+          </div>
+          <div class="form__foot">
+            <button class="btn" data-variant="primary" type="submit" id="send" data-busy="Sending" data-done="Sent" data-error="Try again"><i class="icon" data-icon="paper-plane-tilt"></i>Send message</button>
+            <span class="muted">Sending is simulated in this template.</span>
+          </div>
+        </div>
+      </form>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="site-bar">
+      <p class="site-footer__note">© 2026 Noa Lindqvist · Design engineer in Lisbon</p>
+      <nav class="site-nav" aria-label="Footer"><a class="site-nav__link" href="work.html">Work</a><a class="site-nav__link" href="blog.html">Writing</a><a class="site-nav__link" href="about.html#contact">Contact</a></nav>
+      <button class="btn" data-variant="ghost" data-copy="hello@noa.example"><i class="icon" data-icon="copy"></i>hello@noa.example</button>
+    </div>
+  </footer>
+  <script src="screens.js"></script>
+  <script src="../../../handoff/minimaly/ds.js"></script>
+  <script>
+    const form = document.getElementById("contact-form");
+    const value = (id) => document.getElementById(id).value.trim();
+    const checks = [
+      ["f-name", () => value("name") !== ""],
+      ["f-email", () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value("email"))],
+      ["f-message", () => value("message") !== ""],
+    ].map(([id, ok]) => ({ field: document.getElementById(id), ok }));
+    const explainEmail = () => {
+      document.getElementById("email-error").textContent = value("email") ? "Add the domain, like name@studio.com." : "An email, so I can reply.";
+    };
+    // A refused field shakes each time: the attribute comes off and back on so the animation replays.
+    const refuse = (bad) => {
+      checks.forEach(({ field }) => field.removeAttribute("data-invalid"));
+      void form.offsetWidth;
+      bad.forEach(({ field }) => field.setAttribute("data-invalid", ""));
+    };
+    checks.forEach((c) => c.field.addEventListener("input", () => { if (c.ok()) c.field.removeAttribute("data-invalid"); }));
+    const sent = { variant: "success" };
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      explainEmail();
+      const bad = checks.filter((c) => !c.ok());
+      refuse(bad);
+      if (bad.length) return bad[0].field.querySelector("input, textarea").focus();
+      runButton(document.getElementById("send"), () => new Promise((done) => setTimeout(done, 900))).then(() => {
+        form.reset();
+        toast("Message sent. I reply within two working days.", sent);
+      });
+    });
+
+    if (state === "error" || state === "sent") document.getElementById("contact").scrollIntoView({ behavior: "instant" });
+    if (state === "error") {
+      document.getElementById("name").value = "Sam Rivera";
+      document.getElementById("email").value = "sam@rivera";
+      explainEmail();
+      refuse(checks.filter((c) => !c.ok()));
+    }
+    // The state shows the toast at rest: it would leave after 4 s otherwise.
+    if (state === "sent") toast("Message sent. I reply within two working days.", { ...sent, duration: 0 });
+  </script>
+</body>
+</html>
