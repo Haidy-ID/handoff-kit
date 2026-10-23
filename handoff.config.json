@@ -19,6 +19,13 @@
       "icon": "lightbulb",
       "text": "Concepts and free prototypes, some with a handoff.",
       "groupBy": ["team", "pi"]
+    },
+    {
+      "title": "Templates",
+      "path": "templates",
+      "icon": "layout",
+      "text": "Complete prototypes to start from: real screens, states and flows built on the design system.",
+      "groupBy": ["team", "pi"]
     }
   ]
 }
