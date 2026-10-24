@@ -49,9 +49,6 @@ html[data-state="menu-open"] .drawer, html[data-state="menu-open"] .drawer::back
 .hero { display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacing-xl); padding-top: var(--spacing-3xl); }
 .hero .text[data-variant="display"] { max-width: calc(var(--measure) * 1.4); }
 .status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-sm); color: var(--color-text-secondary); font-size: var(--font-size-md); }
-.now { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--spacing-xl); }
-.now__item { display: flex; flex-direction: column; gap: var(--spacing-sm); padding-top: var(--spacing-lg); border-top: var(--stroke-width-subtle) solid var(--color-border); }
-@media (max-width: 760px) { .now { grid-template-columns: minmax(0, 1fr); } }
 .cta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacing-lg); padding: var(--spacing-4xl); border: var(--stroke-width-subtle) solid var(--color-border); border-radius: var(--radius-xl); background: var(--color-surface-raised); }
 @media (max-width: 640px) { .cta { padding: var(--spacing-xl); } }
 
