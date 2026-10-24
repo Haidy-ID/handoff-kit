@@ -3,8 +3,8 @@
    data-force="hover" pins the hover state for specimen pages. Tokens only, no raw values. */
 
 /* Borders and padding stay inside the declared size (32 px controls), whatever the page reset. */
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input, .thread, .message, .diff, .pane, .text, .prose, .code, .quote, .media, .site-nav),
-:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input, .thread, .message, .diff, .pane, .text, .prose, .code, .quote, .media, .site-nav) * { box-sizing: border-box; }
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input, .thread, .message, .diff, .pane, .text, .prose, .code, .quote, .media, .site-nav, .carousel),
+:where(.btn, .badge, .chip, .avatar, .kbd, .card, .tooltip, .popover, .icon, .input, .select, .breadcrumb, .accordion, .skeleton, .tabs, .menu, .modal, .drawer, .toast, .stream, .typing, .steps, .progress, .pagination, .table, .toc, .sticky-header, .field, .checkbox, .radio, .switch, .textarea, .banner, .empty, .list, .shell, .composer, .reasoning, .tool-call, .cite, .dropzone, .stepper, .combobox, .rich-editor, .date-picker, .command-palette, .attachments, .attachment, .slider, .tag-input, .thread, .message, .diff, .pane, .text, .prose, .code, .quote, .media, .site-nav, .carousel) * { box-sizing: border-box; }
 
 /* Motion: keyframes shared by the components and the pages built on them.
    enter = fade up (page sections, cards), pop-in = fade and grow (tooltips, popovers), fade-in, fade-out.
@@ -999,6 +999,17 @@ html:has(:is(.modal, .drawer):modal) { overflow: hidden; }
 .tag-input:has(> input:disabled) .tag-input__remove { visibility: hidden; }
 .field[data-invalid] > .tag-input, .field[data-invalid] > .combobox > .tag-input { border-color: var(--color-status-critical); animation: shake calc(var(--duration-slow) * 1.4) var(--ease-out); }
 .field[data-invalid] > .tag-input:focus-within, .field[data-invalid] > .combobox > .tag-input:focus-within { box-shadow: 0 0 0 var(--stroke-width-subtle) var(--color-status-critical); }
+
+/* Carousel: a row of cards that scrolls sideways: one card at a time with the arrows, freely with a trackpad, a swipe or
+   the arrow keys once focused. The arrows are icon buttons with data-carousel="prev|next" and aria-controls on the
+   carousel's id, so they can sit anywhere (a section head). ds.js disables each one at its end. */
+.carousel { --carousel-item: 320px; display: grid; grid-auto-flow: column; grid-auto-columns: min(var(--carousel-item), 85%); gap: var(--spacing-lg); margin: 0; padding: var(--spacing-xs) 2px var(--spacing-md); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: 2px; scroll-behavior: smooth; scrollbar-width: none; list-style: none; }
+.carousel::-webkit-scrollbar { display: none; }
+.carousel > * { min-width: 0; scroll-snap-align: start; }
+.carousel > * > .card { height: 100%; }
+.carousel:focus-visible { outline: var(--stroke-width-mid) solid var(--color-accent); outline-offset: 2px; border-radius: var(--radius-lg); }
+.carousel__controls { display: flex; gap: var(--spacing-xs); }
+@media (prefers-reduced-motion: reduce) { .carousel { scroll-behavior: auto; } }
 
 /* Editorial layer, for websites: type, long-form reading, code, quotes, media, site navigation. Tool screens rarely need it. */
 

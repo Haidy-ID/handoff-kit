@@ -1,4 +1,5 @@
 ## 2026-10-24
+- Home shows the latest articles as a carousel of cards (new Minimaly `carousel`), six of them, arrows next to All articles: the list read as an index, the cards invite a click.
 - The editorial layer moved into Minimaly: `text` (display, title, heading, lead, eyebrow), `prose`, `code`, `quote`, `media`, `site-nav`, link cards and large buttons, plus tokens for display sizes, reading rhythm, measure and page width. This topic now uses them; its own CSS keeps only the page layout and the placeholder drawings.
 - The hero and closing calls to action use the large button: on a website, the main action reads first.
 - The Minimaly fixes found here (dark contrast, segmented, TOC, toast, dialog) are in the library; the article list stays local, and two kit questions stay open.

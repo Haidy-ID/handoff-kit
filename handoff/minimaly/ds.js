@@ -1044,6 +1044,35 @@
     if (option && option.getAttribute("aria-selected") !== "true") setActive(option.closest(".combobox"), option);
   });
 
+  // Carousel: each arrow scrolls its carousel (aria-controls) by one card and is disabled at its end. Slides are numbered
+  // for screen readers ("2 of 6"); the track keeps its native scrolling.
+  const carouselArrows = (track) => document.querySelectorAll(`[data-carousel][aria-controls="${track.id}"]`);
+  const syncCarousel = (track) => {
+    const end = track.scrollWidth - track.clientWidth - 1;
+    for (const b of carouselArrows(track)) b.disabled = b.dataset.carousel === "prev" ? track.scrollLeft <= 1 : track.scrollLeft >= end;
+  };
+  const buildCarousel = (track) => {
+    if (track.hasAttribute("aria-roledescription")) return;
+    track.setAttribute("aria-roledescription", "carousel");
+    track.tabIndex = 0;
+    const items = [...track.children];
+    items.forEach((item, i) => {
+      item.setAttribute("role", "group");
+      item.setAttribute("aria-roledescription", "slide");
+      item.setAttribute("aria-label", `${i + 1} of ${items.length}`);
+    });
+    track.addEventListener("scroll", () => syncCarousel(track), { passive: true });
+    new ResizeObserver(() => syncCarousel(track)).observe(track);
+    syncCarousel(track);
+  };
+  document.addEventListener("click", (e) => {
+    const arrow = e.target.closest?.("[data-carousel]");
+    const track = arrow && document.getElementById(arrow.getAttribute("aria-controls"));
+    if (!track) return;
+    const step = (track.firstElementChild?.getBoundingClientRect().width || track.clientWidth) + parseFloat(getComputedStyle(track).columnGap || 0);
+    track.scrollBy({ left: arrow.dataset.carousel === "prev" ? -step : step });
+  });
+
   // Banner: [data-dismiss] inside a .banner folds it away, then removes it and fires "dismiss" on the parent.
   document.addEventListener("click", (e) => {
     const banner = e.target.closest?.(".banner [data-dismiss]")?.closest(".banner");
@@ -1785,6 +1814,7 @@
     each(node, ".combobox", buildCombobox);
     each(node, ".steps", buildSteps);
     each(node, ".divider", buildDivider);
+    each(node, ".carousel[id]", buildCarousel);
     each(node, ".rich-editor:not(:has(.rich-editor__box))", buildRichEditor);
     each(node, ".date-picker:not(:has(.date-picker__field))", buildDatePicker);
     each(node, ".command-palette", buildCommandPalette);

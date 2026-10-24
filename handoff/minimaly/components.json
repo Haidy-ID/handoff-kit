@@ -858,5 +858,19 @@
       "hover",
       "current"
     ]
+  },
+  {
+    "id": "carousel",
+    "class": "carousel",
+    "name": "Carousel",
+    "variants": [
+      "default"
+    ],
+    "states": [
+      "start",
+      "middle",
+      "end",
+      "focus"
+    ]
   }
 ]
