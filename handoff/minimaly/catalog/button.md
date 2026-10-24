@@ -14,4 +14,4 @@
 - Toggle or filter: `aria-pressed="true"` gives the accent tint. Use it instead of a clickable chip.
 - Disabled: `disabled` on `<button>`, `aria-disabled="true"` on `<a>`.
 - Icon-only buttons always carry `aria-label`.
-- `data-size="lg"` (40 px, 13 px text) for a website's call to action. Tool screens keep 32 px.
+- `data-size="lg"` (40 px, 13 px text) for a website's call to action. Tool screens keep 32 px. Buttons side by side share one size: put `lg` on each of them.
